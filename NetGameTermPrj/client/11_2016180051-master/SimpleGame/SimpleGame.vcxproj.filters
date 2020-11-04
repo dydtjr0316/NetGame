@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="00Main">
+      <UniqueIdentifier>{d347518c-84f3-4418-a098-1c264f06f187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject">
+      <UniqueIdentifier>{cc11ab81-6b41-4ac1-a06c-d5b4a3719748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\00Player">
+      <UniqueIdentifier>{cdac380d-a5ef-4bdd-94cf-eaca4f9dd5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\01Boss">
+      <UniqueIdentifier>{c08b72b3-378f-49ff-b2eb-456c540c4018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\02Bullet">
+      <UniqueIdentifier>{d3efb00f-e5c2-4087-a24b-a6a17b2ba1ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\04Hp">
+      <UniqueIdentifier>{de62be81-2bd2-4d14-a206-34e8ba667997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.etc">
+      <UniqueIdentifier>{0de18820-53b7-4531-a142-bf92a5db054e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06ScnMgr">
+      <UniqueIdentifier>{bcf27d63-8147-4d93-8aeb-fa119851f001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N">
+      <UniqueIdentifier>{879ef3ac-2b4d-406b-bc21-b54dd95dfea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\03LoadPng">
+      <UniqueIdentifier>{a52b190b-98ff-47d6-a060-0f335e876fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\02CollisonMgr">
+      <UniqueIdentifier>{afaf168c-fb2a-4102-b841-e19582bacbbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\05Render">
+      <UniqueIdentifier>{a506e72d-6fc4-4ae0-9733-76c0c8f9629d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\07Sound">
+      <UniqueIdentifier>{02829b25-061c-4965-9364-70ee7bc49bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\08Shader">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="98N\08Shader\Shaders">
+      <UniqueIdentifier>{aa86e47f-445f-4440-9a76-173363b46c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98N\04Physics">
+      <UniqueIdentifier>{289f0df4-1c86-4cbb-8e2e-bf829c35fca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01CGameObject\03DoorN">
+      <UniqueIdentifier>{a7220491-34e0-4875-8ebe-c71ccc11af92}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Boss.h">
+      <Filter>01CGameObject\01Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>01CGameObject\02Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>01CGameObject\03DoorN</Filter>
+    </ClInclude>
+    <ClInclude Include="Hp.h">
+      <Filter>01CGameObject\04Hp</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>01CGameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>01CGameObject\00Player</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>99.etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>99.etc</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>99.etc</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisonMgr.h">
+      <Filter>98N\02CollisonMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadPng.h">
+      <Filter>98N\03LoadPng</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>98N\04Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>98N\05Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ScnMgr.h">
+      <Filter>06ScnMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>98N\07Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>99.etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Boss.cpp">
+      <Filter>01CGameObject\01Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>01CGameObject\02Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>01CGameObject\03DoorN</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>01CGameObject\00Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Hp.cpp">
+      <Filter>01CGameObject\04Hp</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleGame.cpp">
+      <Filter>00Main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>99.etc</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisonMgr.cpp">
+      <Filter>98N\02CollisonMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadPng.cpp">
+      <Filter>98N\03LoadPng</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>98N\04Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>98N\05Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ScnMgr.cpp">
+      <Filter>06ScnMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>98N\07Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>01CGameObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\SolidRect.fs">
+      <Filter>98N\08Shader\Shaders</Filter>
+    </None>
+    <None Include="Shaders\SolidRect.vs">
+      <Filter>98N\08Shader\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
