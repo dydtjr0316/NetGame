@@ -1,42 +1,109 @@
 #pragma once
-struct Player_Packet
+
+// Logout
+struct CS_Client_Logout_Packet
 {
 	char size;
-	int id;
-	float PosX, posY, PosZ;
-	float hp;
+	char type;
+	char id;
 };
 
-struct Boss_Packet
+// Login
+struct CS_Client_Login_Packet
 {
 	char size;
-	int id;
-	float PosX, posY, PosZ;
-	float hp;
+	char type;
+	char nickname[32];
 };
 
-struct Bullet_Packet
-{
-	char size;
-	int id;
-	float PosX, posY, PosZ;
-	bool bisDead;
-};
-
-struct LoginOk_Packet
+struct SC_Client_LoginOK_Packet
 {
 	char size;
 	char type;
 };
-struct Login_Packet
+
+struct SC_All_Client_Packet
 {
 	char size;
 	char type;
-	char Nick[3][16];
+	char nickname[2][32];
 };
 
-struct Ready_Packet
+// Lobby
+struct CS_Client_Ready_Packet
 {
+	char size;
+	char type;
+	char id;
+};
+
+struct SC_Client_RedayOK_Packet
+{
+	char size;
+	char type;
+	char id[2];
+	char nickname[2][32];
+};
+
+// Move
+struct CS_Move_Packet
+{
+	char size;
+	char type;
+	float hp;
+};
+
+struct SC_Move_Packet
+{
+	char size;
+	char type;
 	int id;
-	bool bisReady;
+	float hp;
+	short x, y, z;
+};
+
+// Attack
+struct CS_Attack_Packet
+{
+	char size;
+	char type;
+};
+
+struct SC_Attack_Packet
+{
+	char size;
+	char type;
+	int id;
+	short x, y, z;
+};
+
+// Boss
+struct CS_Boss_Move_Packet
+{
+	char size;
+	char type;
+	float hp;
+};
+
+struct CS_Boss_Attack_Packet
+{
+	char size;
+	char type;
+};
+
+struct SC_Boss_Move_Packet
+{
+	char size;
+	char type;
+	int id;
+	float hp;
+	short x, y, z;
+};
+
+struct SC_Boss_Attack_Packet
+{
+	char size;
+	char type;
+	int id;
+	short x, y, z;
 };
