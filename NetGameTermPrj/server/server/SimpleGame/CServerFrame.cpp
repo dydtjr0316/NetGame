@@ -41,7 +41,7 @@ int CServerFrame::InitTCPServer()
 	ZeroMemory(&ServerAddr, sizeof(ServerAddr));
 	ServerAddr.sin_family = AF_INET;
 	ServerAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	ServerAddr.sin_port = htons(SERVERTCPPORT/*수정*/);
+	ServerAddr.sin_port = htons(TCP_SERVERPORT/*수정*/);
 	int retval = bind(m_ListenSock, (SOCKADDR*)&ServerAddr, sizeof(ServerAddr));
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitTCPServer Bind() Error");
@@ -71,7 +71,7 @@ int CServerFrame::InitUDPServer()
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serveraddr.sin_port = htons(SERVERUDPPORT);
+	serveraddr.sin_port = htons(UDP_SERVERPORT);
 	int retval = bind(m_UDP_Sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitUDPServer Sock() Error");
