@@ -14,6 +14,8 @@
 #include <vector>
 #include <iterator>
 #include <atomic>
+#include <string>
+#include <mutex>
 
 // class
 #include "ScnMgr.h"
