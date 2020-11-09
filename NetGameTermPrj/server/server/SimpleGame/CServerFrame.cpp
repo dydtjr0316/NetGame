@@ -137,8 +137,8 @@ void CServerFrame::LoginServer()
 			m_Error->err_display("CServerFrame::RunServer() changesocket1");
 
 		// 넘버링
-		int id = 3;
-		for (int i = 0; i < 3; ++i) {
+		int id = 2;
+		for (int i = 0; i < id; ++i) {
 			if (m_mClients.count(i) == 0) {
 				id = i;
 				break;
@@ -146,8 +146,8 @@ void CServerFrame::LoginServer()
 		}
 
 		{
-			// 접속중인 클라가 3명이면 접속 끊음
-			if (2 < id) {
+			// 접속중인 클라가 2명 이상이면 접속 끊음
+			if (2 <= id) {
 				closesocket(clientSock);
 				continue;
 			}
@@ -185,5 +185,17 @@ void CServerFrame::LoginServer()
 			//}
 		}
 	}
+}
+
+DWORD __stdcall CServerFrame::Process(LPVOID arg)
+{
+	int user_id = reinterpret_cast<int>(arg);
+
+	SOCKADDR_IN	 Client_Addr;
+	int addrLength = sizeof(Client_Addr);
+
+
+
+	return 0;
 }
 
