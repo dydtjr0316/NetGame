@@ -13,10 +13,30 @@ public:
 	int InitTCPServer(); // 리턴값 1
 	int InitUDPServer(); // 리턴값 1
 
+	void LoginServer();
+
 	static DWORD WINAPI UDP_Thread(LPVOID arg);
 	static void UpdateMovePos();
 
-	void LoginServer();
+
+	static DWORD WINAPI Process(LPVOID arg);
+
+
+	void SaveNickName();
+	void sendNickName();
+
+	void UpdateStatus();
+	void SendAllStatus();
+
+	void IsAllReady();
+
+	void BulletRoute();
+	
+	void Collision();
+
+	void UpdatePosition();
+
+
 
 private:
 	SOCKET m_ListenSock;

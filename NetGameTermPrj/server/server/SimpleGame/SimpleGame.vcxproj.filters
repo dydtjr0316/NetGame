@@ -69,6 +69,9 @@
     <Filter Include="02Server\02Error">
       <UniqueIdentifier>{ce8deed8-ef36-4e08-88cf-ca9074fec5ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03Client">
+      <UniqueIdentifier>{2b0d0ad4-19b8-4a9d-be49-ab813b741105}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -131,6 +134,9 @@
     <ClInclude Include="Enum.h">
       <Filter>99.etc</Filter>
     </ClInclude>
+    <ClInclude Include="CClient.h">
+      <Filter>03Client</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Boss.cpp">
@@ -147,9 +153,6 @@
     </ClCompile>
     <ClCompile Include="Hp.cpp">
       <Filter>01CGameObject\04Hp</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleGame.cpp">
-      <Filter>00Main</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>99.etc</Filter>
@@ -180,6 +183,12 @@
     </ClCompile>
     <ClCompile Include="CError.cpp">
       <Filter>02Server\02Error</Filter>
+    </ClCompile>
+    <ClCompile Include="CClient.cpp">
+      <Filter>03Client</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerMain.cpp">
+      <Filter>00Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

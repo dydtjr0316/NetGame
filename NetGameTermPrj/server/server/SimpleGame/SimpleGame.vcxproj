@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Boss.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="CClient.h" />
     <ClInclude Include="CError.h" />
     <ClInclude Include="CollisonMgr.h" />
     <ClInclude Include="CServerFrame.h" />
@@ -178,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="CClient.cpp" />
     <ClCompile Include="CError.cpp" />
     <ClCompile Include="CollisonMgr.cpp" />
     <ClCompile Include="CServerFrame.cpp" />
@@ -189,7 +191,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ScnMgr.cpp" />
-    <ClCompile Include="SimpleGame.cpp" />
+    <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
