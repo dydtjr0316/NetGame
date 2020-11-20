@@ -18,9 +18,7 @@ public:
 	static DWORD WINAPI UDP_Thread(LPVOID arg);
 	static void UpdateMovePos();
 
-
 	static DWORD WINAPI Process(LPVOID arg);
-
 
 	void SaveNickName();
 	void sendNickName();
@@ -35,8 +33,6 @@ public:
 	void Collision();
 
 	void UpdatePosition();
-
-
 
 private:
 	SOCKET m_ListenSock;

@@ -6,9 +6,6 @@
 SOCKET	CServerFrame::m_UDP_Sock;
 CError* CServerFrame::m_Error;
 
-
-
-
 CServerFrame::CServerFrame()
 {
 	// 이니셜라이저 하나 만들던가 생성자 오버사용
@@ -76,7 +73,6 @@ int CServerFrame::InitUDPServer()
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitUDPServer Sock() Error");
 	}
-
 
 	return 1;
 }
@@ -197,5 +193,45 @@ DWORD __stdcall CServerFrame::Process(LPVOID arg)
 
 
 	return 0;
+}
+
+void CServerFrame::SaveNickName()
+{
+
+}
+
+void CServerFrame::sendNickName()
+{
+
+}
+
+void CServerFrame::UpdateStatus()
+{
+
+}
+
+void CServerFrame::SendAllStatus()
+{
+
+}
+
+void CServerFrame::IsAllReady()
+{
+
+}
+
+void CServerFrame::BulletRoute()
+{
+
+}
+
+void CServerFrame::Collision()
+{
+
+}
+
+void CServerFrame::UpdatePosition()
+{
+
 }
 
