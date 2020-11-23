@@ -8,12 +8,26 @@ std::unordered_map <int, CClient> CServerFrame::m_mClients;
 CServerFrame::CServerFrame()
 {
 	// 이니셜라이저 하나 만들던가 생성자 오버사용
+	//
+
+	m_Error = new CError;
 }
 
 CServerFrame::~CServerFrame()
 {
 	// 플레이어, 보스 등 
 	// 댕글링 포인터 안나오게 삭제
+
+	if (m_Error != nullptr) {
+		delete m_Error;
+		m_Error = nullptr;
+	}
+
+	for (auto& h : m_hClientsThreads) {
+		CloseHandle(h);
+		h = NULL;
+	}
+
 	closesocket(m_ListenSock);
 
 	WSACleanup();
@@ -102,18 +116,18 @@ void CServerFrame::UpdateMovePos()
 	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(CS_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
 
 	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
-
+	
 	for (auto& cl : m_mClients) {
 		if (cl.first == move_packet.id) {
 			short x = cl.second.GetPosX();
 			short y = cl.second.GetPosY();
 
-			char dir = move_packet.dir;
+			char dir = move_packet.state;
 			switch (dir) {
-			case MOVE_UP: if (y > 0) y = y - 0.1f; break;
-			case MOVE_DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-			case MOVE_LEFT: if (x > 0) x = x - 0.1f; break;
-			case MOVE_RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
+			case UP: if (y > 0) y = y - 0.1f; break;
+			case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
+			case LEFT: if (x > 0) x = x - 0.1f; break;
+			case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
 			default: while (true);
 			}
 			cl.second.SetPos(x, y);
@@ -204,7 +218,7 @@ void CServerFrame::LoginServer()
 			}
 
 			// 클라이언트 정보를 저장하는 map에 저장
-			CPlayer client(clientSock, id, clientAddr);
+			CClient client(clientSock, id, clientAddr);
 			m_mClients.emplace(id, client);
 
 

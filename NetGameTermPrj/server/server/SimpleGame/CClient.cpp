@@ -5,10 +5,22 @@
 
 CClient::CClient()
 {
+	m_bisReady = false;
+	m_cNickName = "";
+}
+
+CClient::CClient(SOCKET s, int id, SOCKADDR_IN addr)
+{
+	m_bisReady = false;
+	m_cNickName = "NONE";
+	m_TcpSocket = s;
+	m_addr = addr;
+	m_PlayerId = id;
 }
 
 CClient::~CClient()
 {
+
 }
 
 void CClient::SetSocket_TCP(SOCKET Socket)

@@ -5,7 +5,6 @@ constexpr char SC_PACKET_MOVE = 0;
 constexpr char SC_PACKET_ENTER = 1;
 constexpr char SC_PACKET_LOGIN = 2;
 constexpr char SC_PACKET_LEAVE = 3;
-enum STATE { IDLE,DOWN, UP, RIGHT, LEFT };
 
 // Logout
 struct CS_Client_Logout_Packet
@@ -20,7 +19,7 @@ struct CS_Client_Login_Packet
 {
 	char size;
 	char type;
-	char nickname[32];
+	string nickname;
 };
 
 struct SC_Client_LoginOK_Packet
@@ -33,7 +32,7 @@ struct SC_All_Client_Packet
 {
 	char size;
 	char type;
-	char nickname[2][32];
+	string nickname[2];
 };
 
 // Lobby
@@ -49,16 +48,15 @@ struct SC_Client_RedayOK_Packet
 	char size;
 	char type;
 	char id[2];
-	char nickname[2][32];
+	string nickname[2];
 };
 
 // Move
 struct CS_Move_Packet
 {
 	char size;
-	char type;
 	int id;
-	STATE dir;
+	STATE state;
 	STATE head;
 };
 

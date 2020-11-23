@@ -3,6 +3,7 @@ class CClient
 {
 public:	// »ý¼º ¼Ò¸ê
 	CClient();
+	CClient(SOCKET, int, SOCKADDR_IN);
 	~CClient();
 
 public:
@@ -12,7 +13,7 @@ public:
 	SOCKET	GetSocket_UDP() { return m_UdpSocket; }
 
 	//Client Data
-	char*	GetNickName() { return m_cNickName; }
+	std::string GetNickName() { return m_cNickName; }
 
 	int		GetPlayerHp() { return m_iPlayerHp; }
 	int		GetBossHp() { return m_iBossHp; }
@@ -43,11 +44,12 @@ public:
 
 private:
 	// Network
-	SOCKET m_TcpSocket;
-	SOCKET m_UdpSocket;
+	SOCKET		m_TcpSocket;
+	SOCKET		m_UdpSocket;
+	SOCKADDR_IN m_addr;
 	
 	// Client Data
-	char	m_cNickName[32];
+	string	m_cNickName;
 
 	int		m_PlayerId;
 	int		m_iPlayerHp;
