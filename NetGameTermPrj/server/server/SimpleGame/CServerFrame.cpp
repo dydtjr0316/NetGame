@@ -84,6 +84,7 @@ void CServerFrame::UDP_Socket()
 	{
 		// move함수
 		UpdateMovePos();
+		SendMovePos();
 	}
 }
 
@@ -97,7 +98,7 @@ void CServerFrame::UpdateMovePos()
 	SC_Move_Packet move_packet;
 	// 0초기화
 	ZeroMemory(&move_packet, sizeof(SC_Move_Packet));
-	// 전송
+
 	addrLength = sizeof(clientAddr);
 	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
 
@@ -107,9 +108,15 @@ void CServerFrame::UpdateMovePos()
 	float hp = move_packet.hp;
 	short x = move_packet.x;
 	short y = move_packet.y;
-	short z = move_packet.z;
 
-	for (auto& client : )
+	for (auto& client : m_mClients) {
+		if (client.first == id) client.second.SetPos(x, y);
+	}
+}
+
+void CServerFrame::SendMovePos()
+{
+
 }
 
 void CServerFrame::LoginServer()

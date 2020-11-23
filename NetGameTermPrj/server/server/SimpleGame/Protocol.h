@@ -1,4 +1,5 @@
 #pragma once
+#pragma pack (push, 1)
 
 // Logout
 struct CS_Client_Logout_Packet
@@ -50,7 +51,7 @@ struct CS_Move_Packet
 {
 	char size;
 	char type;
-	float hp;
+	char dir;
 };
 
 struct SC_Move_Packet
@@ -107,3 +108,5 @@ struct SC_Boss_Attack_Packet
 	int id;
 	short x, y;
 };
+
+#pragma pack (pop)
