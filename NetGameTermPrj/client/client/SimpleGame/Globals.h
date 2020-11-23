@@ -46,3 +46,6 @@
 #define SHOOT_DOWN 332
 #define SHOOT_LEFT 333
 #define SHOOT_RIGHT 334
+
+enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
+enum ITEM { NONE, TRIPLE };
