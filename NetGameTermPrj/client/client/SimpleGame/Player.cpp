@@ -248,7 +248,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 		fY += 0.1f;
 		m_CurState = UP;
 
-		//m_server->SendMovePacket(id, m_CurState, m_Head);
+
 	}
 	if (ScnMgr::GetInstance()->m_KeyS)
 	{
@@ -270,6 +270,8 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	}
 
+	m_server->SendMovePacket(m_id, m_CurState, m_Head);
+
 
 
 	bool Shoot = true;
@@ -279,6 +281,8 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
+
+	m_server->SendMovePacket(m_id, m_CurState, m_Head);
 
 	if (Shoot)
 	{

@@ -8,6 +8,8 @@ public:
  public:
 	virtual void Render();
 
+	void SetID(int id) { m_id = id; }
+
 	virtual int Update(float elapsedInSec);
 	void SetColor(float r, float g, float b, float a);
 	void GetColor(float *r, float *g, float *b, float *a);
@@ -40,6 +42,7 @@ public:
 	void lsDead() { m_blsDead = true; }
 
 protected:
+	int m_id;
 	float m_posX, m_posY, m_posZ; // Position
 	float m_velX, m_velY, m_velZ; // Velocity
 	float m_healthPoint;

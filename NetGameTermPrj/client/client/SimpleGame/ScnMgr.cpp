@@ -58,6 +58,8 @@ ScnMgr::ScnMgr()
 	}
 	//Create Hero
 	m_Obj[HERO_ID] = new CPlayer();
+	m_Obj[HERO_ID]->SetID(m_id);
+
 	m_Obj[HERO_ID]->SetPos(0, 0, 0);
 	m_Obj[HERO_ID]->SetVol(0.5, 0.5, 0.5);
 	m_Obj[HERO_ID]->SetColor(1, 1, 1, 1);
