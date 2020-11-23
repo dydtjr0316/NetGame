@@ -40,7 +40,7 @@ public:
 		float mass, float fricCoef, float type, float hp,Object* pObj);
 	void DeleteObject(int idx);
 
-
+	void SetID(int id) { m_id = id; }
 	void AddRenderGroup(RENDERGROUP Group,Object* pObj);
 
 
@@ -62,6 +62,7 @@ public:
 	vector<list<Object*>> m_RenderGroup;
 	Physics* m_Physics = NULL;
 	int m_TestChar[10];
+	int m_id;
 
 public:
 	bool m_KeyW = false;

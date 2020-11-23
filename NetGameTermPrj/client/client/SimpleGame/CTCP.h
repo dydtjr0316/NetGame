@@ -2,15 +2,15 @@
 
 
 class CTCP {
-	WSAData* wsa;
-	static unsigned int sock;
-	sockaddr_in* serveraddr;
+	WSAData* m_wsaData;
+	static SOCKET m_Socket;
+	sockaddr_in* m_Serveraddr;
 	//static PacketFrameState framepacket;
 	//static PacketReadyStateServerToClient lobbypacket;
 	//static PacketLoginOK loginpacket;
 
-	long long remainingCoolTime;
-	long long defaultCoolTime;
+	//long long remainingCoolTime;
+	//long long defaultCoolTime;
 
 public:
 	CTCP();
@@ -19,7 +19,7 @@ public:
 	static void err_quit(const char*);
 	static int recvn(unsigned int, char*, int, int);
 
-	int ConnectTCPToServer(const char*);
+	int ConnectTCP(const char*);
 	int RecvMyID();
 
 	void ClickMouse(char, float, float);

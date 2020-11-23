@@ -15,9 +15,12 @@ but WITHOUT ANY WARRANTY.
 
 #include "Renderer.h"
 #include "ScnMgr.h"
+#include "CServer.h"
 
  ScnMgr* g_ScnMgr = NULL;
 int g_PrevTime = 0;
+int my_id;
+SERVER server;
 
 void RenderScene(int temp)
 {
@@ -74,6 +77,7 @@ void SpecialKeyUpInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	my_id = server.ConnectServer();
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -92,6 +96,7 @@ int main(int argc, char **argv)
 	}
 
 	g_ScnMgr = ScnMgr::GetInstance();
+	g_ScnMgr->SetID(my_id);
 
 	
 	glutDisplayFunc(Display);

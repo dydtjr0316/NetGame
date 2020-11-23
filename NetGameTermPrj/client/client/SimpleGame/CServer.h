@@ -2,10 +2,10 @@
 
 
 
-class CUDP;
+class CUDP;class CTCP;
 class SERVER {
 private:
-	//TCP* tcp;
+	CTCP* m_tcp;
 	CUDP* m_pUdp;
 	char m_cServerip[15];
 
