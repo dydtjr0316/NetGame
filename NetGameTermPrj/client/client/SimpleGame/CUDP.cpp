@@ -51,6 +51,14 @@ void CUDP::ConnectUDP(const char* ip)
 	cout << "Complete : UDP Connect" << endl;
 }
 
-void CUDP::Move(char, float, float)
+void CUDP::Move(char id, STATE state)
 {
+	CS_Move_Packet packet;
+
+	packet.size = sizeof(CS_Move_Packet);
+	packet.id = id;
+	packet.state = state;
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+	if (retval == SOCKET_ERROR)		
+		err_quit("[UDP Send Error]");
 }
