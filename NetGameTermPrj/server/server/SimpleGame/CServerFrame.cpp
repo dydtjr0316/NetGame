@@ -234,4 +234,3 @@ void CServerFrame::UpdatePosition()
 {
 
 }
-
