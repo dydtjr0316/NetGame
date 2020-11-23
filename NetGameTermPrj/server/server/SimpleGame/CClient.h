@@ -15,6 +15,7 @@ public:
 	//Client Data
 	std::string GetNickName() { return m_cNickName; }
 
+	int		GetID() { return m_PlayerId; }
 	int		GetPlayerHp() { return m_iPlayerHp; }
 	int		GetBossHp() { return m_iBossHp; }
 

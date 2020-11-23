@@ -35,7 +35,7 @@ CServerFrame::~CServerFrame()
 
 int CServerFrame::InitTCPServer()
 {
-	wcout.imbue(locale("korean"));
+	std::wcout.imbue(locale("korean"));
 
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -44,8 +44,7 @@ int CServerFrame::InitTCPServer()
 
 	// ListenSock 생성
 	m_ListenSock = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_ListenSock == INVALID_SOCKET)
-	{
+	if (m_ListenSock == INVALID_SOCKET) {
 		m_Error->err_display("ServerFrame::InitTCPServer Sock() Error");
 	}
 
@@ -54,16 +53,14 @@ int CServerFrame::InitTCPServer()
 	ZeroMemory(&ServerAddr, sizeof(ServerAddr));
 	ServerAddr.sin_family = AF_INET;
 	ServerAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	ServerAddr.sin_port = htons(TCP_SERVERPORT/*수정*/);
+	ServerAddr.sin_port = htons(TCP_SERVERPORT);
 	int retval = bind(m_ListenSock, (SOCKADDR*)&ServerAddr, sizeof(ServerAddr));
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitTCPServer Bind() Error");
-
 	}
 
 	retval = listen(m_ListenSock, SOMAXCONN);
-	if (retval == SOCKET_ERROR)
-	{
+	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitTCPServer Listen() Error");
 	}
 
@@ -76,7 +73,6 @@ int CServerFrame::InitUDPServer()
 	m_UDP_Sock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (m_UDP_Sock == INVALID_SOCKET) {
 		m_Error->err_display("ServerFrame::InitUDPServer Sock() Error");
-
 	}
 
 	// bind()
@@ -97,9 +93,8 @@ void CServerFrame::UDP_Socket()
 {
 	while (true)
 	{
-		// move함수
+		// move
 		UpdateMovePos();
-		SendMovePos();
 	}
 }
 
@@ -118,7 +113,7 @@ void CServerFrame::UpdateMovePos()
 	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
 	
 	for (auto& cl : m_mClients) {
-		if (cl.first == move_packet.id) {
+		if (cl.first == static_cast<int>(move_packet.id)) {
 			short x = cl.second.GetPosX();
 			short y = cl.second.GetPosY();
 
@@ -156,12 +151,14 @@ void CServerFrame::LoginServer()
 	// 0일 경우 블로킹 0이아닐경우 논 블로킹
 
 	int iChangeSocketMode = ioctlsocket(m_ListenSock, FIONBIO, &ul_BlockingMode);
-
+	if (iChangeSocketMode == SOCKET_ERROR)
+		m_Error->err_display("CServerFrame::RunServer() changesocket");
 	addrLength = sizeof(clientAddr);
 
 	while (true)
 	{
 		// 이벤트 모드 대기
+
 		clientSock = accept(m_ListenSock, (SOCKADDR*)&clientAddr, &addrLength);
 		if (clientSock == INVALID_SOCKET) {
 			if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -175,9 +172,8 @@ void CServerFrame::LoginServer()
 
 		// 블로킹 모드 변환
 		ul_BlockingMode = Blocking;
-
-		int chagesocket = ioctlsocket(clientSock, FIONBIO, &ul_BlockingMode);
-		if (chagesocket == SOCKET_ERROR)
+		int iChangeSocketMode = ioctlsocket(clientSock, FIONBIO, &ul_BlockingMode);
+		if (iChangeSocketMode == SOCKET_ERROR)
 			m_Error->err_display("CServerFrame::RunServer() changesocket1");
 
 		// 넘버링
@@ -199,10 +195,8 @@ void CServerFrame::LoginServer()
 
 		{
 			// Print client Information
-		/*	printf("\n클라이언트 접속: IP 주소=%s, 포트 번호=%d, id=%d\n",
-				inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), id
+			/*printf("\n클라이언트 접속: IP 주소=%s, 포트 번호=%d, id=%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), id
 			);*/
-
 			// std::cout << "send" << std::endl;
 
 			// ID 전송
@@ -221,12 +215,10 @@ void CServerFrame::LoginServer()
 			CClient client(clientSock, id, clientAddr);
 			m_mClients.emplace(id, client);
 
-
-			
-			//m_hClientsThreads[id] = CreateThread(NULL, 0, /* 워커 스레드 */, (LPVOID)m_mClients[id].GetID(), 0, NULL);
-			//if (NULL == m_hClientsThreads[id]) {
-			//	closesocket(clientSock);
-			//}
+			m_hClientsThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_mClients[id].GetID(), 0, NULL);
+			if (NULL == m_hClientsThreads[id]) {
+				closesocket(clientSock);
+			}
 		}
 	}
 }
@@ -234,9 +226,10 @@ void CServerFrame::LoginServer()
 DWORD __stdcall CServerFrame::Process(LPVOID arg)
 {
 	int user_id = reinterpret_cast<int>(arg);
+	//printf("TCP 접속, ID : %d\n", id);
 
 	SOCKADDR_IN	 Client_Addr;
-	int addrLength = sizeof(Client_Addr);
+	int addrLength;
 
 	addrLength = sizeof(Client_Addr);
 	getpeername(m_mClients[user_id].GetSocket_TCP(), (SOCKADDR*)&Client_Addr, &addrLength);

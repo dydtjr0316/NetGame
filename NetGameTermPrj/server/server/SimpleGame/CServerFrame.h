@@ -23,7 +23,6 @@ public:
 
 	void UDP_Socket();
 	void UpdateMovePos();
-	void SendMovePos();
 
 	static DWORD WINAPI Process(LPVOID arg);
 
