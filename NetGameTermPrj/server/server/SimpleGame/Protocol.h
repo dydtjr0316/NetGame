@@ -51,6 +51,7 @@ struct CS_Move_Packet
 {
 	char size;
 	char type;
+	int id;
 	char dir;
 };
 

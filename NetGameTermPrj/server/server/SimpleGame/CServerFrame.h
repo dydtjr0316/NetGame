@@ -2,9 +2,9 @@
 #include "stdafx.h"
 #include "CError.h"
 #include "CClient.h"
+#include "Player.h"
 #include "Protocol.h"
 #include <unordered_map>
-using namespace std;
 
 class CError;
 class CPlayer;
@@ -46,7 +46,7 @@ private:
 	static SOCKET m_UDP_Sock;
 	static CError* m_Error;
 
-	static unordered_map<int, CClient> m_mClients;
+	static std::unordered_map<int, CClient> m_mClients;
 
 	HANDLE m_hClientsThreads[2];
 };

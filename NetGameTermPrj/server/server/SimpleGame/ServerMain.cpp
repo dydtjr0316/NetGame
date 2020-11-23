@@ -9,6 +9,7 @@ int main()
 	ServerFrame.InitUDPServer();
 
 	ServerFrame.UDP_Socket();
+	ServerFrame.LoginServer();
 
 	return 0;
 }

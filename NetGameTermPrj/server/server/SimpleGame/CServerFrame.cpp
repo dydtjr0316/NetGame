@@ -1,8 +1,9 @@
+#include "stdafx.h"
 #include "CServerFrame.h"
 
 SOCKET	CServerFrame::m_UDP_Sock;
 CError* CServerFrame::m_Error;
-unordered_map <int, CClient> CServerFrame::m_mClients;
+std::unordered_map <int, CClient> CServerFrame::m_mClients;
 
 CServerFrame::CServerFrame()
 {
@@ -94,23 +95,18 @@ void CServerFrame::UpdateMovePos()
 	int addrLength;
 	int retval;
 
-	// 보낼 MovePos Packet
-	SC_Move_Packet move_packet;
-	// 0초기화
-	ZeroMemory(&move_packet, sizeof(SC_Move_Packet));
+	CS_Move_Packet move_packet;
+	ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
 
 	addrLength = sizeof(clientAddr);
-	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
+	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(CS_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
 
 	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
 
-	int id = move_packet.id;
-	float hp = move_packet.hp;
-	short x = move_packet.x;
-	short y = move_packet.y;
+	for (auto& cl : m_mClients) {
+		if (cl.first == move_packet.id) {
 
-	for (auto& client : m_mClients) {
-		if (client.first == id) client.second.SetPos(x, y);
+		}
 	}
 }
 
@@ -210,6 +206,9 @@ DWORD __stdcall CServerFrame::Process(LPVOID arg)
 
 	SOCKADDR_IN	 Client_Addr;
 	int addrLength = sizeof(Client_Addr);
+
+	addrLength = sizeof(Client_Addr);
+	getpeername(m_mClients[user_id].GetSocket_TCP(), (SOCKADDR*)&Client_Addr, &addrLength);
 
 
 

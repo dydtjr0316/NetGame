@@ -13,9 +13,9 @@ CPlayer::~CPlayer()
 
 CPlayer::CPlayer(SOCKET _sock, int _id, SOCKADDR_IN _addr)
 {
-	m_TCP_Socket = _sock;
-	m_iID = _id;
-	m_Addr = _addr;
+	//m_TCP_Socket = _sock;
+	//m_iID = _id;
+	//m_Addr = _addr;
 	
 	// 추가 이니셜라이저
 }
