@@ -50,9 +50,9 @@ struct SC_Client_RedayOK_Packet
 struct CS_Move_Packet
 {
 	char size;
-	char type;
 	int id;
-	char dir;
+	STATE state;
+	STATE head;
 };
 
 struct SC_Move_Packet

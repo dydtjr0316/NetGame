@@ -1,11 +1,12 @@
 #pragma 
 #include "Object.h"
 
+class SERVER;
 class CPlayer :public Object
 {
 public:
-	enum STATE { IDLE,DOWN, UP, RIGHT, LEFT };
-	enum ITEM {NONE,TRIPLE};
+	SERVER* m_server;
+
 public:
 	CPlayer();
 	~CPlayer();

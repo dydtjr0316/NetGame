@@ -57,6 +57,15 @@
     <Filter Include="01CGameObject\03DoorN">
       <UniqueIdentifier>{a7220491-34e0-4875-8ebe-c71ccc11af92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02Server">
+      <UniqueIdentifier>{687346c2-00a5-4874-ad62-ca6695969d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02Server\01TCP">
+      <UniqueIdentifier>{49941451-8815-42e3-82f5-ce3b6c1c46b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02Server\02UDP">
+      <UniqueIdentifier>{e23a1763-724c-48a5-9d9d-09894ee34e21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -110,6 +119,15 @@
     <ClInclude Include="Protocol.h">
       <Filter>99.etc</Filter>
     </ClInclude>
+    <ClInclude Include="CServer.h">
+      <Filter>02Server</Filter>
+    </ClInclude>
+    <ClInclude Include="CTCP.h">
+      <Filter>02Server\01TCP</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDP.h">
+      <Filter>02Server\02UDP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Boss.cpp">
@@ -153,6 +171,15 @@
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>01CGameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CServer.cpp">
+      <Filter>02Server</Filter>
+    </ClCompile>
+    <ClCompile Include="CTCP.cpp">
+      <Filter>02Server\01TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="CUDP.cpp">
+      <Filter>02Server\02UDP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
