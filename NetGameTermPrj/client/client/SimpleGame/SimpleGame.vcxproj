@@ -104,7 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,6 +158,9 @@
     <ClInclude Include="Boss.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CollisonMgr.h" />
+    <ClInclude Include="CServer.h" />
+    <ClInclude Include="CTCP.h" />
+    <ClInclude Include="CUDP.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Hp.h" />
@@ -176,6 +179,9 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CollisonMgr.cpp" />
+    <ClCompile Include="CServer.cpp" />
+    <ClCompile Include="CTCP.cpp" />
+    <ClCompile Include="CUDP.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Hp.cpp" />
     <ClCompile Include="LoadPng.cpp" />
