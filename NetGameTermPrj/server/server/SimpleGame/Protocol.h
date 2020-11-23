@@ -1,4 +1,7 @@
 #pragma once
+#define SERVERTCPPORT 15915
+#define SERVERUDPPORT 51951
+#define SERVERIP "127.0.0.1"
 
 // Logout
 struct CS_Client_Logout_Packet
