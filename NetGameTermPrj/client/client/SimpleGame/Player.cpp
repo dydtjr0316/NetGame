@@ -2,9 +2,11 @@
 #include "Player.h"
 #include <math.h>
 #include "Bullet.h"
+#include "CServer.h"
+
 CPlayer::CPlayer()
 {
-
+	m_server = new SERVER;
 }
 
 CPlayer::~CPlayer()
@@ -238,11 +240,15 @@ void CPlayer::KeyInput(float elapsedInSec)
 	float fAmount = 20.f;
 	m_CurState = IDLE;
 	m_Head = DOWN;
+
+	
 	if (ScnMgr::GetInstance()->m_KeyW)
 	{
 		m_Head = UP;
 		fY += 0.1f;
 		m_CurState = UP;
+
+		//m_server->SendMovePacket(id, m_CurState, m_Head);
 	}
 	if (ScnMgr::GetInstance()->m_KeyS)
 	{
