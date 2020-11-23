@@ -3,6 +3,9 @@
 #define SERVERTCPPORT 15915
 #define SERVERUDPPORT 51951
 #define SERVERIP "127.0.0.1"
+
+SOCKET CTCP::m_Socket;
+
 CTCP::CTCP()
 {
 	m_wsaData = new WSAData;
@@ -43,7 +46,7 @@ int CTCP::recvn(unsigned int s, char* buf, int len, int flags)
 
 		else if (received == 0) {
 			// std::cout << "Too much Clients connecting" << std::endl;
-			closesocket(m_Socket);
+			closesocket((m_Socket));
 			return 0;
 		}
 
