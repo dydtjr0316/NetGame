@@ -1,6 +1,12 @@
 #pragma once
 #pragma pack (push, 1)
 
+constexpr char SC_PACKET_MOVE = 0;
+constexpr char SC_PACKET_ENTER = 1;
+constexpr char SC_PACKET_LOGIN = 2;
+constexpr char SC_PACKET_LEAVE = 3;
+enum STATE { IDLE,DOWN, UP, RIGHT, LEFT };
+
 // Logout
 struct CS_Client_Logout_Packet
 {
@@ -52,7 +58,8 @@ struct CS_Move_Packet
 	char size;
 	char type;
 	int id;
-	char dir;
+	STATE dir;
+	STATE head;
 };
 
 struct SC_Move_Packet
@@ -61,7 +68,7 @@ struct SC_Move_Packet
 	char type;
 	int id;
 	float hp;
-	short x, y;
+	float x, y;
 };
 
 // Attack
@@ -76,7 +83,7 @@ struct SC_Attack_Packet
 	char size;
 	char type;
 	int id;
-	short x, y;
+	float x, y;
 };
 
 // Boss
@@ -84,7 +91,6 @@ struct CS_Boss_Move_Packet
 {
 	char size;
 	char type;
-	float hp;
 };
 
 struct CS_Boss_Attack_Packet
@@ -99,7 +105,7 @@ struct SC_Boss_Move_Packet
 	char type;
 	int id;
 	float hp;
-	short x, y;
+	float x, y;
 };
 
 struct SC_Boss_Attack_Packet
@@ -107,7 +113,7 @@ struct SC_Boss_Attack_Packet
 	char size;
 	char type;
 	int id;
-	short x, y;
+	float x, y;
 };
 
 #pragma pack (pop)

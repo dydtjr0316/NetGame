@@ -49,3 +49,7 @@
 
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
+
+// 화면 크기
+#define WIDTH 800
+#define HEIGHT 600

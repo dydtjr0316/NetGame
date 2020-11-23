@@ -105,14 +105,31 @@ void CServerFrame::UpdateMovePos()
 
 	for (auto& cl : m_mClients) {
 		if (cl.first == move_packet.id) {
+			short x = cl.second.GetPosX();
+			short y = cl.second.GetPosY();
 
+			char dir = move_packet.dir;
+			switch (dir) {
+			case MOVE_UP: if (y > 0) y = y - 0.1f; break;
+			case MOVE_DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
+			case MOVE_LEFT: if (x > 0) x = x - 0.1f; break;
+			case MOVE_RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
+			default: while (true);
+			}
+			cl.second.SetPos(x, y);
+
+			SC_Move_Packet update_packet;
+			ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
+
+			update_packet.id = cl.first;
+			update_packet.size = sizeof(update_packet);
+			update_packet.type = SC_PACKET_MOVE;
+			update_packet.x = x;
+			update_packet.y = y;
+
+			retval = sendto(cl.second.GetSocket_UDP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, addrLength);
 		}
 	}
-}
-
-void CServerFrame::SendMovePos()
-{
-
 }
 
 void CServerFrame::LoginServer()
