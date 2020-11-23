@@ -49,6 +49,7 @@ private:
 	// Client Data
 	char	m_cNickName[32];
 
+	int		m_PlayerId;
 	int		m_iPlayerHp;
 	int		m_iBossHp;
 

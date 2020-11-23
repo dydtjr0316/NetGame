@@ -59,7 +59,7 @@ struct SC_Move_Packet
 	char type;
 	int id;
 	float hp;
-	short x, y, z;
+	short x, y;
 };
 
 // Attack
@@ -74,7 +74,7 @@ struct SC_Attack_Packet
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	short x, y;
 };
 
 // Boss
@@ -97,7 +97,7 @@ struct SC_Boss_Move_Packet
 	char type;
 	int id;
 	float hp;
-	short x, y, z;
+	short x, y;
 };
 
 struct SC_Boss_Attack_Packet
@@ -105,5 +105,5 @@ struct SC_Boss_Attack_Packet
 	char size;
 	char type;
 	int id;
-	short x, y, z;
+	short x, y;
 };

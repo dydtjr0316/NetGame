@@ -8,6 +8,7 @@ int main()
 	ServerFrame.InitTCPServer();
 	ServerFrame.InitUDPServer();
 
+	ServerFrame.UDP_Socket();
 
 	return 0;
 }

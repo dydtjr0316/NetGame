@@ -1,10 +1,8 @@
-#include "stdafx.h"
 #include "CServerFrame.h"
-#include "CError.h"
-#include "Player.h"
 
 SOCKET	CServerFrame::m_UDP_Sock;
 CError* CServerFrame::m_Error;
+unordered_map <int, CClient> CServerFrame::m_mClients;
 
 CServerFrame::CServerFrame()
 {
@@ -15,6 +13,9 @@ CServerFrame::~CServerFrame()
 {
 	// 플레이어, 보스 등 
 	// 댕글링 포인터 안나오게 삭제
+	closesocket(m_ListenSock);
+
+	WSACleanup();
 }
 
 int CServerFrame::InitTCPServer()
@@ -77,14 +78,13 @@ int CServerFrame::InitUDPServer()
 	return 1;
 }
 
-DWORD __stdcall CServerFrame::UDP_Thread(LPVOID arg)
+void CServerFrame::UDP_Socket()
 {
 	while (true)
 	{
 		// move함수
 		UpdateMovePos();
 	}
-	return 1;
 }
 
 void CServerFrame::UpdateMovePos()
@@ -94,8 +94,22 @@ void CServerFrame::UpdateMovePos()
 	int retval;
 
 	// 보낼 MovePos Packet
+	SC_Move_Packet move_packet;
 	// 0초기화
+	ZeroMemory(&move_packet, sizeof(SC_Move_Packet));
 	// 전송
+	addrLength = sizeof(clientAddr);
+	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
+
+	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
+
+	int id = move_packet.id;
+	float hp = move_packet.hp;
+	short x = move_packet.x;
+	short y = move_packet.y;
+	short z = move_packet.z;
+
+	for (auto& client : )
 }
 
 void CServerFrame::LoginServer()

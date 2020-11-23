@@ -23,9 +23,10 @@ public:
 
 private:
 	// NetWorking
-	SOCKET m_TCP_Socket;
-	SOCKADDR_IN m_Addr;
-	int m_iID;
+	//SOCKET m_TCP_Socket;
+	//SOCKADDR_IN m_Addr;
+	//int m_iID;
+
 private:
 	float m_MaxFrame = 0.f;
 	float m_Frame = 0.f;
@@ -47,5 +48,4 @@ private:
 private:
 	int m_iBulletSound = -1;
 	int m_iDamageSound = -1;
-
 };

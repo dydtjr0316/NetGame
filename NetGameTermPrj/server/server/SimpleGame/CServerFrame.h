@@ -1,4 +1,10 @@
 #pragma once
+#include "stdafx.h"
+#include "CError.h"
+#include "CClient.h"
+#include "Protocol.h"
+#include <unordered_map>
+using namespace std;
 
 class CError;
 class CPlayer;
@@ -15,8 +21,8 @@ public:
 
 	void LoginServer();
 
-	static DWORD WINAPI UDP_Thread(LPVOID arg);
-	static void UpdateMovePos();
+	void UDP_Socket();
+	void UpdateMovePos();
 
 	static DWORD WINAPI Process(LPVOID arg);
 
@@ -39,7 +45,7 @@ private:
 	static SOCKET m_UDP_Sock;
 	static CError* m_Error;
 
-	unordered_map<int, CPlayer> m_mClients;
+	static unordered_map<int, CClient> m_mClients;
 
 	HANDLE m_hClientsThreads[2];
 };
