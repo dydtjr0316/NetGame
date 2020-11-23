@@ -51,6 +51,6 @@ void CUDP::ConnectUDP(const char* ip)
 	cout << "Complete : UDP Connect" << endl;
 }
 
-void CUDP::Mover(char, float, float)
+void CUDP::Move(char, float, float)
 {
 }
