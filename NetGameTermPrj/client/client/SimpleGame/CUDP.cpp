@@ -4,6 +4,7 @@
 // 지우기
 // 지우기
 
+SOCKET CUDP::m_Socket;
 //#include "Protocol.h"
 CUDP::CUDP()
 {
@@ -63,7 +64,10 @@ void CUDP::Move(char id, STATE state, STATE head)
 	packet.id = id;
 	packet.state = state;
 	packet.head = head;
+	// 여기하던중
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
 	if (retval == SOCKET_ERROR)		
-		err_quit("[UDP Send Error]");
+		err_quit("[여기니?]");
+
+	cout << "보낸다?" << endl;
 }

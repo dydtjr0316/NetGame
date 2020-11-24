@@ -75,7 +75,7 @@ int CTCP::ConnectTCP(const char* ip)
 
 	cout << "TCP소켓 : " << m_Socket << endl;
 
-	printf("\n서버 연결: IP 주소=%s, 포트 번호=%d \n",
+	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
 
 
@@ -83,7 +83,7 @@ int CTCP::ConnectTCP(const char* ip)
 
 
 	
-	cout << "ID : " << m_iid << endl;
+	cout << "ID : " << m_iid << endl << endl;
 
 
 	return m_iid;

@@ -26,6 +26,8 @@ public:
 	int ConnectTCP(const char*);
 	int RecvMyID();
 
+	int GetID() { return m_iid; }
+
 	void ClickMouse(char, float, float);
 
 	void CreateRecvThread();

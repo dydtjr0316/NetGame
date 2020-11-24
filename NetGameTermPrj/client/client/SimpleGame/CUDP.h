@@ -3,7 +3,7 @@
 
 class CUDP {
 	WSAData* m_wsaData;
-	SOCKET m_Socket;
+	static SOCKET m_Socket;
 	sockaddr_in* m_Serveraddr;
 
 public:

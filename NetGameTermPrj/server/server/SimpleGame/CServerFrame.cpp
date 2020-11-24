@@ -123,6 +123,15 @@ void CServerFrame::UpdateMovePos()
 	addrLength = sizeof(clientAddr);
 	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(CS_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
 
+
+	cout <<"id : " << move_packet.id << endl;
+	cout << move_packet.size << endl;
+	cout << move_packet.state << endl;
+	cout << move_packet.head << endl;
+
+
+
+
 	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
 	
 	for (auto& cl : m_mClients) {

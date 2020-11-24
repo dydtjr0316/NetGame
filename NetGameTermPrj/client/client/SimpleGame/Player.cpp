@@ -9,7 +9,7 @@
 CPlayer::CPlayer()
 {
 	m_server = new SERVER;
-	m_id = m_server->ConnectServer();
+	m_id = m_server->GetID();
 
 }
 

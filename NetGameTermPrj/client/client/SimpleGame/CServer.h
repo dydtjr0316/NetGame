@@ -14,6 +14,9 @@ public:
 	SERVER();
 	virtual ~SERVER();
 
+
+	int GetID();
+
 	void SetState(int);
 	int GetState();
 
