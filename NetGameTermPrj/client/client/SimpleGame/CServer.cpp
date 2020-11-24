@@ -27,5 +27,8 @@ int SERVER::ConnectServer()
 	int id = m_tcp->ConnectTCP("127.0.0.1");
 	m_pUdp->ConnectUDP("127.0.0.1");
 
+	//int id = m_tcp->ConnectTCP("127.0.0.1");
+	//m_pUdp->ConnectUDP("127.0.0.1");
+
 	return id;
 }

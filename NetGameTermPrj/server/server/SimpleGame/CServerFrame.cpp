@@ -63,6 +63,13 @@ int CServerFrame::InitTCPServer()
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitTCPServer Listen() Error");
 	}
+	else
+	{
+		cout << "TCP연결된건가?" << endl;
+	}
+
+
+
 
 	return 1;
 }
@@ -85,6 +92,10 @@ int CServerFrame::InitUDPServer()
 	if (retval == SOCKET_ERROR) {
 		m_Error->err_display("ServerFrame::InitUDPServer Sock() Error");
 	}
+	else
+	{
+		cout << "UDP연결된건가?" << endl;
+	}
 
 	return 1;
 }
@@ -103,6 +114,8 @@ void CServerFrame::UpdateMovePos()
 	SOCKADDR_IN clientAddr;
 	int addrLength;
 	int retval;
+
+	LoginServer();
 
 	CS_Move_Packet move_packet;
 	ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
@@ -199,8 +212,13 @@ void CServerFrame::LoginServer()
 			);*/
 			// std::cout << "send" << std::endl;
 
+
+			cout << id << endl;
 			// ID 전송
 			int retval = send(clientSock, (char*)&id, sizeof(int), 0);
+
+			cout << "id 전송" << endl;
+
 			if (SOCKET_ERROR == retval) {
 				/*if (WSAGetLastError() == WSAEWOULDBLOCK) {
 					continue;
@@ -220,6 +238,8 @@ void CServerFrame::LoginServer()
 				closesocket(clientSock);
 			}
 		}
+
+		if (id == 1)break;
 	}
 }
 

@@ -3,9 +3,7 @@
 
 // 지우기
 // 지우기
-#define SERVERTCPPORT 15915
-#define SERVERUDPPORT 51951
-#define SERVERIP "127.0.0.1"
+
 //#include "Protocol.h"
 CUDP::CUDP()
 {
@@ -44,11 +42,17 @@ void CUDP::ConnectUDP(const char* ip)
 	ZeroMemory(&(*m_Serveraddr), sizeof((*m_Serveraddr)));
 	m_Serveraddr->sin_family = AF_INET;
 	m_Serveraddr->sin_addr.s_addr = inet_addr(ip);
-	m_Serveraddr->sin_port = htons(SERVERUDPPORT);
+	m_Serveraddr->sin_port = htons(UDP_SERVERPORT);
 	int retval = connect(m_Socket, (SOCKADDR*)&(*m_Serveraddr), sizeof((*m_Serveraddr)));
 	if (retval == SOCKET_ERROR)		err_quit("[UDP Connect Error]");
 
-	cout << "Complete : UDP Connect" << endl;
+
+	cout << "UDP소켓 : " << m_Socket << endl;
+	printf("\n서버 연결: IP 주소=%s, 포트 번호=%d \n",
+		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
+
+
+
 }
 
 void CUDP::Move(char id, STATE state, STATE head)

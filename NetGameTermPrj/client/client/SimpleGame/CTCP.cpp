@@ -10,7 +10,6 @@ CTCP::CTCP()
 {
 	m_wsaData = new WSAData;
 	m_Serveraddr = new sockaddr_in;
-
 }
 
 CTCP::~CTCP()
@@ -68,27 +67,37 @@ int CTCP::ConnectTCP(const char* ip)
 	ZeroMemory(&(*m_Serveraddr), sizeof((*m_Serveraddr)));
 	m_Serveraddr->sin_family = AF_INET;
 	m_Serveraddr->sin_addr.s_addr = inet_addr(ip);
-	m_Serveraddr->sin_port = htons(SERVERTCPPORT);
+	m_Serveraddr->sin_port = htons(TCP_SERVERPORT);
 
 	int retval = connect(m_Socket, (SOCKADDR*)&(*m_Serveraddr), sizeof((*m_Serveraddr)));
-	if (retval == SOCKET_ERROR)		err_quit("connect()");
+	if (retval == SOCKET_ERROR)		
+		err_quit("connect()");
+
+	cout << "TCP소켓 : " << m_Socket << endl;
+
+	cout << "1" << endl;
 
 	printf("\n서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
 
+	cout << "2" << endl;
+
+	int id = RecvMyID();
+	
+	cout << "ID : " << id << endl;
 
 
-	return RecvMyID();
+	return id;
 }
 
 int CTCP::RecvMyID()
 {
 	int id = 0;
 
+	bool IsLogin = true;
 	int retval = recvn((SOCKET)m_Socket, (char*)&id, sizeof(int), 0);
 	if (retval <= 0) err_quit("[RECV Error] ID \n");
 
-	bool IsLogin = true;
 
 
 	return id;
