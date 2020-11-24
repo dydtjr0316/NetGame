@@ -5,6 +5,10 @@ class CTCP {
 	WSAData* m_wsaData;
 	static SOCKET m_Socket;
 	sockaddr_in* m_Serveraddr;
+	int m_iid =-1;
+
+
+
 	//static PacketFrameState framepacket;
 	//static PacketReadyStateServerToClient lobbypacket;
 	//static PacketLoginOK loginpacket;

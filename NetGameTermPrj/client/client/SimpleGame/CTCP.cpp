@@ -75,30 +75,30 @@ int CTCP::ConnectTCP(const char* ip)
 
 	cout << "TCP소켓 : " << m_Socket << endl;
 
-	cout << "1" << endl;
-
 	printf("\n서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
 
-	cout << "2" << endl;
 
-	int id = RecvMyID();
+	m_iid = RecvMyID();
+
+
 	
-	cout << "ID : " << id << endl;
+	cout << "ID : " << m_iid << endl;
 
 
-	return id;
+	return m_iid;
 }
 
 int CTCP::RecvMyID()
 {
-	int id = 0;
+	if (m_iid < 0) {
 
-	bool IsLogin = true;
-	int retval = recvn((SOCKET)m_Socket, (char*)&id, sizeof(int), 0);
-	if (retval <= 0) err_quit("[RECV Error] ID \n");
+		bool IsLogin = true;
+		int retval = recvn((SOCKET)m_Socket, (char*)&m_iid, sizeof(int), 0);
+		if (retval <= 0) err_quit("[RECV Error] ID \n");
+	}
 
 
 
-	return id;
+	return m_iid;
 }

@@ -3,14 +3,19 @@
 #include <math.h>
 #include "Bullet.h"
 #include "CServer.h"
+#include "CTCP.h"
+
 
 CPlayer::CPlayer()
 {
 	m_server = new SERVER;
+	m_id = m_server->ConnectServer();
+
 }
 
 CPlayer::~CPlayer()
 {
+
 }
 
 int CPlayer::Update(float elapsedInSec)
@@ -30,7 +35,6 @@ int CPlayer::Update(float elapsedInSec)
 
 	KeyInput(elapsedInSec);
 	Shooting();
-	//cout <<"X:"<< m_posX*100.f <<"y:"<<m_posY*100.f<< endl;
 	if(m_blsDamaged==false)
 	CollisionCheck();
 	int Collision=MapCollisionCheck(&m_posX, &m_posY);
@@ -67,11 +71,7 @@ void CPlayer::Render()
 	b = m_b;
 	a = m_a;
 
-	//ScnMgr::GetInstance()->m_Renderer->DrawSolidRectGauge(x, y, z,
-	//	0, sy / 2.f, 0,
-	//	sx, 5, 0,
-	//	1, 0, 0, 1,
-	//	100.f);
+
 	static float temp = 0;
 	if (m_CurState != LEFT)			temp += 0.2f;
 	else
@@ -215,8 +215,6 @@ void CPlayer::Shooting()
 		vBulletY *= bulletVel;
 		vBulletZ *= bulletVel;
 
-	
-
 		CBullet* pObj = new CBullet;
 
 
@@ -269,6 +267,8 @@ void CPlayer::KeyInput(float elapsedInSec)
 		m_CurState = RIGHT;
 
 	}
+
+
 
 	m_server->SendMovePacket(m_id, m_CurState, m_Head);
 

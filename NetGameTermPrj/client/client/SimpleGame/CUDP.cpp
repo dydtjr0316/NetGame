@@ -48,10 +48,10 @@ void CUDP::ConnectUDP(const char* ip)
 
 
 	cout << "UDP소켓 : " << m_Socket << endl;
-	printf("\n서버 연결: IP 주소=%s, 포트 번호=%d \n",
+	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
 
-
+	cout << endl;
 
 }
 

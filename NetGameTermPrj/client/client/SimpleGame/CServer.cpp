@@ -15,6 +15,14 @@ SERVER::~SERVER()
 	delete m_pUdp;
 }
 
+int SERVER::GetID()
+{
+	int id = m_tcp->GetID();
+	return id;
+}
+
+
+
 
 
 void SERVER::SendMovePacket(char id, STATE state, STATE head)
