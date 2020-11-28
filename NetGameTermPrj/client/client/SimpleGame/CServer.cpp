@@ -94,3 +94,30 @@ int SERVER::RecvMyID()
 
 	return m_id;
 }
+
+void SERVER::SendMovePacket(char id, float x, float y)
+{
+	CS_Move_Packet packet;
+
+	packet.size = sizeof(CS_Move_Packet);
+	packet.id = id;
+	packet.x = x;
+	packet.y = y;
+
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+
+	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
+
+	cout << "send move packet (" << packet.x << ", " << packet.y << ", " << packet.id << endl;
+}
+
+CS_Move_Packet SERVER::RecvMovePacket()
+{
+	CS_Move_Packet packet;
+
+	int retval = recvn((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	if (retval <= 0) err_quit(" SERVER::RecvMyID()");
+
+
+	return packet;
+}
