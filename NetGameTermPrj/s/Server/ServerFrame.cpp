@@ -20,24 +20,18 @@ ServerFrame::~ServerFrame()
 	WSACleanup();
 }
 
-void ServerFrame::err_quit(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, WSAGetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPCWSTR)lpMsgBuf, (LPCWSTR)msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(1);
-}
-
 void ServerFrame::err_display(const char* msg)
 {
-	LPVOID lpMsgBuf;
+	WCHAR* lpMsgBuf;
 	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL, WSAGetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(LPTSTR)&lpMsgBuf, 0, NULL);
-	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
+	std::cout << msg;
+	std::wcout << L"¿¡·¯ " << lpMsgBuf << std::endl;
+	while (true);
 	LocalFree(lpMsgBuf);
 }
 
@@ -49,7 +43,7 @@ int ServerFrame::InitTCPServer()
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)	return -1;
 
 	m_sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_sock == INVALID_SOCKET) err_display("InitTCPServer() -> socket() Error");
+	if (m_sock == INVALID_SOCKET) err_display("InitTCPServer() -> socket()");
 
 	SOCKADDR_IN Server_Addr;
 	ZeroMemory(&Server_Addr, sizeof(Server_Addr));
@@ -57,10 +51,10 @@ int ServerFrame::InitTCPServer()
 	Server_Addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	Server_Addr.sin_port = htons(TCP_SERVERPORT);
 	int ret = bind(m_sock, (SOCKADDR*)&Server_Addr, sizeof(Server_Addr));
-	if (ret == SOCKET_ERROR) err_display("InitTCPServer() -> bind() Error");
+	if (ret == SOCKET_ERROR) err_display("InitTCPServer() -> bind()");
 
 	ret = listen(m_sock, SOMAXCONN);
-	if (ret == SOCKET_ERROR) err_display("InitTCPServer() -> listen() Error");
+	if (ret == SOCKET_ERROR) err_display("InitTCPServer() -> listen()");
 
 	return 1;
 }
@@ -73,10 +67,7 @@ void ServerFrame::LoginServer()
 
 	while (true) {
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
-		if (clientSock == INVALID_SOCKET) {
-			if (WSAGetLastError() == WSAEWOULDBLOCK) continue;
-			else err_display("LoginServer() -> accept() Error");
-		}
+		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
 
 		int id = 2;
 		for (int i = 0; i < id; ++i) {
@@ -92,14 +83,14 @@ void ServerFrame::LoginServer()
 		}
 
 		int ret = send(clientSock, (char*)&id, sizeof(int), 0);
-		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send() Error");
+		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send()");
 
 		Client client(clientSock, id, clientAddr);
 		m_Clients.emplace(id, client);
 
 		u_id = id;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
-		if (NULL == m_hCThreads[id]) closesocket(clientSock);		
+		if (NULL == m_hCThreads[id]) closesocket(clientSock);
 	}
 
 	LobbyServer(u_id);
@@ -139,7 +130,7 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 
 		int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
 		if (ret == SOCKET_ERROR || ret == 0) {
-			err_display("Process() -> recv() : login Error");
+			err_display("Process() -> recv() : login");
 			closesocket(m_Clients[id].GetSock_TCP());
 			m_Clients.erase(id);
 			return 0;
@@ -203,7 +194,7 @@ void ServerFrame::UpdateMove(int id)
 
 	addrlen = sizeof(clientAddr);
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv() Error");
+	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
 
 	float x = m_Clients[id].GetX();
 	float y = m_Clients[id].GetY();
@@ -228,7 +219,7 @@ void ServerFrame::UpdateMove(int id)
 	update_packet.size = sizeof(update_packet);
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send() Error");
+	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
 }
 
 void ServerFrame::UpdateStatus()
