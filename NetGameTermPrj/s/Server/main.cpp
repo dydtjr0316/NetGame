@@ -7,8 +7,6 @@ int main()
 {
 	server.InitTCPServer();
 
-	server.CreateMoveThread();
-
 	server.LoginServer();
 
 	//server.InGameServer();

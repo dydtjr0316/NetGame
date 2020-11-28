@@ -15,12 +15,12 @@ public:
 	int InitTCPServer();
 
 	void LoginServer();
-	void LobbyServer();
+	void LobbyServer(int id);
 	void InGameServer();
 
 	static DWORD WINAPI Process(LPVOID arg);
 
-	void CreateMoveThread();
+	void CreateMoveThread(int id);
 	static DWORD WINAPI MOVEThread(LPVOID arg);
 	static void UpdateMove(int id);
 
