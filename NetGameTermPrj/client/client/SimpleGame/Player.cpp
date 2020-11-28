@@ -233,7 +233,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 {
 	m_blsCanShoot = false;
 	float fX, fY, fZ;
-	fX = fY = fZ = 0.1f;
+	fX = fY = fZ = 0.0f;
 	float fAmount = 20.f;
 	m_CurState = IDLE;
 	m_Head = DOWN;

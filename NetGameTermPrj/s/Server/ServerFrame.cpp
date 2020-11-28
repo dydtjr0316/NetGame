@@ -66,6 +66,8 @@ void ServerFrame::LoginServer()
 	int addrlen, u_id;
 
 	while (true) {
+		addrlen = sizeof(clientAddr);
+		
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
 

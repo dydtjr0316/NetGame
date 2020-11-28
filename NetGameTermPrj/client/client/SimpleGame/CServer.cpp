@@ -60,28 +60,42 @@ int SERVER::recvn(unsigned int s, char* buf, int len, int flags)
 
 int SERVER::ConnectTCP(const char* ip)
 {
-	if (WSAStartup(MAKEWORD(2, 2), &(*m_wsaData)) != 0)
+	if (WSAStartup(MAKEWORD(2, 2), &(m_wsaData)) != 0)
 		return -1;
 
 	m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_Socket == INVALID_SOCKET)	err_quit("socket()");
 
-	ZeroMemory(&(*m_Serveraddr), sizeof((*m_Serveraddr)));
-	m_Serveraddr->sin_family = AF_INET;
-	m_Serveraddr->sin_addr.s_addr = inet_addr(ip);
-	m_Serveraddr->sin_port = htons(TCP_SERVERPORT);
+	ZeroMemory(&(m_Serveraddr), sizeof((m_Serveraddr)));
+	m_Serveraddr.sin_family = AF_INET;
+	m_Serveraddr.sin_addr.s_addr = inet_addr(ip);
+	m_Serveraddr.sin_port = htons(TCP_SERVERPORT);
 
-	int retval = connect(m_Socket, (SOCKADDR*)&(*m_Serveraddr), sizeof((*m_Serveraddr)));
+	int retval = connect(m_Socket, (SOCKADDR*)&(m_Serveraddr), sizeof((m_Serveraddr)));
 	if (retval == SOCKET_ERROR)
 		err_quit("connect()");
 
 	cout << "TCP소켓 : " << m_Socket << endl;
 
 	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
-		inet_ntoa(m_Serveraddr->sin_addr), ntohs(m_Serveraddr->sin_port));
+		inet_ntoa(m_Serveraddr.sin_addr), ntohs(m_Serveraddr.sin_port));
 
 
 	m_id = RecvMyID();
+
+	// send login packet
+
+	CS_Client_Login_Packet packet;
+	packet.size = sizeof(packet);
+	packet.type = 0;
+	packet.nickname = "박선윤";
+
+	retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+
+	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
+
+
+
 
 	cout << "ID : " << m_id << endl << endl;
 

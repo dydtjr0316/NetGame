@@ -9,9 +9,9 @@ private:
 
 // tcp
 private:
-	WSAData* m_wsaData;
+	WSAData m_wsaData;
 	static SOCKET m_Socket;
-	sockaddr_in* m_Serveraddr;
+	sockaddr_in m_Serveraddr;
 	int m_id = 0;
 
 
