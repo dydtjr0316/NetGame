@@ -137,11 +137,14 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 			m_Clients.erase(id);
 			return 0;
 		}
-
-		m_Clients[id].SetNickname(login_packet.nickname);
+		string tenp;
+		tenp.push_back(login_packet.nickname);
+		m_Clients[id].SetNickname(tenp);
 
 		int nick_size = m_nick.size();
-		m_nick.insert(login_packet.nickname);
+
+		m_nick.insert( tenp);
+		//m_nick.insert(login_packet.nickname);
 
 		SC_Client_LoginOK_Packet loginok_packet;
 		loginok_packet.size = sizeof(SC_Client_LoginOK_Packet);

@@ -49,7 +49,7 @@ struct CS_Client_Login_Packet
 {
 	char size;
 	char type;
-	string nickname;
+	char nickname;
 };
 
 struct SC_Client_LoginOK_Packet

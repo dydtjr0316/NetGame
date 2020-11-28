@@ -88,7 +88,7 @@ int SERVER::ConnectTCP(const char* ip)
 	CS_Client_Login_Packet packet;
 	packet.size = sizeof(packet);
 	packet.type = 0;
-	packet.nickname = "¹Ú¼±À±";
+	packet.nickname = 'd';
 
 	retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
 
