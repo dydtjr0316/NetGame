@@ -283,7 +283,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
 
-	m_server->SendMovePacket(m_id, m_posX, m_posY);
+	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState);
 
 
 	if (Shoot)

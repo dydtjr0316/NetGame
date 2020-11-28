@@ -97,7 +97,7 @@ int SERVER::RecvMyID()
 	return m_id;
 }
 
-void SERVER::SendMovePacket(char id, float x, float y)
+void SERVER::SendMovePacket(char id, float x, float y, char type)
 {
 	CS_Move_Packet packet;
 
@@ -105,6 +105,7 @@ void SERVER::SendMovePacket(char id, float x, float y)
 	packet.id = id;
 	packet.x = x;
 	packet.y = y;
+	packet.type = type;
 
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
 

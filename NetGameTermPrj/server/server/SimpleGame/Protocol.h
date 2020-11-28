@@ -55,6 +55,7 @@ struct SC_Client_RedayOK_Packet
 struct CS_Move_Packet
 {
 	char size;
+	char type;
 	int id;
 	float x, y;
 };
@@ -62,6 +63,7 @@ struct CS_Move_Packet
 struct SC_Move_Packet
 {
 	char size;
+	char type;
 	int id;
 	float x, y;
 };
