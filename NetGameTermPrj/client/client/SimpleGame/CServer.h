@@ -20,6 +20,7 @@ public:
 	SERVER();
 	virtual ~SERVER();
 	int ConnectServer();
+	int GetID() { return m_id; }
 
 	// tcp
 	static void err_quit(const char*);
@@ -28,7 +29,6 @@ public:
 	int ConnectTCP(const char*);
 	int RecvMyID();
 
-	int GetID() { return m_id; }
 
 	void SendMovePacket(char id, STATE state, STATE head, float x, float y);
 	void RecvMovePacket(float &x, float &y, CS_Move_Packet& move);
