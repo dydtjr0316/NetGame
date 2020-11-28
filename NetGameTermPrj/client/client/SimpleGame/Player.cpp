@@ -3,7 +3,6 @@
 #include <math.h>
 #include "Bullet.h"
 #include "CServer.h"
-#include "CTCP.h"
 
 
 CPlayer::CPlayer()
@@ -234,7 +233,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 {
 	m_blsCanShoot = false;
 	float fX, fY, fZ;
-	fX = fY = fZ = 0.f;
+	fX = fY = fZ = 0.1f;
 	float fAmount = 20.f;
 	m_CurState = IDLE;
 	m_Head = DOWN;
@@ -281,9 +280,12 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
-
+	CS_Move_Packet cs;
 	m_server->SendMovePacket(m_id, m_CurState, m_Head, fX, fY);
+	m_server->RecvMovePacket(fX, fY, cs);
+	
 
+	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
 
 
 	if (Shoot)

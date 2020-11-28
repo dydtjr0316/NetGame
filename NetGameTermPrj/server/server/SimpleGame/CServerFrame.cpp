@@ -130,61 +130,61 @@ void CServerFrame::UpdateMovePos()
 	cout << move_packet.state << endl;
 	cout << move_packet.head << endl;
 
-	CS_Move_Packet& mover = move_packet;
+	//CS_Move_Packet mover = move_packet;
+	
 
 
 
-	switch (mover.state)
+	switch (move_packet.state)
 	{
 	case UP:
-		mover.y += 0.1f;
+		move_packet.y += 0.1f;
 		break;
 	case DOWN:
-		mover.y -= 0.1f;
+		move_packet.y -= 0.1f;
 		break;
 	case RIGHT:
-		mover.x += 0.1f;
+		move_packet.x += 0.1f;
 		break;
 	case LEFT:
-		mover.x -= 0.1f;
+		move_packet.x -= 0.1f;
 		break;
 	default:
 		break;
 	}
-
-	m_clients[mover.id].SetPos(mover.x, mover.y);
-	m_clients[mover.id].SetHead_n_State(mover.state, mover.head);
+	m_clients[move_packet.id].SetPos(move_packet.x, move_packet.y);
+	m_clients[move_packet.id].SetHead_n_State(move_packet.state, move_packet.head);
 	
-	retval = sendto(m_clients[mover.id].GetSocket_UDP(), (char*)&mover, sizeof(mover), 0, (SOCKADDR*)&clientAddr, addrLength);
+	retval = sendto(m_clients[move_packet.id].GetSocket_UDP(), (char*)&move_packet, sizeof(move_packet), 0, (SOCKADDR*)&clientAddr, addrLength);
 
 	
-	for (auto& cl : m_mClients) {
-		if (cl.first == static_cast<int>(move_packet.id)) {
-			short x = cl.second.GetPosX();
-			short y = cl.second.GetPosY();
+	//for (auto& cl : m_mClients) {
+	//	if (cl.first == static_cast<int>(move_packet.id)) {
+	//		short x = cl.second.GetPosX();
+	//		short y = cl.second.GetPosY();
 
-			char dir = move_packet.state;
-			switch (dir) {
-			case UP: if (y > 0) y = y - 0.1f; break;
-			case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-			case LEFT: if (x > 0) x = x - 0.1f; break;
-			case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
-			default: while (true);
-			}
-			cl.second.SetPos(x, y);
+	//		char dir = move_packet.state;
+	//		switch (dir) {
+	//		case UP: if (y > 0) y = y - 0.1f; break;
+	//		case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
+	//		case LEFT: if (x > 0) x = x - 0.1f; break;
+	//		case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
+	//		default: while (true);
+	//		}
+	//		cl.second.SetPos(x, y);
 
-			SC_Move_Packet update_packet;
-			ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
+	//		SC_Move_Packet update_packet;
+	//		ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
 
-			update_packet.id = cl.first;
-			update_packet.size = sizeof(update_packet);
-			//update_packet.type = SC_PACKET_MOVE;
-			update_packet.x = x;
-			update_packet.y = y;
+	//		update_packet.id = cl.first;
+	//		update_packet.size = sizeof(update_packet);
+	//		//update_packet.type = SC_PACKET_MOVE;
+	//		update_packet.x = x;
+	//		update_packet.y = y;
 
-			retval = sendto(cl.second.GetSocket_UDP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, addrLength);
-		}
-	}
+	//		retval = sendto(cl.second.GetSocket_UDP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, addrLength);
+	//	}
+	//}
 
 
 }
