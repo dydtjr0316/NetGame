@@ -14,7 +14,7 @@ public:
 
 	void ConnectUDP(const char* ip);
 
-	void Move(char id, STATE state, STATE head);
+	void Move(char id, STATE state, STATE head, float x, float y);
 
 
 };

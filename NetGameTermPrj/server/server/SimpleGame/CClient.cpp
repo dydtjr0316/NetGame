@@ -52,6 +52,12 @@ void CClient::SetPos(float x, float y)
 	m_fPosY = y;
 }
 
+void CClient::SetHead_n_State(STATE curstate, STATE head)
+{
+	m_CurState = curstate;
+	m_Head = head;
+}
+
 void CClient::SetIsReady(bool ready)
 {
 	m_bisReady = ready;

@@ -38,6 +38,6 @@ public:
 	void SendCanUseNicknameClientToServer(const char* nickname);
 	//
 
-	void SendMovePacket(char id, STATE state, STATE head);
+	void SendMovePacket(char id, STATE state, STATE head, float x, float y);
 };
 

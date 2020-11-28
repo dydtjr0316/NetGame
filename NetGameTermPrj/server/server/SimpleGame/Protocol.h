@@ -56,6 +56,7 @@ struct CS_Move_Packet
 {
 	char size;
 	int id;
+	float x, y;
 	STATE state;
 	STATE head;
 };
@@ -63,9 +64,7 @@ struct CS_Move_Packet
 struct SC_Move_Packet
 {
 	char size;
-	char type;
 	int id;
-	float hp;
 	float x, y;
 };
 

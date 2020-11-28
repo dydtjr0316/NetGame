@@ -98,7 +98,5 @@ int CTCP::RecvMyID()
 		if (retval <= 0) err_quit("[RECV Error] ID \n");
 	}
 
-
-
 	return m_iid;
 }

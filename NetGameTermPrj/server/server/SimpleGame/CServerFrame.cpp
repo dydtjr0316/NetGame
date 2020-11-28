@@ -122,6 +122,7 @@ void CServerFrame::UpdateMovePos()
 
 	addrLength = sizeof(clientAddr);
 	retval = recvfrom(m_UDP_Sock, (char*)&move_packet, sizeof(CS_Move_Packet), 0, (SOCKADDR*)&clientAddr, &addrLength);
+	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
 
 
 	cout <<"id : " << move_packet.id << endl;
@@ -129,10 +130,33 @@ void CServerFrame::UpdateMovePos()
 	cout << move_packet.state << endl;
 	cout << move_packet.head << endl;
 
+	CS_Move_Packet& mover = move_packet;
 
 
 
-	if (retval == SOCKET_ERROR) m_Error->err_display("recvfrom() UpdateMovePos()");
+	switch (mover.state)
+	{
+	case UP:
+		mover.y += 0.1f;
+		break;
+	case DOWN:
+		mover.y -= 0.1f;
+		break;
+	case RIGHT:
+		mover.x += 0.1f;
+		break;
+	case LEFT:
+		mover.x -= 0.1f;
+		break;
+	default:
+		break;
+	}
+
+	m_clients[mover.id].SetPos(mover.x, mover.y);
+	m_clients[mover.id].SetHead_n_State(mover.state, mover.head);
+	
+	retval = sendto(m_clients[mover.id].GetSocket_UDP(), (char*)&mover, sizeof(mover), 0, (SOCKADDR*)&clientAddr, addrLength);
+
 	
 	for (auto& cl : m_mClients) {
 		if (cl.first == static_cast<int>(move_packet.id)) {
@@ -154,13 +178,15 @@ void CServerFrame::UpdateMovePos()
 
 			update_packet.id = cl.first;
 			update_packet.size = sizeof(update_packet);
-			update_packet.type = SC_PACKET_MOVE;
+			//update_packet.type = SC_PACKET_MOVE;
 			update_packet.x = x;
 			update_packet.y = y;
 
 			retval = sendto(cl.second.GetSocket_UDP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0, (SOCKADDR*)&clientAddr, addrLength);
 		}
 	}
+
+
 }
 
 void CServerFrame::LoginServer()
@@ -191,7 +217,6 @@ void CServerFrame::LoginServer()
 			}
 		}
 
-
 		// 블로킹 모드 변환
 		ul_BlockingMode = Blocking;
 		int iChangeSocketMode = ioctlsocket(clientSock, FIONBIO, &ul_BlockingMode);
@@ -216,11 +241,6 @@ void CServerFrame::LoginServer()
 		}
 
 		{
-			// Print client Information
-			/*printf("\n클라이언트 접속: IP 주소=%s, 포트 번호=%d, id=%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), id
-			);*/
-			// std::cout << "send" << std::endl;
-
 
 			cout << id << endl;
 			// ID 전송
@@ -229,17 +249,13 @@ void CServerFrame::LoginServer()
 			cout << "id 전송" << endl;
 
 			if (SOCKET_ERROR == retval) {
-				/*if (WSAGetLastError() == WSAEWOULDBLOCK) {
-					continue;
-				}*/
-				//else {
 				m_Error->err_display("CServerFrame::RunLoginServer send()");
 				return;
-				//}
 			}
 
 			// 클라이언트 정보를 저장하는 map에 저장
 			CClient client(clientSock, id, clientAddr);
+
 			m_mClients.emplace(id, client);
 
 			m_hClientsThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_mClients[id].GetID(), 0, NULL);
@@ -250,6 +266,8 @@ void CServerFrame::LoginServer()
 
 		if (id == 1)break;
 	}
+
+
 }
 
 DWORD __stdcall CServerFrame::Process(LPVOID arg)
@@ -306,4 +324,23 @@ void CServerFrame::Collision()
 void CServerFrame::UpdatePosition()
 {
 
+}
+
+void CServerFrame::Send_Others_Packet(int user_id, int other_id)
+{
+	SC_Move_Packet p;
+
+	p.id = other_id;
+	p.size = sizeof(SC_Move_Packet);
+	p.x = m_clients[other_id].GetPosX();
+	p.x = m_clients[other_id].GetPosY();
+	//p.hp = m_clients[other_id].GetPlayerHp();
+
+	int retval = send(m_clients->GetSocket_TCP(), (char*)&p, p.size, 0);
+	if(SOCKET_ERROR == retval)
+	{
+		m_Error->err_display("CServerFrame::Send_Others_Packet");
+	}
+
+	// 여기
 }

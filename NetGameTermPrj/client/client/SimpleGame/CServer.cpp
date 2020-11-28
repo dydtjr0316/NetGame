@@ -25,9 +25,9 @@ int SERVER::GetID()
 
 
 
-void SERVER::SendMovePacket(char id, STATE state, STATE head)
+void SERVER::SendMovePacket(char id, STATE state, STATE head, float x, float y)
 {
-	m_pUdp->Move(id, state, head);
+	m_pUdp->Move(id, state, head, x, y);
 }
 
 int SERVER::ConnectServer()

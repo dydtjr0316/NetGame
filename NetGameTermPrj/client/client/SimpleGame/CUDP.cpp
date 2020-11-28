@@ -56,7 +56,7 @@ void CUDP::ConnectUDP(const char* ip)
 
 }
 
-void CUDP::Move(char id, STATE state, STATE head)
+void CUDP::Move(char id, STATE state, STATE head, float x, float y)
 {
 	CS_Move_Packet packet;
 
@@ -64,7 +64,10 @@ void CUDP::Move(char id, STATE state, STATE head)
 	packet.id = id;
 	packet.state = state;
 	packet.head = head;
-	// 여기하던중
+	packet.x = x;
+	packet.y = y;
+	
+
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
 	if (retval == SOCKET_ERROR)		
 		err_quit("[여기니?]");

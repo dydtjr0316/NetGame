@@ -37,6 +37,7 @@ public:
 	void	SetPlayerHp(int hp);
 
 	void	SetPos(float x, float y);
+	void	SetHead_n_State(STATE curstate, STATE head);
 
 	void	SetIsReady(bool ready);
 	void	SetIsDamaged(bool damaged);
@@ -49,8 +50,12 @@ private:
 	SOCKET		m_UdpSocket;
 	SOCKADDR_IN m_addr;
 	
+	// 시야 처리
+
 	// Client Data
 	string	m_cNickName;
+	STATE	m_CurState;
+	STATE	m_Head;
 
 	int		m_PlayerId;
 	int		m_iPlayerHp;
