@@ -16,16 +16,15 @@
 #define INGAME_CLEAR 312
 #define INGAME_OVER 313
 
-// Enum으로 쓰기로 한 부분
-//#define MOVE_UP 321
-//#define MOVE_DOWN 322
-//#define MOVE_LEFT 323
-//#define MOVE_RIGHT 324
-//
-//#define SHOOT_UP 331
-//#define SHOOT_DOWN 332
-//#define SHOOT_LEFT 333
-//#define SHOOT_RIGHT 334
+#define MOVE_UP 321
+#define MOVE_DOWN 322
+#define MOVE_LEFT 323
+#define MOVE_RIGHT 324
+
+#define SHOOT_UP 331
+#define SHOOT_DOWN 332
+#define SHOOT_LEFT 333
+#define SHOOT_RIGHT 334
 
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
@@ -86,9 +85,9 @@ struct SC_Client_RedayOK_Packet
 struct CS_Move_Packet
 {
 	char size;
+	char type;
 	int id;
-	STATE state;
-	STATE head;
+	float x, y;
 };
 
 struct SC_Move_Packet

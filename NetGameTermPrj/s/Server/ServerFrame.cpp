@@ -69,7 +69,7 @@ void ServerFrame::LoginServer()
 {
 	SOCKET clientSock;
 	SOCKADDR_IN clientAddr;
-	int addrlen;
+	int addrlen, u_id;
 
 	while (true) {
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
@@ -97,15 +97,17 @@ void ServerFrame::LoginServer()
 		Client client(clientSock, id, clientAddr);
 		m_Clients.emplace(id, client);
 
+		u_id = id;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
-		if (NULL == m_hCThreads[id]) closesocket(clientSock);
+		if (NULL == m_hCThreads[id]) closesocket(clientSock);		
 	}
 
-	//LobbyServer();
+	LobbyServer(u_id);
 }
 
-void ServerFrame::LobbyServer()
+void ServerFrame::LobbyServer(int id)
 {
+	CreateMoveThread(id);
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
 	// 인게임으로 넘어가기?
@@ -176,9 +178,9 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 	return 0;
 }
 
-void ServerFrame::CreateMoveThread()
+void ServerFrame::CreateMoveThread(int id)
 {
-	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, 0, 0, NULL);
+	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 }
 
 DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
@@ -206,12 +208,12 @@ void ServerFrame::UpdateMove(int id)
 	float x = m_Clients[id].GetX();
 	float y = m_Clients[id].GetY();
 
-	char dir = move_packet.state;
+	char dir = move_packet.type;
 	switch (dir) {
-	case UP: if (y > 0) y = y - 0.1f; break;
-	case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-	case LEFT: if (x > 0) x = x - 0.1f; break;
-	case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
+	case MOVE_UP: if (y > 0) y = y - 0.1f; break;
+	case MOVE_DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
+	case MOVE_LEFT: if (x > 0) x = x - 0.1f; break;
+	case MOVE_RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
 	default: while (true);
 	}
 	m_Clients[id].SetPos(x, y);
