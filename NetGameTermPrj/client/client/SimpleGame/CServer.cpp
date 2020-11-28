@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "CServer.h"
 
+SOCKET SERVER::m_Socket;
+
 SERVER::SERVER()
 {
 

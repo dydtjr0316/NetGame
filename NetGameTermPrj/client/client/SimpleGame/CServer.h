@@ -30,7 +30,7 @@ public:
 	int RecvMyID();
 
 
-	void SendMovePacket(char id, STATE state, STATE head, float x, float y);
-	void RecvMovePacket(float &x, float &y, CS_Move_Packet& move);
+	void SendMovePacket(char id, float x, float y);
+	CS_Move_Packet RecvMovePacket();
 };
 
