@@ -280,12 +280,10 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
-	CS_Move_Packet cs;
-	m_server->SendMovePacket(m_id, m_CurState, m_Head, fX, fY);
-	m_server->RecvMovePacket(fX, fY, cs);
-	
 
 	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
+
+	m_server->SendMovePacket(m_id, m_posX, m_posY);
 
 
 	if (Shoot)
@@ -298,10 +296,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 			m_CurrentCoolTIme = 0;
 
 	}
-
-	
-
-
 
 	float fSize = sqrtf(fX * fX + fY * fY);
 	if (fSize > FLT_EPSILON)
@@ -321,7 +315,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 			AddForce(0.f, 0.f, fZ, elapsedInSec);
 		}
 	}
-
 
 
 
