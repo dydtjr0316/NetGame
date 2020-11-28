@@ -10,6 +10,7 @@
 
 // stl
 #include <unordered_map>
+#include <unordered_set>
 #include <list>
 #include <vector>
 #include <iterator>

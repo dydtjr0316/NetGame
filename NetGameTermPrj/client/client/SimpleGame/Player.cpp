@@ -3,7 +3,6 @@
 #include <math.h>
 #include "Bullet.h"
 #include "CServer.h"
-#include "CTCP.h"
 
 
 CPlayer::CPlayer()
@@ -234,7 +233,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 {
 	m_blsCanShoot = false;
 	float fX, fY, fZ;
-	fX = fY = fZ = 0.f;
+	fX = fY = fZ = 0.1f;
 	float fAmount = 20.f;
 	m_CurState = IDLE;
 	m_Head = DOWN;
@@ -243,7 +242,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 	if (ScnMgr::GetInstance()->m_KeyW)
 	{
 		m_Head = UP;
-		fY += 0.1f;
+	//	fY += 0.1f;
 		m_CurState = UP;
 
 
@@ -251,26 +250,26 @@ void CPlayer::KeyInput(float elapsedInSec)
 	if (ScnMgr::GetInstance()->m_KeyS)
 	{
 		m_Head = DOWN;
-		fY -= 0.1f;
+		//fY -= 0.1f;
 		m_CurState = DOWN;
 	}
 	if (ScnMgr::GetInstance()->m_KeyA)
 	{
 		m_Head = LEFT;
-		fX -= 0.1f;
+		//fX -= 0.1f;
 		m_CurState = LEFT;
 	}
 	if (ScnMgr::GetInstance()->m_KeyD)
 	{
 		m_Head = RIGHT;
-		fX += 0.1f;
+		//fX += 0.1f;
 		m_CurState = RIGHT;
 
 	}
 
 
 
-	m_server->SendMovePacket(m_id, m_CurState, m_Head);
+	//m_server->SendMovePacket(m_id, m_CurState, m_Head, fX, fY);
 
 
 
@@ -282,7 +281,10 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
 
-	m_server->SendMovePacket(m_id, m_CurState, m_Head);
+	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
+
+	m_server->SendMovePacket(m_id, m_posX, m_posY);
+
 
 	if (Shoot)
 	{
@@ -294,10 +296,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 			m_CurrentCoolTIme = 0;
 
 	}
-
-	
-
-
 
 	float fSize = sqrtf(fX * fX + fY * fY);
 	if (fSize > FLT_EPSILON)
@@ -317,7 +315,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 			AddForce(0.f, 0.f, fZ, elapsedInSec);
 		}
 	}
-
 
 
 

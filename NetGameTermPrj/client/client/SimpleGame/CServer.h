@@ -1,43 +1,36 @@
 #pragma once
 
-
-
-class CUDP;class CTCP;
 class SERVER {
+// server
 private:
-	CTCP* m_tcp;
-	CUDP* m_pUdp;
 	char m_cServerip[15];
 
 	mutex m_lock;
+
+// tcp
+private:
+	WSAData* m_wsaData;
+	static SOCKET m_Socket;
+	sockaddr_in* m_Serveraddr;
+	int m_id = 0;
+
+
 public:
+	// server
 	SERVER();
 	virtual ~SERVER();
-
-
-	int GetID();
-
-	void SetState(int);
-	int GetState();
-
-	void AddFrame();
-	long long GetFrame();
-
-	void GetServerIP();
 	int ConnectServer();
+	int GetID() { return m_id; }
 
-	void CreateRecvThread();
+	// tcp
+	static void err_quit(const char*);
+	static int recvn(unsigned int, char*, int, int);
 
-	void SendTCPClickMouse(const char& id, const float& x, const float& y);
-	void SendUDPMoveMouse(const char& id, const float& x, const float& y);
-	void SendTCPClientReady(int id);
-	void SendTCPClientUnReady(int id);
-	void CreateNick(unsigned char);
-	void ClearNick();
+	int ConnectTCP(const char*);
+	int RecvMyID();
 
-	void SendCanUseNicknameClientToServer(const char* nickname);
-	//
 
-	void SendMovePacket(char id, STATE state, STATE head);
+	void SendMovePacket(char id, float x, float y);
+	CS_Move_Packet RecvMovePacket();
 };
 

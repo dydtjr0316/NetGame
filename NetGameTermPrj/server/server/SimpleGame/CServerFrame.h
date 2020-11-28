@@ -6,6 +6,7 @@
 #include "Protocol.h"
 #include <unordered_map>
 
+class CClient;
 class CError;
 class CPlayer;
 class CServerFrame
@@ -40,10 +41,14 @@ public:
 
 	void UpdatePosition();
 
+	void Send_Others_Packet(int user_id, int other_id);
+
 private:
 	SOCKET m_ListenSock;
 	static SOCKET m_UDP_Sock;
 	static CError* m_Error;
+
+	CClient	m_clients[2];
 
 	static std::unordered_map<int, CClient> m_mClients;
 
