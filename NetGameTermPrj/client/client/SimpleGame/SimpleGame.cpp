@@ -78,6 +78,13 @@ void SpecialKeyUpInput(int key, int x, int y)
 int main(int argc, char **argv)
 {
 	my_id = server.ConnectServer();
+
+	char nick[32];
+	cin >> nick;
+	server.SendLoginPacket(my_id, nick);
+	SC_Client_Enter_Packet p;
+	p = server.RecvEnterPacket();
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);

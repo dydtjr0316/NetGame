@@ -1,7 +1,7 @@
 #pragma once
 
 // Login
-#define NICKNAME_ADD 11
+#define ENTER_USER 11
 #define NICKNAME_USE 12
 #define NICKNAME_UNUSE 13
 #define MAX_USER 14
@@ -16,15 +16,16 @@
 #define INGAME_CLEAR 312
 #define INGAME_OVER 313
 
-#define MOVE_UP 321
-#define MOVE_DOWN 322
-#define MOVE_LEFT 323
-#define MOVE_RIGHT 324
-
-#define SHOOT_UP 331
-#define SHOOT_DOWN 332
-#define SHOOT_LEFT 333
-#define SHOOT_RIGHT 334
+// enum으로 사용
+//#define MOVE_UP 321
+//#define MOVE_DOWN 322
+//#define MOVE_LEFT 323
+//#define MOVE_RIGHT 324
+//
+//#define SHOOT_UP 331
+//#define SHOOT_DOWN 332
+//#define SHOOT_LEFT 333
+//#define SHOOT_RIGHT 334
 
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
@@ -49,6 +50,7 @@ struct CS_Client_Login_Packet
 {
 	char size;
 	char type;
+	int id;
 	char nickname[32];
 };
 
@@ -58,11 +60,12 @@ struct SC_Client_LoginOK_Packet
 	char type;
 };
 
-struct SC_All_Client_Packet
+struct SC_Client_Enter_Packet
 {
 	char size;
 	char type;
-	char nickname[2][32];
+	int id;
+	char nickname[32];
 };
 
 // Lobby

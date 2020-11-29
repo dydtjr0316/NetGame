@@ -15,6 +15,8 @@ public:
 	int InitTCPServer();
 
 	void LoginServer();
+	static void Send_enter_packet(int to, int id);
+
 	void LobbyServer(int id);
 	void InGameServer();
 
@@ -23,9 +25,6 @@ public:
 	void CreateMoveThread(int id);
 	static DWORD WINAPI MOVEThread(LPVOID arg);
 	static void UpdateMove(int id);
-
-	//void SaveNickName();
-	//void SendNickName();
 
 	void UpdateStatus();
 	void SendAllStatus();
@@ -36,6 +35,7 @@ public:
 	void UpdateCollision();
 	void UpdateBoss();
 	CS_Move_Packet AddForce(CS_Move_Packet& move_packet);
+
 private:
 	SOCKET m_sock;
 	

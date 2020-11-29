@@ -102,11 +102,10 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
+
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
 	// 인게임으로 넘어가기?
-
-	//InGameServer();
 }
 
 void ServerFrame::InGameServer()
@@ -151,24 +150,38 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		if (nick_size == m_nick.size()) {
 			loginok_packet.type = NICKNAME_UNUSE;
 			ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
+			if (ret == SOCKET_ERROR) err_display("Process() -> send() : unuse");
 		}
 		else {
 			loginok_packet.type = NICKNAME_USE;
 			ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
+			if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");
+			cout << "Enter : " << id << ", " << login_packet.nickname << endl;
 			Login = true;
 		}
 
-		//for (auto& cl : m_Clients) {
-		//	int i = cl.second.GetID();
-		//	m_ready.id[i] = cl.second.GetReady();
-		//	strcpy_s(m_ready.nickname[i], m_Clients[i].GetNickname().c_str());
+		//for (int i = 0; i < 2; ++i) {
+		//	if (m_Clients.count(i) != 0) {
+		//		if (id != i) {
+		//			//Send_enter_packet(i, id);
+		//			Send_enter_packet(id, i);
+		//		}
+		//	}
 		//}
-		//m_Clients[id].SetReady(true);
-
-		//m_ready.type = 
 	}
 
 	return 0;
+}
+
+void ServerFrame::Send_enter_packet(int to, int id)
+{
+	SC_Client_Enter_Packet packet;
+	packet.id = id;
+	packet.size = sizeof(packet);
+	packet.type = ENTER_USER;
+	strcpy_s(packet.nickname, m_Clients[to].GetNickname().c_str());
+
+	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
 }
 
 void ServerFrame::CreateMoveThread(int id)
@@ -198,26 +211,13 @@ void ServerFrame::UpdateMove(int id)
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
 
-
-	cout << "받은 패킷" << endl;
-	cout << move_packet.type << endl;
-	/*float x = m_Clients[id].GetX();
-	float y = m_Clients[id].GetY();*/
+	//cout << "받은 패킷" << endl;
+	//cout << move_packet.type << endl;
 
 	float fX, fY, fZ;
 	fX = fY = fZ = 0.0f;
 	float fAmount = 20.f;
 	float fSize = 0.f;
-
-	char dir = move_packet.type;
-
-	switch (dir) {
-	case UP: if (y > 0) y = y - 0.1f; break;
-	case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-	case LEFT: if (x > 0) x = x - 0.1f; break;
-	case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
-	default: while (true);
-	}
 
 	switch (move_packet.type)
 	{
@@ -263,13 +263,11 @@ void ServerFrame::UpdateMove(int id)
 	update_packet.id = id;
 	update_packet.size = sizeof(update_packet);
 
-	if (move_packet.type != IDLE)
-	{
+	if (move_packet.type != IDLE) {
 		update_packet.x = move_packet.velx;
 		update_packet.y = move_packet.vely;
 	}
-	else
-	{
+	else {
 		update_packet.x = move_packet.velx;
 		update_packet.y = move_packet.vely;
 	}
@@ -309,8 +307,7 @@ CS_Move_Packet ServerFrame::AddForce(CS_Move_Packet& move_packet)
 	float fAmount = 20.f;
 	float fSize = 0.f;
 
-	fSize == sqrtf(fX * fX + fY * fY);
-
+	fSize = sqrtf(fX * fX + fY * fY);
 
 	fX /= fSize;
 	fY /= fSize;
@@ -330,5 +327,4 @@ CS_Move_Packet ServerFrame::AddForce(CS_Move_Packet& move_packet)
 	CS_Move_Packet temp = move_packet;
 
 	return temp;
-
 }
