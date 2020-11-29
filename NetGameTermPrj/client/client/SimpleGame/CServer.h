@@ -30,7 +30,10 @@ public:
 	int RecvMyID();
 
 
-	void SendMovePacket(char id, float x, float y, char type);
-	CS_Move_Packet RecvMovePacket();
+	void SendMovePacket(char id, float x, float y,
+		char type, float elapsedInSec,
+		float velx, float vely, float mass);
+	SC_Move_Packet RecvMovePacket();
+
 };
 

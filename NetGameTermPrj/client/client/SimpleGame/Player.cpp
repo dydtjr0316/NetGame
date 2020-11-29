@@ -283,7 +283,9 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
 
-	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState);
+	m_server->SendMovePacket(m_id, m_posX, m_posY
+		, m_CurState, elapsedInSec, 
+		m_velX, m_velY, m_mass);
 
 
 	if (Shoot)
@@ -316,9 +318,12 @@ void CPlayer::KeyInput(float elapsedInSec)
 		}
 	}
 
+	SC_Move_Packet& packet =  m_server->RecvMovePacket();
 
+	m_posX = packet.x;
+	m_posY = packet.y;
 
-
+	cout << m_posX << " : " << m_posY << endl;
 
 
 }

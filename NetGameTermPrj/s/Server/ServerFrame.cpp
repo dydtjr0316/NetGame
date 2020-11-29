@@ -64,7 +64,7 @@ void ServerFrame::LoginServer()
 	SOCKET clientSock;
 	SOCKADDR_IN clientAddr;
 	int addrlen, u_id;
-
+	
 	while (true) {
 		addrlen = sizeof(clientAddr);
 		
@@ -93,9 +93,12 @@ void ServerFrame::LoginServer()
 		u_id = id;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 		if (NULL == m_hCThreads[id]) closesocket(clientSock);
+
+
+
+		LobbyServer(u_id);
 	}
 
-	LobbyServer(u_id);
 }
 
 void ServerFrame::LobbyServer(int id)
@@ -201,27 +204,94 @@ void ServerFrame::UpdateMove(int id)
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
 
-	float x = m_Clients[id].GetX();
-	float y = m_Clients[id].GetY();
+
+	cout << "받은 패킷" << endl;
+	cout << move_packet.type<<endl;
+	/*float x = m_Clients[id].GetX();
+	float y = m_Clients[id].GetY();*/
+	
+	float fX, fY, fZ;
+	fX = fY = fZ = 0.0f;
+	float fAmount = 20.f;
+	float fSize = 0.f;
+
+	float temp_posx = move_packet.x;
+	float temp_posy = move_packet.y;
+
+	cout << temp_posx << " 이거랑 " << temp_posy << endl;
+
 
 	char dir = move_packet.type;
-	switch (dir) {
-	case MOVE_UP: if (y > 0) y = y - 0.1f; break;
-	case MOVE_DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-	case MOVE_LEFT: if (x > 0) x = x - 0.1f; break;
-	case MOVE_RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
-	default: while (true);
+	switch (move_packet.type)
+	{
+	case UP:
+		move_packet.y += 0.01f;
+		fY += 0.1f;
+		break;
+	case DOWN:
+		fY -= 0.1f;
+		break;
+	case LEFT:
+		fX -= 0.1f;
+		break;
+	case RIGHT:
+		fX += 0.1f;
+		break;
+	default:
+		break;
 	}
-	m_Clients[id].SetPos(x, y);
+
+	if (move_packet.type != IDLE)
+	{
+		//fSize == sqrtf(fX * fX + fY * fY);
+
+		//// elapsedInSec 확인
+		//if (fSize > FLT_EPSILON)
+		//{
+		//	fX /= fSize;
+		//	fY /= fSize;
+		//	fX *= fAmount;
+		//	fY *= fAmount;
+
+		//	float accX, accY, accZ;
+		//	accX = accY = accZ = 0.f;
+
+		//	accX = fX / move_packet.mass;
+		//	accY = fY / move_packet.mass;
+		//	accZ = fZ / move_packet.mass;
+
+		//	move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+		//	move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
+		//	//m_velZ = m_velZ + accZ * move_packet.elapsedInSec;
+		//}
+
+		temp_posx = temp_posx + move_packet.velx * move_packet.elapsedInSec;
+		temp_posy = temp_posy + move_packet.vely * move_packet.elapsedInSec;
+		cout << temp_posx << " 이거랑 " << temp_posy << endl;
+	}
+
+
+
+	//if (fZ > FLT_EPSILON)
+	//{
+	//	if (m_posZ < FLT_EPSILON)
+	//	{
+	//		fZ *= fAmount * 20.f;
+	//		AddForce(0.f, 0.f, fZ, elapsedInSec);
+	//	}
+	//}
+	//m_Clients[id].SetPos(fX, fY);
+
+
 
 	SC_Move_Packet update_packet;
 	ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
 
 	update_packet.type = SC_PACKET_MOVE;
 	update_packet.id = id;
-	update_packet.x = x;
-	update_packet.y = y;
 	update_packet.size = sizeof(update_packet);
+	update_packet.x = move_packet.x	;
+	update_packet.y = move_packet.y;
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");

@@ -1,12 +1,9 @@
-﻿  Client.cpp
-  ServerFrame.cpp
+﻿  ServerFrame.cpp
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(94,87): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(122,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(122,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(144,32): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(179,86): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(184,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(184,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
-  main.cpp
-  코드를 생성하고 있습니다...
-  Server.vcxproj -> D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(125,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(125,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(147,32): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(182,86): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(187,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(187,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+LINK : fatal error LNK1168: D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe을(를) 쓰기용으로 열 수 없습니다.

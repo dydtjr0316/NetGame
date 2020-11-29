@@ -88,6 +88,9 @@ struct CS_Move_Packet
 	char type;
 	int id;
 	float x, y;
+	float elapsedInSec;
+	float velx, vely;
+	float mass;
 };
 
 struct SC_Move_Packet
