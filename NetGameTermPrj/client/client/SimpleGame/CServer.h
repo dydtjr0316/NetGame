@@ -31,7 +31,7 @@ public:
 
 
 	void SendMovePacket(char id, float x, float y,
-		char type, float elapsedInSec,
+		STATE type, float elapsedInSec,
 		float velx, float vely, float mass);
 	SC_Move_Packet RecvMovePacket();
 

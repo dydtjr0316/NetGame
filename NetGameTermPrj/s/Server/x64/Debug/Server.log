@@ -6,4 +6,5 @@ D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(147,32): warning C426
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(182,86): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(187,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(187,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
-LINK : fatal error LNK1168: D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe을(를) 쓰기용으로 열 수 없습니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(310,8): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+  Server.vcxproj -> D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe

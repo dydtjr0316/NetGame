@@ -65,3 +65,32 @@ void Client::SetDead(bool dead)
 {
 	m_dead = dead;
 }
+CS_Move_Packet Client::AddForce(CS_Move_Packet& move_packet, float fX, float fY)
+{
+	float fAmount = 20.f;
+	float fSize = 0.f;
+
+	fSize = sqrtf(fX * fX + fY * fY);
+
+	if (fSize > FLT_EPSILON)
+	{
+		fX /= fSize;
+		fY /= fSize;
+		fX *= fAmount;
+		fY *= fAmount;
+
+		float accX, accY, accZ;
+		accX = accY = accZ = 0.f;
+
+		accX = fX / move_packet.mass;
+		accY = fY / move_packet.mass;
+
+		move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+		move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
+
+	}
+	CS_Move_Packet temp = move_packet;
+
+	return temp;
+
+}

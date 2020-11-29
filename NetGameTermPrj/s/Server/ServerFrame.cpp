@@ -206,26 +206,19 @@ void ServerFrame::UpdateMove(int id)
 
 
 	cout << "받은 패킷" << endl;
-	cout << move_packet.type<<endl;
+	cout << move_packet.type << endl;
 	/*float x = m_Clients[id].GetX();
 	float y = m_Clients[id].GetY();*/
-	
+
 	float fX, fY, fZ;
 	fX = fY = fZ = 0.0f;
 	float fAmount = 20.f;
 	float fSize = 0.f;
 
-	float temp_posx = move_packet.x;
-	float temp_posy = move_packet.y;
-
-	cout << temp_posx << " 이거랑 " << temp_posy << endl;
-
-
 	char dir = move_packet.type;
 	switch (move_packet.type)
 	{
 	case UP:
-		move_packet.y += 0.01f;
 		fY += 0.1f;
 		break;
 	case DOWN:
@@ -241,48 +234,25 @@ void ServerFrame::UpdateMove(int id)
 		break;
 	}
 
-	if (move_packet.type != IDLE)
+	fSize = sqrtf(fX * fX + fY * fY);
+
+	if (fSize > FLT_EPSILON)
 	{
-		//fSize == sqrtf(fX * fX + fY * fY);
+		fX /= fSize;
+		fY /= fSize;
+		fX *= fAmount;
+		fY *= fAmount;
 
-		//// elapsedInSec 확인
-		//if (fSize > FLT_EPSILON)
-		//{
-		//	fX /= fSize;
-		//	fY /= fSize;
-		//	fX *= fAmount;
-		//	fY *= fAmount;
+		float accX, accY, accZ;
+		accX = accY = accZ = 0.f;
 
-		//	float accX, accY, accZ;
-		//	accX = accY = accZ = 0.f;
+		accX = fX / 1.0f;
+		accY = fY / 1.0f;
 
-		//	accX = fX / move_packet.mass;
-		//	accY = fY / move_packet.mass;
-		//	accZ = fZ / move_packet.mass;
+		move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+		move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
 
-		//	move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
-		//	move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
-		//	//m_velZ = m_velZ + accZ * move_packet.elapsedInSec;
-		//}
-
-		temp_posx = temp_posx + move_packet.velx * move_packet.elapsedInSec;
-		temp_posy = temp_posy + move_packet.vely * move_packet.elapsedInSec;
-		cout << temp_posx << " 이거랑 " << temp_posy << endl;
 	}
-
-
-
-	//if (fZ > FLT_EPSILON)
-	//{
-	//	if (m_posZ < FLT_EPSILON)
-	//	{
-	//		fZ *= fAmount * 20.f;
-	//		AddForce(0.f, 0.f, fZ, elapsedInSec);
-	//	}
-	//}
-	//m_Clients[id].SetPos(fX, fY);
-
-
 
 	SC_Move_Packet update_packet;
 	ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
@@ -290,8 +260,17 @@ void ServerFrame::UpdateMove(int id)
 	update_packet.type = SC_PACKET_MOVE;
 	update_packet.id = id;
 	update_packet.size = sizeof(update_packet);
-	update_packet.x = move_packet.x	;
-	update_packet.y = move_packet.y;
+
+	if (move_packet.type != IDLE)
+	{
+		update_packet.x = move_packet.velx;
+		update_packet.y = move_packet.vely;
+	}
+	else
+	{
+		update_packet.x = move_packet.velx;
+		update_packet.y = move_packet.vely;
+	}
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
@@ -319,5 +298,36 @@ void ServerFrame::UpdateCollision()
 
 void ServerFrame::UpdateBoss()
 {
+}
+
+CS_Move_Packet ServerFrame::AddForce(CS_Move_Packet& move_packet)
+{
+	float fX, fY, fZ;
+	fX = fY = fZ = 0.0f;
+	float fAmount = 20.f;
+	float fSize = 0.f;
+
+	fSize == sqrtf(fX * fX + fY * fY);
+
+
+	fX /= fSize;
+	fY /= fSize;
+	fX *= fAmount;
+	fY *= fAmount;
+
+	float accX, accY, accZ;
+	accX = accY = accZ = 0.f;
+
+	accX = fX / move_packet.mass;
+	accY = fY / move_packet.mass;
+	accZ = fZ / move_packet.mass;
+
+	move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+	move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
+
+	CS_Move_Packet temp = move_packet;
+
+	return temp;
+
 }
 

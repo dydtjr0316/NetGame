@@ -232,9 +232,7 @@ void CPlayer::Shooting()
 void CPlayer::KeyInput(float elapsedInSec)
 {
 	m_blsCanShoot = false;
-	float fX, fY, fZ;
-	fX = fY = fZ = 0.0f;
-	float fAmount = 20.f;
+
 	m_CurState = IDLE;
 	m_Head = DOWN;
 
@@ -267,12 +265,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	}
 
-
-
-	//m_server->SendMovePacket(m_id, m_CurState, m_Head, fX, fY);
-
-
-
 	bool Shoot = true;
 
 	if (ScnMgr::GetInstance()->m_KeyRight)	m_Head = RIGHT;
@@ -281,7 +273,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
 
-	//int retval = recv((SOCKET), (char*)&m_iid, sizeof(int), 0);
 
 	m_server->SendMovePacket(m_id, m_posX, m_posY
 		, m_CurState, elapsedInSec, 
@@ -299,33 +290,10 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	}
 
-	float fSize = sqrtf(fX * fX + fY * fY);
-	if (fSize > FLT_EPSILON)
-	{
-		fX /= fSize;
-		fY /= fSize;
-		fX *= fAmount;
-		fY *= fAmount;
-
-	    AddForce(fX, fY, 0.f, elapsedInSec);
-	}
-	if (fZ > FLT_EPSILON)
-	{
-		if (m_posZ< FLT_EPSILON)
-		{
-			fZ *= fAmount * 20.f;
-			AddForce(0.f, 0.f, fZ, elapsedInSec);
-		}
-	}
-
 	SC_Move_Packet& packet =  m_server->RecvMovePacket();
 
-	m_posX = packet.x;
-	m_posY = packet.y;
-
-	cout << m_posX << " : " << m_posY << endl;
-
-
+	m_velX = packet.x;
+	m_velY = packet.y;
 }
 
 void CPlayer::LateInit()
