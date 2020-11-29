@@ -274,8 +274,8 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else Shoot = false;
 
 
-	m_server->SendMovePacket(m_id, m_posX, m_posY
-		, m_CurState, elapsedInSec, 
+	m_server->SendMovePacket(m_id, m_posX, m_posY, 
+		m_CurState, elapsedInSec, 
 		m_velX, m_velY, m_mass);
 
 

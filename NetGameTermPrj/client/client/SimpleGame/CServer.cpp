@@ -19,7 +19,6 @@ int SERVER::ConnectServer()
 	return id;
 }
 
-
 void SERVER::err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;
@@ -80,22 +79,15 @@ int SERVER::ConnectTCP(const char* ip)
 	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr.sin_addr), ntohs(m_Serveraddr.sin_port));
 
-
 	m_id = RecvMyID();
 
 	// send login packet
-
-	CS_Client_Login_Packet packet;
-	packet.size = sizeof(packet);
-	packet.type = 0;
+	//CS_Client_Login_Packet packet;
+	//packet.size = sizeof(packet);
+	//packet.type = 0;
 	//packet.nickname = "";
-
-	retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
-
-	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
-
-
-
+	//retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+	//if (retval == SOCKET_ERROR)err_quit(" SERVER::ConnectTCP");
 
 	cout << "ID : " << m_id << endl << endl;
 
@@ -104,16 +96,38 @@ int SERVER::ConnectTCP(const char* ip)
 
 int SERVER::RecvMyID()
 {
-
 	int retval = recvn((SOCKET)m_Socket, (char*)&m_id, sizeof(int), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMyID()");
 
 	return m_id;
 }
 
-void SERVER::SendMovePacket(char id, float x, float y, 
-	STATE type, float elapsedInSec, 
-	float velx, float vely, float mass)
+void SERVER::SendLoginPacket(int id, char nickname[32])
+{
+	CS_Client_Login_Packet packet;
+
+	packet.size = sizeof(CS_Client_Login_Packet);
+	packet.id = id;
+	strcpy_s(packet.nickname, nickname);
+
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+
+	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
+
+	cout << "send enter packet (" << packet.id << ", " << packet.nickname << endl;
+}
+
+SC_Client_Enter_Packet SERVER::RecvEnterPacket()
+{
+	SC_Client_Enter_Packet packet;
+
+	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	if (retval <= 0) err_quit(" SERVER::SendEnterPacket");
+
+	return packet;
+}
+
+void SERVER::SendMovePacket(int id, float x, float y, STATE type, float elapsedInSec, float velx, float vely, float mass)
 {
 	CS_Move_Packet packet;
 
@@ -131,7 +145,7 @@ void SERVER::SendMovePacket(char id, float x, float y,
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
 
-	cout << "send move packet (" << packet.x << ", " << packet.y << ", " << packet.id << endl;
+	//cout << "send move packet (" << packet.x << ", " << packet.y << ", " << packet.id << endl;
 }
 
 SC_Move_Packet SERVER::RecvMovePacket()
@@ -139,8 +153,7 @@ SC_Move_Packet SERVER::RecvMovePacket()
 	SC_Move_Packet packet;
 
 	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
-	if (retval <= 0) err_quit(" SERVER::RecvMyID()");
-
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
 	return packet;
 }

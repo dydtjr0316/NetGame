@@ -29,11 +29,10 @@ public:
 	int ConnectTCP(const char*);
 	int RecvMyID();
 
+	void SendLoginPacket(int id, char nickname[32]);
+	SC_Client_Enter_Packet RecvEnterPacket();
 
-	void SendMovePacket(char id, float x, float y,
-		STATE type, float elapsedInSec,
-		float velx, float vely, float mass);
+	void SendMovePacket(int id, float x, float y, STATE type, float elapsedInSec, float velx, float vely, float mass);
 	SC_Move_Packet RecvMovePacket();
-
 };
 
