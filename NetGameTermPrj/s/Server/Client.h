@@ -38,6 +38,8 @@ public:
 	void SetDamege(bool damage);
 	void SetDead(bool dead);
 
+
+	CS_Move_Packet AddForce(CS_Move_Packet& move_packet, float fX, float fY);
 private:
 	SOCKET		m_sock;
 	SOCKADDR_IN m_addr;

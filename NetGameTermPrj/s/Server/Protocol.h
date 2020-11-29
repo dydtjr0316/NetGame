@@ -85,9 +85,12 @@ struct SC_Client_RedayOK_Packet
 struct CS_Move_Packet
 {
 	char size;
-	char type;
+	STATE type;
 	int id;
 	float x, y;
+	float elapsedInSec;
+	float velx, vely;
+	float mass;
 };
 
 struct SC_Move_Packet

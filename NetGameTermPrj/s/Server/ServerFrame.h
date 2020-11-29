@@ -35,7 +35,7 @@ public:
 	void SendBulletRoute();
 	void UpdateCollision();
 	void UpdateBoss();
-
+	CS_Move_Packet AddForce(CS_Move_Packet& move_packet);
 private:
 	SOCKET m_sock;
 	

@@ -8,6 +8,7 @@
 #include "CollisonMgr.h"
 #include <list>
 #include <vector>
+#include <string>
 
 
 // for server
@@ -15,5 +16,5 @@
 #include <mutex>
 #include <WinSock2.h>
 
-#include "../../../../NetGameTermPrj/server/server/SimpleGame/Protocol.h"
+#include "../../../../NetGameTermPrj/s/Server/Protocol.h"
 
