@@ -54,7 +54,6 @@ int CPlayer::Update(float elapsedInSec)
 
 void CPlayer::Render()
 {
-
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;
@@ -150,7 +149,6 @@ void CPlayer::Render()
 
 void CPlayer::DrawHead()
 {
-
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;
@@ -194,15 +192,43 @@ void CPlayer::Shooting()
 	ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
 
 	float bulletVel = 4.f;
-	float vBulletX, vBulletY, vBulletZ;
-	vBulletX = vBulletY = vBulletZ = 0.f;
-	if (m_Head == LEFT) vBulletX -= 0.2f;
+	/*float vBulletX, vBulletY, vBulletZ;
+	vBulletX = vBulletY = vBulletZ = 0.f;*/
+
+	m_server->SendAttackPacket(m_id, m_Head);
+
+	/*if (m_Head == LEFT) vBulletX -= 0.2f;
 	if (m_Head == RIGHT)vBulletX += 0.2f;
 	if (m_Head == UP)vBulletY += 0.2f;
-	if (m_Head == DOWN)vBulletY -= 0.2f;
+	if (m_Head == DOWN)vBulletY -= 0.2f;*/
 
+	SC_Attack_Packet& packet = m_server->RecvAttackPacket();
 
-	float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
+	float vBulletSize = sqrtf(packet.velx * packet.velx + packet.vely * packet.vely + 0.f * 0.f);
+
+	if (vBulletSize > 0.000001f)
+	{
+		packet.velx /= vBulletSize;
+		packet.vely /= vBulletSize;
+		//vBulletZ /= vBulletSize;
+
+		packet.velx *= bulletVel;
+		packet.vely *= bulletVel;
+		//vBulletZ *= bulletVel;
+
+		CBullet* pObj = new CBullet;
+
+		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
+			0.2f, 0.2f, 0.2f,
+			1, 1, 1, 1,
+			packet.velx, packet.vely, 0.f,
+			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
+
+		ScnMgr::GetInstance()->m_Obj[id]->AddForce(packet.velx, packet.vely, 0.f, 0.1f);
+		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
+	}
+
+	/*float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
 
 	if (vBulletSize > 0.000001f)
 	{
@@ -216,7 +242,6 @@ void CPlayer::Shooting()
 
 		CBullet* pObj = new CBullet;
 
-
 		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
 			0.2f, 0.2f, 0.2f,
 			1, 1, 1, 1,
@@ -226,7 +251,7 @@ void CPlayer::Shooting()
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
 
-	}
+	}*/
 }
 
 void CPlayer::KeyInput(float elapsedInSec)
@@ -273,11 +298,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 	else Shoot = false;
 
-
-	m_server->SendMovePacket(m_id, m_posX, m_posY, 
-		m_CurState, elapsedInSec, 
-		m_velX, m_velY, m_mass);
-
+	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState, elapsedInSec, m_velX, m_velY, m_mass);
 
 	if (Shoot)
 	{

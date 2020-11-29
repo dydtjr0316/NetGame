@@ -3,8 +3,6 @@
 // Login
 #define ENTER_USER 11
 #define NICKNAME_USE 12
-#define NICKNAME_UNUSE 13
-#define MAX_USER 14
 
 // Lobby
 #define CLIENT_ISREADY 21
@@ -36,6 +34,7 @@ constexpr char SC_PACKET_MOVE = 0;
 constexpr char SC_PACKET_ENTER = 1;
 constexpr char SC_PACKET_LOGIN = 2;
 constexpr char SC_PACKET_LEAVE = 3;
+constexpr char SC_PACKET_ATTACK = 4;
 
 // Logout
 struct CS_Client_Logout_Packet
@@ -108,7 +107,8 @@ struct SC_Move_Packet
 struct CS_Attack_Packet
 {
 	char size;
-	char type;
+	STATE type;
+	int id;
 };
 
 struct SC_Attack_Packet
@@ -116,7 +116,7 @@ struct SC_Attack_Packet
 	char size;
 	char type;
 	int id;
-	float x, y;
+	float velx, vely;
 };
 
 // Boss

@@ -24,7 +24,6 @@ public:
 
 	// tcp
 	static void err_quit(const char*);
-	static int recvn(unsigned int, char*, int, int);
 
 	int ConnectTCP(const char*);
 	int RecvMyID();
@@ -34,5 +33,8 @@ public:
 
 	void SendMovePacket(int id, float x, float y, STATE type, float elapsedInSec, float velx, float vely, float mass);
 	SC_Move_Packet RecvMovePacket();
+
+	void SendAttackPacket(int id, STATE type);
+	SC_Attack_Packet RecvAttackPacket();
 };
 

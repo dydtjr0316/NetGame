@@ -82,8 +82,6 @@ int main(int argc, char **argv)
 	char nick[32];
 	cin >> nick;
 	server.SendLoginPacket(my_id, nick);
-	SC_Client_Enter_Packet p;
-	p = server.RecvEnterPacket();
 
 	// Initialize GL things
 	glutInit(&argc, argv);
@@ -104,13 +102,12 @@ int main(int argc, char **argv)
 
 	g_ScnMgr = ScnMgr::GetInstance();
 	g_ScnMgr->SetID(my_id);
-
 	
 	glutDisplayFunc(Display);
 	glutIdleFunc(Idle);
 
 	glutKeyboardFunc(KeyDownInput); // key down event callback
-	glutKeyboardUpFunc(KeyUpInput); // key iup event callback
+	glutKeyboardUpFunc(KeyUpInput); // key up event callback
 
 	glutMouseFunc(MouseInput);
 

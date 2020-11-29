@@ -2,7 +2,6 @@
 
 unordered_map<int, Client> ServerFrame::m_Clients;
 int ServerFrame::m_id;
-set<string> ServerFrame::m_nick;
 
 ServerFrame::ServerFrame()
 {
@@ -138,36 +137,25 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 			return 0;
 		}
 
-		//login_packet.nickname = "";
 		m_Clients[id].SetNickname(login_packet.nickname);
-
-		int nick_size = m_nick.size();
-		m_nick.insert(login_packet.nickname);
+		cout << "Enter : " << id << ", " << login_packet.nickname << endl;
 
 		SC_Client_LoginOK_Packet loginok_packet;
 		loginok_packet.size = sizeof(SC_Client_LoginOK_Packet);
 
-		if (nick_size == m_nick.size()) {
-			loginok_packet.type = NICKNAME_UNUSE;
-			ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
-			if (ret == SOCKET_ERROR) err_display("Process() -> send() : unuse");
-		}
-		else {
-			loginok_packet.type = NICKNAME_USE;
-			ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
-			if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");
-			cout << "Enter : " << id << ", " << login_packet.nickname << endl;
-			Login = true;
-		}
+		loginok_packet.type = NICKNAME_USE;
+		ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
+		if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");
+		Login = true;
 
-		//for (int i = 0; i < 2; ++i) {
-		//	if (m_Clients.count(i) != 0) {
-		//		if (id != i) {
-		//			//Send_enter_packet(i, id);
-		//			Send_enter_packet(id, i);
-		//		}
-		//	}
-		//}
+		for (int i = 0; i < 2; ++i) {
+			if (m_Clients.count(i) != 0) {
+				if (id != i) {
+					Send_enter_packet(i, id);
+					Send_enter_packet(id, i);
+				}
+			}
+		}
 	}
 
 	return 0;
@@ -179,9 +167,15 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	packet.id = id;
 	packet.size = sizeof(packet);
 	packet.type = ENTER_USER;
-	strcpy_s(packet.nickname, m_Clients[to].GetNickname().c_str());
+	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
 
-	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+	Send_pakcet(to, &packet);
+}
+
+void ServerFrame::Send_pakcet(int id, void* p)
+{
+	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
+	send(m_Clients[id].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 
 void ServerFrame::CreateMoveThread(int id)
@@ -201,13 +195,9 @@ DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 
 void ServerFrame::UpdateMove(int id)
 {
-	SOCKADDR_IN clientAddr;
-	int addrlen;
-
 	CS_Move_Packet move_packet;
 	ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
 
-	addrlen = sizeof(clientAddr);
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
 
@@ -273,6 +263,47 @@ void ServerFrame::UpdateMove(int id)
 	}
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
+	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+}
+
+void ServerFrame::UpdateAttack(int id)
+{
+	CS_Attack_Packet attack_packet;
+	ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
+
+	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
+	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
+
+	float vBulletX, vBulletY, vBulletZ;
+	vBulletX = vBulletY = vBulletZ = 0.f;
+
+	switch (attack_packet.type) {
+	case UP:
+		vBulletY += 0.2f;
+		break;
+	case DOWN:
+		vBulletY -= 0.2f;
+		break;
+	case LEFT:
+		vBulletX -= 0.2f;
+		break;
+	case RIGHT:
+		vBulletX += 0.2f;
+		break;
+	default:
+		break;
+	}
+
+	SC_Attack_Packet update_packet;
+	ZeroMemory(&update_packet, sizeof(SC_Attack_Packet));
+
+	update_packet.velx = vBulletX;
+	update_packet.vely = vBulletY;
+	update_packet.type = SC_PACKET_MOVE;
+	update_packet.id = id;
+	update_packet.size = sizeof(update_packet);
+
+	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
 }
 

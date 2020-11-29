@@ -16,6 +16,7 @@ public:
 
 	void LoginServer();
 	static void Send_enter_packet(int to, int id);
+	static void Send_pakcet(int id, void* p);
 
 	void LobbyServer(int id);
 	void InGameServer();
@@ -25,6 +26,7 @@ public:
 	void CreateMoveThread(int id);
 	static DWORD WINAPI MOVEThread(LPVOID arg);
 	static void UpdateMove(int id);
+	static void UpdateAttack(int id);
 
 	void UpdateStatus();
 	void SendAllStatus();
@@ -45,6 +47,5 @@ private:
 	static unordered_map<int, Client> m_Clients;
 
 	static int m_id;
-	static set<string> m_nick;
 	static SC_Client_RedayOK_Packet m_ready;
 };

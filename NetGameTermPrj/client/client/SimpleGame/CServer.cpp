@@ -32,31 +32,6 @@ void SERVER::err_quit(const char* msg)
 	exit(1);
 }
 
-int SERVER::recvn(unsigned int s, char* buf, int len, int flags)
-{
-	int received;
-	char* ptr = buf;
-	int left = len;
-
-	while (left > 0) {
-		received = recv(s, ptr, left, flags);
-
-		if (received == SOCKET_ERROR)
-			return SOCKET_ERROR;
-
-		else if (received == 0) {
-			// std::cout << "Too much Clients connecting" << std::endl;
-			closesocket((m_Socket));
-			return 0;
-		}
-
-
-		left -= received;
-		ptr += received;
-	}
-	return (len - left);
-}
-
 int SERVER::ConnectTCP(const char* ip)
 {
 	if (WSAStartup(MAKEWORD(2, 2), &(m_wsaData)) != 0)
@@ -81,14 +56,6 @@ int SERVER::ConnectTCP(const char* ip)
 
 	m_id = RecvMyID();
 
-	// send login packet
-	//CS_Client_Login_Packet packet;
-	//packet.size = sizeof(packet);
-	//packet.type = 0;
-	//packet.nickname = "";
-	//retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
-	//if (retval == SOCKET_ERROR)err_quit(" SERVER::ConnectTCP");
-
 	cout << "ID : " << m_id << endl << endl;
 
 	return m_id;
@@ -96,7 +63,7 @@ int SERVER::ConnectTCP(const char* ip)
 
 int SERVER::RecvMyID()
 {
-	int retval = recvn((SOCKET)m_Socket, (char*)&m_id, sizeof(int), 0);
+	int retval = recv((SOCKET)m_Socket, (char*)&m_id, sizeof(int), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMyID()");
 
 	return m_id;
@@ -107,6 +74,7 @@ void SERVER::SendLoginPacket(int id, char nickname[32])
 	CS_Client_Login_Packet packet;
 
 	packet.size = sizeof(CS_Client_Login_Packet);
+	packet.type = ENTER_USER;
 	packet.id = id;
 	strcpy_s(packet.nickname, nickname);
 
@@ -114,7 +82,7 @@ void SERVER::SendLoginPacket(int id, char nickname[32])
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 
-	cout << "send enter packet (" << packet.id << ", " << packet.nickname << endl;
+	cout << "send enter packet (" << packet.id << ", " << packet.nickname << ")" << endl;
 }
 
 SC_Client_Enter_Packet SERVER::RecvEnterPacket()
@@ -145,12 +113,35 @@ void SERVER::SendMovePacket(int id, float x, float y, STATE type, float elapsedI
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
 
-	//cout << "send move packet (" << packet.x << ", " << packet.y << ", " << packet.id << endl;
+	//cout << "send move packet " << packet.id << endl;
 }
 
 SC_Move_Packet SERVER::RecvMovePacket()
 {
 	SC_Move_Packet packet;
+
+	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
+
+	return packet;
+}
+
+void SERVER::SendAttackPacket(int id, STATE type)
+{
+	CS_Attack_Packet packet;
+
+	packet.size = sizeof(CS_Attack_Packet);
+	packet.type = type;
+	packet.id = id;
+
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Attack_Packet), 0);
+
+	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
+}
+
+SC_Attack_Packet SERVER::RecvAttackPacket()
+{
+	SC_Attack_Packet packet;
 
 	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
