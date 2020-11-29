@@ -67,7 +67,6 @@ void ServerFrame::LoginServer()
 
 	while (true) {
 		addrlen = sizeof(clientAddr);
-		
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
 
@@ -92,7 +91,8 @@ void ServerFrame::LoginServer()
 
 		u_id = id;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
-		if (NULL == m_hCThreads[id]) closesocket(clientSock);
+		//if (NULL == m_hCThreads[id]) closesocket(clientSock);
+		//else CloseHandle(m_hCThreads);
 	}
 
 	LobbyServer(u_id);
@@ -137,14 +137,12 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 			m_Clients.erase(id);
 			return 0;
 		}
-		string tenp;
-		tenp.push_back(login_packet.nickname);
-		m_Clients[id].SetNickname(tenp);
+
+		//login_packet.nickname = "";
+		m_Clients[id].SetNickname(login_packet.nickname);
 
 		int nick_size = m_nick.size();
-
-		m_nick.insert( tenp);
-		//m_nick.insert(login_packet.nickname);
+		m_nick.insert(login_packet.nickname);
 
 		SC_Client_LoginOK_Packet loginok_packet;
 		loginok_packet.size = sizeof(SC_Client_LoginOK_Packet);
@@ -167,8 +165,6 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		//m_Clients[id].SetReady(true);
 
 		//m_ready.type = 
-
-
 	}
 
 	return 0;
@@ -206,10 +202,10 @@ void ServerFrame::UpdateMove(int id)
 
 	char dir = move_packet.type;
 	switch (dir) {
-	case MOVE_UP: if (y > 0) y = y - 0.1f; break;
-	case MOVE_DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
-	case MOVE_LEFT: if (x > 0) x = x - 0.1f; break;
-	case MOVE_RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
+	case UP: if (y > 0) y = y - 0.1f; break;
+	case DOWN: if (y < (HEIGHT - 1)) y = y + 0.1f; break;
+	case LEFT: if (x > 0) x = x - 0.1f; break;
+	case RIGHT: if (x < (WIDTH - 1)) x = x + 0.1f; break;
 	default: while (true);
 	}
 	m_Clients[id].SetPos(x, y);

@@ -49,7 +49,7 @@ struct CS_Client_Login_Packet
 {
 	char size;
 	char type;
-	char nickname;
+	char nickname[32];
 };
 
 struct SC_Client_LoginOK_Packet
@@ -62,7 +62,7 @@ struct SC_All_Client_Packet
 {
 	char size;
 	char type;
-	string nickname[2];
+	char nickname[2][32];
 };
 
 // Lobby

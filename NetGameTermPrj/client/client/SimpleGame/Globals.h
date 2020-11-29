@@ -21,35 +21,6 @@
 #define UDP_SERVERPORT 65356
 #define SERVERIP "127.0.0.1"
 
-// Login
-#define NICKNAME_ADD 11
-#define NICKNAME_USE 12
-#define NICKNAME_UNUSE 13
-#define MAX_USER 14
-
-// Lobby
-#define CLIENT_ISREADY 21
-#define CLIENT_ISNOTREDAY 22
-#define CLIENT_ALLREADY 23
-
-// InGame
-#define INGAME_RUNNIG 311
-#define INGAME_CLEAR 312
-#define INGAME_OVER 313
-
-#define MOVE_UP 321
-#define MOVE_DOWN 322
-#define MOVE_LEFT 323
-#define MOVE_RIGHT 324
-
-#define SHOOT_UP 331
-#define SHOOT_DOWN 332
-#define SHOOT_LEFT 333
-#define SHOOT_RIGHT 334
-
-enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
-enum ITEM { NONE, TRIPLE };
-
 // 화면 크기
 #define WIDTH 800
 #define HEIGHT 600
