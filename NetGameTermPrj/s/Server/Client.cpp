@@ -3,13 +3,13 @@
 Client::Client()
 {
 	m_ready = false;
-	m_nick = "";
+	strcpy_s(m_nick, "NONE");
 }
 
 Client::Client(SOCKET s, int id, SOCKADDR_IN addr)
 {
 	m_ready = false;
-	m_nick = "";
+	strcpy_s(m_nick, "NONE");
 	m_sock = s;
 	m_id = id;
 	m_addr = addr;
@@ -30,9 +30,9 @@ void Client::SetAddr(SOCKADDR_IN addr)
 	m_addr = addr;
 }
 
-void Client::SetNickname(string nick)
+void Client::SetNickname(char nick[])
 {
-	m_nick = nick;
+	strcpy_s(m_nick, nick);
 }
 
 void Client::SetID(int id)

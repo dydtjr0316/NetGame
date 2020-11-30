@@ -111,15 +111,10 @@ int main(int argc, char **argv)
 	g_ScnMgr = ScnMgr::GetInstance();
 	g_ScnMgr->SetID(my_id);
 
-	SC_Client_Enter_Packet packet;
-	ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
-	int retval = recv((SOCKET)server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
-
-	/*if (packet.type == ENTER_USER) {
-		cout << "Enter " << packet.nickname;
-		g_ScnMgr_other = ScnMgr::GetInstance();
-		g_ScnMgr_other->SetID(packet.id);
-	}*/
+	SC_Client_LoginOK_Packet p;
+	ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
+	int ret = recv(server.GetSock(), (char*)&p, sizeof(p), 0);
+	cout << p.nickname << endl;
 
 	glutDisplayFunc(Display);
 	glutIdleFunc(Idle);
@@ -135,10 +130,22 @@ int main(int argc, char **argv)
 	g_PrevTime = glutGet(GLUT_ELAPSED_TIME);
 	glutTimerFunc(10, RenderScene, 0);
 
+	if (p.type == NICKNAME_USE) {
+		cout << "waiting for other client to enter" << endl;
+		SC_Client_Enter_Packet packet;
+		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
+		ret = recv(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+
+		if (packet.type == ENTER_USER) {
+			cout << "Enter " << packet.nickname;
+			g_ScnMgr_other = ScnMgr::GetInstance();
+			g_ScnMgr_other->SetID(packet.id);
+		}
+	}
+
 	glutMainLoop();
 		
 	ScnMgr::GetInstance()->DestroyInstance();
 
-    return 0;
+	return 0;
 }
-

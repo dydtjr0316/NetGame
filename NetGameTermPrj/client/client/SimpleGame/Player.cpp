@@ -192,13 +192,13 @@ void CPlayer::Shooting()
 	ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
 
 	float bulletVel = 4.f;
-	/*float vBulletX, vBulletY, vBulletZ;
-	vBulletX = vBulletY = vBulletZ = 0.f;*/
+	float vBulletX, vBulletY, vBulletZ;
+	vBulletX = vBulletY = vBulletZ = 0.f;
 
-	/*if (m_Head == LEFT) vBulletX -= 0.2f;
+	if (m_Head == LEFT) vBulletX -= 0.2f;
 	if (m_Head == RIGHT)vBulletX += 0.2f;
 	if (m_Head == UP)vBulletY += 0.2f;
-	if (m_Head == DOWN)vBulletY -= 0.2f;*/
+	if (m_Head == DOWN)vBulletY -= 0.2f;
 
 	m_server->SendAttackPacket(m_id, m_Head);
 

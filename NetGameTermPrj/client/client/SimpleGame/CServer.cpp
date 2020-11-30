@@ -71,7 +71,7 @@ int SERVER::RecvMyID()
 	return m_id;
 }
 
-void SERVER::SendLoginPacket(int id, char nickname[32])
+void SERVER::SendLoginPacket(int id, char nickname[])
 {
 	CS_Client_Login_Packet packet;
 

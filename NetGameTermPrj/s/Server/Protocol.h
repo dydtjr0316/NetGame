@@ -1,18 +1,9 @@
 #pragma once
 
-// Login
-#define ENTER_USER 11
-#define NICKNAME_USE 12
-
-// Lobby
-#define CLIENT_ISREADY 21
-#define CLIENT_ISNOTREDAY 22
-#define CLIENT_ALLREADY 23
-
 // InGame
-#define INGAME_RUNNIG 311
-#define INGAME_CLEAR 312
-#define INGAME_OVER 313
+//#define INGAME_RUNNIG 311
+//#define INGAME_CLEAR 312
+//#define INGAME_OVER 313
 
 // enum으로 사용
 //#define MOVE_UP 321
@@ -36,13 +27,14 @@ constexpr char SC_PACKET_LOGIN = 2;
 constexpr char SC_PACKET_LEAVE = 3;
 constexpr char SC_PACKET_ATTACK = 4;
 
-// Logout
-struct CS_Client_Logout_Packet
-{
-	char size;
-	char type;
-	char id;
-};
+// Login
+constexpr char ENTER_USER = 5;
+constexpr char NICKNAME_USE = 6;
+
+// Lobby
+constexpr char CLIENT_ISREADY = 7;
+constexpr char CLIENT_ISNOTREDAY = 8;
+constexpr char CLIENT_ALLREADY = 9;
 
 // Login
 struct CS_Client_Login_Packet
@@ -57,6 +49,7 @@ struct SC_Client_LoginOK_Packet
 {
 	char size;
 	char type;
+	char nickname[32];
 };
 
 struct SC_Client_Enter_Packet
@@ -79,8 +72,7 @@ struct SC_Client_RedayOK_Packet
 {
 	char size;
 	char type;
-	char id[2];
-	char nickname[2][32];
+	char id;
 };
 
 // Move
