@@ -140,12 +140,11 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		m_Clients[id].SetNickname(login_packet.nickname);
 		cout << "Enter : " << id << ", " << login_packet.nickname << endl;
 
-		SC_Client_LoginOK_Packet loginok_packet;
+		/*SC_Client_LoginOK_Packet loginok_packet;
 		loginok_packet.size = sizeof(SC_Client_LoginOK_Packet);
-
 		loginok_packet.type = NICKNAME_USE;
 		ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
-		if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");
+		if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");*/
 		Login = true;
 
 		for (int i = 0; i < 2; ++i) {
@@ -165,7 +164,7 @@ void ServerFrame::Send_enter_packet(int to, int id)
 {
 	SC_Client_Enter_Packet packet;
 	packet.id = id;
-	packet.size = sizeof(packet);
+	packet.size = sizeof(SC_Client_Enter_Packet);
 	packet.type = ENTER_USER;
 	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
 

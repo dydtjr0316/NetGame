@@ -10,6 +10,8 @@ SERVER::SERVER()
 
 SERVER::~SERVER()
 {
+	closesocket(m_Socket);
+	WSACleanup();
 }
 
 int SERVER::ConnectServer()
@@ -78,7 +80,7 @@ void SERVER::SendLoginPacket(int id, char nickname[32])
 	packet.id = id;
 	strcpy_s(packet.nickname, nickname);
 
-	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Client_Login_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 

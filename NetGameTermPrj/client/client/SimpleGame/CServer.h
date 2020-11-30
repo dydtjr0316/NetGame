@@ -20,6 +20,8 @@ public:
 	SERVER();
 	virtual ~SERVER();
 	int ConnectServer();
+
+	SOCKET GetSock() { return m_Socket; }
 	int GetID() { return m_id; }
 
 	// tcp

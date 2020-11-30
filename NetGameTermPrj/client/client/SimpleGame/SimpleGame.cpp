@@ -17,7 +17,8 @@ but WITHOUT ANY WARRANTY.
 #include "ScnMgr.h"
 #include "CServer.h"
 
- ScnMgr* g_ScnMgr = NULL;
+ScnMgr* g_ScnMgr = NULL; 
+ScnMgr* g_ScnMgr_other = NULL;
 int g_PrevTime = 0;
 int my_id;
 SERVER server;
@@ -34,6 +35,13 @@ void RenderScene(int temp)
 	g_ScnMgr->Update(elapsedTimeInSec);
 	g_ScnMgr->RenderScene();
 	g_ScnMgr->DoGarbageCollect();
+
+	if (g_ScnMgr_other != NULL) {
+		g_ScnMgr_other->Update(elapsedTimeInSec);
+		g_ScnMgr_other->RenderScene();
+		g_ScnMgr_other->DoGarbageCollect();
+	}
+
 	glutSwapBuffers();
 
 	glutTimerFunc(10, RenderScene, 0);
@@ -57,32 +65,30 @@ void MouseInput(int button, int state, int x, int y)
 void KeyDownInput(unsigned char key, int x, int y)
 {
 	g_ScnMgr->KeyDownInput(key, x, y);
+	if (g_ScnMgr_other != NULL) g_ScnMgr_other->KeyDownInput(key, x, y);
 }
 
 void KeyUpInput(unsigned char key, int x, int y)
 {
 	g_ScnMgr->KeyUpInput(key, x, y);
+	if (g_ScnMgr_other != NULL) g_ScnMgr_other->KeyUpInput(key, x, y);
 }
 
 void SpecialKeyDownInput(int key, int x, int y)
 {
 	g_ScnMgr->SpecialKeyDownInput(key, x, y);
+	if (g_ScnMgr_other != NULL) g_ScnMgr_other->SpecialKeyDownInput(key, x, y);
 }
 
 void SpecialKeyUpInput(int key, int x, int y)
 {
 	g_ScnMgr->SpecialKeyUpInput(key, x, y);
+	if (g_ScnMgr_other != NULL) g_ScnMgr_other->SpecialKeyUpInput(key, x, y);
 }
 
 
 int main(int argc, char **argv)
 {
-	my_id = server.ConnectServer();
-
-	char nick[32];
-	cin >> nick;
-	server.SendLoginPacket(my_id, nick);
-
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -99,10 +105,25 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
+	
+	my_id = server.ConnectServer();
+
+	char nick[32];
+	cin >> nick;
+	server.SendLoginPacket(my_id, nick);
 
 	g_ScnMgr = ScnMgr::GetInstance();
 	g_ScnMgr->SetID(my_id);
-	
+
+	SC_Client_Enter_Packet packet;
+	int retval = recv((SOCKET)server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+
+	if (packet.type == ENTER_USER) {
+		cout << packet.nickname;
+		g_ScnMgr_other = ScnMgr::GetInstance();
+		g_ScnMgr_other->SetID(packet.id);
+	}
+
 	glutDisplayFunc(Display);
 	glutIdleFunc(Idle);
 
