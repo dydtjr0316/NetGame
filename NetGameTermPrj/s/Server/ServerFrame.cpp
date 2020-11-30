@@ -103,7 +103,7 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
-	//CreateAttackThread(id);
+	CreateAttackThread(id);
 
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
