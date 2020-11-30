@@ -24,7 +24,9 @@ public:
 	static DWORD WINAPI Process(LPVOID arg);
 
 	void CreateMoveThread(int id);
+	void CreateAttackThread(int id);
 	static DWORD WINAPI MOVEThread(LPVOID arg);
+	static DWORD WINAPI AttackThread(LPVOID arg);
 	static void UpdateMove(int id);
 	static void UpdateAttack(int id);
 
@@ -43,6 +45,7 @@ private:
 	
 	HANDLE m_hCThreads[2];
 	HANDLE m_MOVEThread;
+	HANDLE m_AttackThread;
 
 	static unordered_map<int, Client> m_Clients;
 

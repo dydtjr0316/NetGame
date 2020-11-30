@@ -17,7 +17,7 @@ but WITHOUT ANY WARRANTY.
 #include "ScnMgr.h"
 #include "CServer.h"
 
-ScnMgr* g_ScnMgr = NULL; 
+ScnMgr* g_ScnMgr = NULL;
 ScnMgr* g_ScnMgr_other = NULL;
 int g_PrevTime = 0;
 int my_id;
@@ -65,25 +65,21 @@ void MouseInput(int button, int state, int x, int y)
 void KeyDownInput(unsigned char key, int x, int y)
 {
 	g_ScnMgr->KeyDownInput(key, x, y);
-	if (g_ScnMgr_other != NULL) g_ScnMgr_other->KeyDownInput(key, x, y);
 }
 
 void KeyUpInput(unsigned char key, int x, int y)
 {
 	g_ScnMgr->KeyUpInput(key, x, y);
-	if (g_ScnMgr_other != NULL) g_ScnMgr_other->KeyUpInput(key, x, y);
 }
 
 void SpecialKeyDownInput(int key, int x, int y)
 {
 	g_ScnMgr->SpecialKeyDownInput(key, x, y);
-	if (g_ScnMgr_other != NULL) g_ScnMgr_other->SpecialKeyDownInput(key, x, y);
 }
 
 void SpecialKeyUpInput(int key, int x, int y)
 {
 	g_ScnMgr->SpecialKeyUpInput(key, x, y);
-	if (g_ScnMgr_other != NULL) g_ScnMgr_other->SpecialKeyUpInput(key, x, y);
 }
 
 
@@ -116,13 +112,14 @@ int main(int argc, char **argv)
 	g_ScnMgr->SetID(my_id);
 
 	SC_Client_Enter_Packet packet;
+	ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
 	int retval = recv((SOCKET)server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
 
-	if (packet.type == ENTER_USER) {
-		cout << packet.nickname;
+	/*if (packet.type == ENTER_USER) {
+		cout << "Enter " << packet.nickname;
 		g_ScnMgr_other = ScnMgr::GetInstance();
 		g_ScnMgr_other->SetID(packet.id);
-	}
+	}*/
 
 	glutDisplayFunc(Display);
 	glutIdleFunc(Idle);

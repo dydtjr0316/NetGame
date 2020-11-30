@@ -116,7 +116,7 @@ struct SC_Attack_Packet
 	char size;
 	char type;
 	int id;
-	float velx, vely;
+	float velx, vely, velz;
 };
 
 // Boss

@@ -91,7 +91,7 @@ SC_Client_Enter_Packet SERVER::RecvEnterPacket()
 {
 	SC_Client_Enter_Packet packet;
 
-	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::SendEnterPacket");
 
 	return packet;
@@ -122,7 +122,7 @@ SC_Move_Packet SERVER::RecvMovePacket()
 {
 	SC_Move_Packet packet;
 
-	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
 	return packet;
@@ -145,7 +145,7 @@ SC_Attack_Packet SERVER::RecvAttackPacket()
 {
 	SC_Attack_Packet packet;
 
-	int retval = recv((SOCKET)m_Socket, (char*)&packet, sizeof(packet), 0);
+	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
 	return packet;

@@ -195,36 +195,35 @@ void CPlayer::Shooting()
 	/*float vBulletX, vBulletY, vBulletZ;
 	vBulletX = vBulletY = vBulletZ = 0.f;*/
 
-	m_server->SendAttackPacket(m_id, m_Head);
-
 	/*if (m_Head == LEFT) vBulletX -= 0.2f;
 	if (m_Head == RIGHT)vBulletX += 0.2f;
 	if (m_Head == UP)vBulletY += 0.2f;
 	if (m_Head == DOWN)vBulletY -= 0.2f;*/
 
+	m_server->SendAttackPacket(m_id, m_Head);
+
 	SC_Attack_Packet& packet = m_server->RecvAttackPacket();
 
-	float vBulletSize = sqrtf(packet.velx * packet.velx + packet.vely * packet.vely + 0.f * 0.f);
+	float vBulletSize = sqrtf(packet.velx * packet.velx + packet.vely * packet.vely + packet.velz * packet.velz);
 
-	if (vBulletSize > 0.000001f)
-	{
+	if (vBulletSize > 0.000001f) {
 		packet.velx /= vBulletSize;
 		packet.vely /= vBulletSize;
-		//vBulletZ /= vBulletSize;
+		packet.velz /= vBulletSize;
 
 		packet.velx *= bulletVel;
 		packet.vely *= bulletVel;
-		//vBulletZ *= bulletVel;
+		packet.velz *= bulletVel;
 
 		CBullet* pObj = new CBullet;
 
 		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
 			0.2f, 0.2f, 0.2f,
 			1, 1, 1, 1,
-			packet.velx, packet.vely, 0.f,
+			packet.velx, packet.vely, packet.velz,
 			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
 
-		ScnMgr::GetInstance()->m_Obj[id]->AddForce(packet.velx, packet.vely, 0.f, 0.1f);
+		ScnMgr::GetInstance()->m_Obj[id]->AddForce(packet.velx, packet.vely, packet.velz, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
 	}
 

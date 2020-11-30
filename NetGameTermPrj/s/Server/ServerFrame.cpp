@@ -101,6 +101,7 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
+	//CreateAttackThread(id);
 
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
@@ -140,21 +141,16 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		m_Clients[id].SetNickname(login_packet.nickname);
 		cout << "Enter : " << id << ", " << login_packet.nickname << endl;
 
-		/*SC_Client_LoginOK_Packet loginok_packet;
-		loginok_packet.size = sizeof(SC_Client_LoginOK_Packet);
-		loginok_packet.type = NICKNAME_USE;
-		ret = send(m_Clients[id].GetSock_TCP(), (char*)&loginok_packet, sizeof(SC_Client_LoginOK_Packet), 0);
-		if (ret == SOCKET_ERROR) err_display("Process() -> send() : use");*/
-		Login = true;
-
-		for (int i = 0; i < 2; ++i) {
-			if (m_Clients.count(i) != 0) {
-				if (id != i) {
-					Send_enter_packet(i, id);
-					Send_enter_packet(id, i);
+		//for (int i = 0; i < 2; ++i) {
+			//if (m_Clients.count(i) != 0) {
+				if (id == 2) {
+					Send_enter_packet(0, id);
+					Send_enter_packet(id, 0);
+					Login = true;
 				}
-			}
-		}
+			//}
+		//}
+		Login = true;
 	}
 
 	return 0;
@@ -182,11 +178,26 @@ void ServerFrame::CreateMoveThread(int id)
 	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 }
 
+void ServerFrame::CreateAttackThread(int id)
+{
+	m_AttackThread = CreateThread(NULL, 0, this->AttackThread, (LPVOID)m_Clients[id].GetID(), 0, NULL);
+}
+
 DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 {
 	int id = reinterpret_cast<int>(arg);
 	while (true) {
 		UpdateMove(id);
+	}
+
+	return 0;
+}
+
+DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
+{
+	int id = reinterpret_cast<int>(arg);
+	while (true) {
+		UpdateAttack(id);
 	}
 
 	return 0;
@@ -298,9 +309,10 @@ void ServerFrame::UpdateAttack(int id)
 
 	update_packet.velx = vBulletX;
 	update_packet.vely = vBulletY;
+	update_packet.velz = vBulletZ;
 	update_packet.type = SC_PACKET_MOVE;
 	update_packet.id = id;
-	update_packet.size = sizeof(update_packet);
+	update_packet.size = sizeof(SC_Attack_Packet);
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
