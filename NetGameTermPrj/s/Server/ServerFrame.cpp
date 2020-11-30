@@ -103,7 +103,7 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
-	CreateAttackThread(id);
+	//CreateAttackThread(id);
 
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
@@ -292,7 +292,7 @@ void ServerFrame::UpdateAttack(int id)
 	ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
 
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
+	if (ret == SOCKET_ERROR) err_display("UpdateAttack() -> recv()");
 
 	float vBulletX, vBulletY, vBulletZ;
 	vBulletX = vBulletY = vBulletZ = 0.f;
@@ -325,7 +325,7 @@ void ServerFrame::UpdateAttack(int id)
 	update_packet.size = sizeof(SC_Attack_Packet);
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
 }
 
 void ServerFrame::UpdateStatus()

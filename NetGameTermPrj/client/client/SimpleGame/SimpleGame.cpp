@@ -16,6 +16,7 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 #include "ScnMgr.h"
 #include "CServer.h"
+#include "Player.h"
 
 ScnMgr* g_ScnMgr = NULL;
 ScnMgr* g_ScnMgr_other = NULL;
@@ -35,12 +36,6 @@ void RenderScene(int temp)
 	g_ScnMgr->Update(elapsedTimeInSec);
 	g_ScnMgr->RenderScene();
 	g_ScnMgr->DoGarbageCollect();
-
-	if (g_ScnMgr_other != NULL) {
-		g_ScnMgr_other->Update(elapsedTimeInSec);
-		g_ScnMgr_other->RenderScene();
-		g_ScnMgr_other->DoGarbageCollect();
-	}
 
 	glutSwapBuffers();
 
@@ -137,9 +132,12 @@ int main(int argc, char **argv)
 		ret = recv(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
 
 		if (packet.type == ENTER_USER) {
-			cout << "Enter " << packet.nickname;
-			g_ScnMgr_other = ScnMgr::GetInstance();
-			g_ScnMgr_other->SetID(packet.id);
+			cout << "Enter " << packet.nickname << endl;
+			/*g_ScnMgr_other = ScnMgr::GetInstance();`
+			g_ScnMgr_other->SetID(packet.id);*/
+			CPlayer* Pobj = new CPlayer;
+			int a = g_ScnMgr->AddObject(3.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			cout << a << endl;
 		}
 	}
 
