@@ -84,18 +84,23 @@ void ServerFrame::LoginServer()
 			continue;
 		}
 
+
 		int ret = send(clientSock, (char*)&id, sizeof(int), 0);
 		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send()");
 
+		cout << clientSock << endl;
 		Client client(clientSock, id, clientAddr);
 		m_Clients.emplace(id, client);
 
 		u_id = id;
+		cout << id << endl;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 
 		if (NULL == m_hCThreads[id]) closesocket(clientSock);
 
-		LobbyServer(u_id);
+
+		//for(auto& m : m_Clients)
+			LobbyServer(u_id);
 	}
 
 }
@@ -203,6 +208,7 @@ DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 	int id = reinterpret_cast<int>(arg);
 	while (true) {
 		UpdateMove(id);
+
 	}
 
 	return 0;

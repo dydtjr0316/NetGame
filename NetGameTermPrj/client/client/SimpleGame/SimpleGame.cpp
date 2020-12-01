@@ -99,6 +99,8 @@ int main(int argc, char **argv)
 	
 	my_id = server.ConnectServer();
 
+	//cout << "my_id :" << my_id << endl;
+
 	char nick[32];
 	cin >> nick;
 	server.SendLoginPacket(my_id, nick);

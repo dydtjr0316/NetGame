@@ -58,6 +58,8 @@ int SERVER::ConnectTCP(const char* ip)
 
 	m_id = RecvMyID();
 
+	cout << m_id << endl;
+
 	cout << "ID : " << m_id << endl << endl;
 
 	return m_id;

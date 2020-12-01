@@ -31,7 +31,6 @@ int CPlayer::Update(float elapsedInSec)
 	Object::Update(elapsedInSec);
 
 
-
 	KeyInput(elapsedInSec);
 	Shooting();
 	if(m_blsDamaged==false)
@@ -255,55 +254,66 @@ void CPlayer::Shooting()
 
 void CPlayer::KeyInput(float elapsedInSec)
 {
+//	cout << m_id << endl;
+	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState, elapsedInSec, m_velX, m_velY, m_mass);
+
+
+	SC_Move_Packet& packet = m_server->RecvMovePacket();
+
 	m_blsCanShoot = false;
 
 	m_CurState = IDLE;
 	m_Head = DOWN;
 
+	//cout << "my id : " << m_id << " || packet  id : " << packet.id << endl;
 	
-	if (ScnMgr::GetInstance()->m_KeyW)
+	if (m_id == packet.id)
 	{
-		m_Head = UP;		m_CurState = UP;
+		if (ScnMgr::GetInstance()->m_KeyW)
+		{
+			m_Head = UP;		m_CurState = UP;
+		}
+		if (ScnMgr::GetInstance()->m_KeyS)
+		{
+			m_Head = DOWN;		m_CurState = DOWN;
+		}
+		if (ScnMgr::GetInstance()->m_KeyA)
+		{
+			m_Head = LEFT;		m_CurState = LEFT;
+		}
+		if (ScnMgr::GetInstance()->m_KeyD)
+		{
+			m_Head = RIGHT;		m_CurState = RIGHT;
+		}
+
+		bool Shoot = true;
+
+		if (ScnMgr::GetInstance()->m_KeyRight)	m_Head = RIGHT;
+		else if (ScnMgr::GetInstance()->m_KeyLeft)m_Head = LEFT;
+		else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
+		else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
+		else Shoot = false;
+
+
+
+		if (Shoot)
+		{
+			if (m_CurrentCoolTIme == 0)
+				m_blsCanShoot = true;
+
+			m_CurrentCoolTIme += elapsedInSec;
+			if (m_CurrentCoolTIme > 0.3)
+				m_CurrentCoolTIme = 0;
+
+		}
 	}
-	if (ScnMgr::GetInstance()->m_KeyS)
+
+
+	if (m_id == packet.id)
 	{
-		m_Head = DOWN;		m_CurState = DOWN;
+		m_velX = packet.x;
+		m_velY = packet.y;
 	}
-	if (ScnMgr::GetInstance()->m_KeyA)
-	{
-		m_Head = LEFT;		m_CurState = LEFT;
-	}
-	if (ScnMgr::GetInstance()->m_KeyD)
-	{
-		m_Head = RIGHT;		m_CurState = RIGHT;
-	}
-
-	bool Shoot = true;
-
-	if (ScnMgr::GetInstance()->m_KeyRight)	m_Head = RIGHT;
-	else if (ScnMgr::GetInstance()->m_KeyLeft)m_Head = LEFT;
-	else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
-	else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
-	else Shoot = false;
-
-	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState, elapsedInSec, m_velX, m_velY, m_mass);
-
-	if (Shoot)
-	{
-		if (m_CurrentCoolTIme == 0)
-			m_blsCanShoot = true;
-
-		m_CurrentCoolTIme += elapsedInSec;
-		if (m_CurrentCoolTIme > 0.3)
-			m_CurrentCoolTIme = 0;
-
-	}
-
-	SC_Move_Packet& packet =  m_server->RecvMovePacket();
-
-	m_velX = packet.x;
-	m_velY = packet.y;
-
 }
 
 void CPlayer::LateInit()

@@ -1,11 +1,11 @@
 ﻿  ServerFrame.cpp
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(94,87): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(124,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(124,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(193,67): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(199,90): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(204,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(204,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(214,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
-D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(214,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(97,87): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(129,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(129,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(197,67): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(203,90): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(208,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(208,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(219,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
+D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(219,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
   Server.vcxproj -> D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe
