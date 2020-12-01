@@ -116,7 +116,7 @@ void CDoor::CheckDoor()
 
 	float PlayerX, PlayerY, PlayerZ;
 
-	ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
+	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
 
 	PlayerX *= 100;
 	PlayerY *= 100;
@@ -127,8 +127,8 @@ void CDoor::CheckDoor()
 		if (PlayerX > -30 && PlayerX < 30 && PlayerY>118)
 		{
 			ScnMgr::GetInstance()->CreateBoss();
-			ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetPos(PlayerX / 100, -230 / 100, PlayerZ/100);
-			ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
+			//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetPos(PlayerX / 100, -230 / 100, PlayerZ/100);
+			//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
 			m_blsCheckMonster = false;
 		}
 	}

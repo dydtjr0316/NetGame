@@ -46,7 +46,7 @@ int CHp::Update(float elapsedInSec)
 {
 	LateInit();
 	
-	ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetHP(&m_iHpCount);
+	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetHP(&m_iHpCount);
  
 	ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
 

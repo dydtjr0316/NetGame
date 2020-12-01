@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "CServer.h"
+#include "ScnMgr.h"
+#include "Player.h"
 
 SOCKET SERVER::m_Socket;
 
@@ -46,7 +48,7 @@ int SERVER::ConnectTCP(const char* ip)
 	m_Serveraddr.sin_family = AF_INET;
 	m_Serveraddr.sin_addr.s_addr = inet_addr(ip);
 	m_Serveraddr.sin_port = htons(TCP_SERVERPORT);
-
+	cout << m_Socket << endl;
 	int retval = connect(m_Socket, (SOCKADDR*)&(m_Serveraddr), sizeof((m_Serveraddr)));
 	if (retval == SOCKET_ERROR)
 		err_quit("connect()");
@@ -56,13 +58,8 @@ int SERVER::ConnectTCP(const char* ip)
 	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr.sin_addr), ntohs(m_Serveraddr.sin_port));
 
-	m_id = RecvMyID();
 
-	cout << m_id << endl;
-
-	cout << "ID : " << m_id << endl << endl;
-
-	return m_id;
+	return RecvMyID();
 }
 
 int SERVER::RecvMyID()
@@ -80,7 +77,7 @@ int SERVER::recvn(SOCKET s, char* buf, int len, int flags)
 	int left = len;
 
 	while (left > 0) {
-		received = recvn(s, ptr, left, flags);
+		received = recv(s, ptr, left, flags);
 		if (received == SOCKET_ERROR)
 			return SOCKET_ERROR;
 		else if (received == 0)
@@ -106,6 +103,8 @@ void SERVER::SendLoginPacket(int id, char nickname[])
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 
 	cout << "send enter packet (" << packet.id << ", " << packet.nickname << ")" << endl;
+
+
 }
 
 SC_Client_Enter_Packet SERVER::RecvEnterPacket()

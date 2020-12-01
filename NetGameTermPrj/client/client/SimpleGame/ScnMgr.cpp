@@ -57,17 +57,17 @@ ScnMgr::ScnMgr()
 		m_Obj[i] = NULL;
 	}
 	//Create Hero
-	m_Obj[HERO_ID] = new CPlayer();
-	m_Obj[HERO_ID]->SetID(m_id);
-
-	m_Obj[HERO_ID]->SetPos(0, 0, 0);
-	m_Obj[HERO_ID]->SetVol(0.5, 0.5, 0.5);
-	m_Obj[HERO_ID]->SetColor(1, 1, 1, 1);
-	m_Obj[HERO_ID]->SetVel(0, 0, 0);
-	m_Obj[HERO_ID]->SetMass(1.0);
-	m_Obj[HERO_ID]->SetFricCoef(0.9f);
-	m_Obj[HERO_ID]->SetType(TYPE_NORMAL);
-	m_Obj[HERO_ID]->SetHP(6.f);
+	//m_Obj[HERO_ID] = new CPlayer();
+	//m_Obj[HERO_ID]->SetID(900);
+	//
+	//m_Obj[HERO_ID]->SetPos(0, 0, 0);
+	//m_Obj[HERO_ID]->SetVol(0.1, 0.1, 0.1);
+	//m_Obj[HERO_ID]->SetColor(1, 1, 1, 1);
+	//m_Obj[HERO_ID]->SetVel(0, 0, 0);
+	//m_Obj[HERO_ID]->SetMass(1.0);
+	//m_Obj[HERO_ID]->SetFricCoef(0.9f);
+	//m_Obj[HERO_ID]->SetType(TYPE_NORMAL);
+	//m_Obj[HERO_ID]->SetHP(6.f);
 	g_Stage = m_Renderer->GenPngTexture("../Texture/StartRoom.Png");
 	g_UI = m_Renderer->GenPngTexture("../Texture/UI.Png");
 
@@ -82,12 +82,12 @@ ScnMgr::ScnMgr()
 
 	m_iBloodPaticle = m_Renderer->GenPngTexture("../Texture/BloodPaticle.png");
 
-	CHp* Pobj = new CHp;
-	AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj);
+	//CHp* Pobj = new CHp;
+	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj);
 
-	CDoor * Pobj2 = new CDoor;
-	AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj2);
-	
+	//CDoor * Pobj2 = new CDoor;
+	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj2);
+	//
 	list<Object*> pList;
 	for (INT i = 0; i < END; i++)
 	{
@@ -131,7 +131,7 @@ void ScnMgr::Update(float elapsedInSec)
 	}
 
 	float x, y, z;
-	m_Obj[HERO_ID]->GetPos(&x, &y, &z);
+	//m_Obj[HERO_ID]->GetPos(&x, &y, &z);
 	m_Renderer->SetCameraPos(0.f,   0.f);
 
 	if (m_blsShake)
@@ -362,7 +362,7 @@ void ScnMgr::ResetObject()
 			continue;
 		int type = 0;
 		m_Obj[i]->GetType(&type);
-		if (i != HERO_ID && type != TYPE_UI)
+		if (/*i != HERO_ID &&*/ type != TYPE_UI)
 			m_Obj[i]->lsDead();
 	}
 
@@ -387,9 +387,9 @@ void ScnMgr::SpecialKeyDownInput(int key, int x, int y)
 	if (key == GLUT_KEY_F1)
 	{
 		// stage 시작 하는 조건 넣기 
-		GetInstance()->CreateBoss();
-		GetInstance()->m_Obj[HERO_ID]->SetPos(10 / 100, 110 / 100, 10 / 100);
-		GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
+		//GetInstance()->CreateBoss();
+		//GetInstance()->m_Obj[HERO_ID]->SetPos(10 / 100, 110 / 100, 10 / 100);
+		//GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
 	}
 	if (key == GLUT_KEY_UP)
 	{

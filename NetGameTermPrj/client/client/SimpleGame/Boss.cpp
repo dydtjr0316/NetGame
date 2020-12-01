@@ -66,7 +66,7 @@ void CBoss::TracePlayer()
 
 	float PlayerPosX, PlayerPosY, PlayerPosZ;
 
-	ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerPosX, &PlayerPosY, &PlayerPosZ);
+	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerPosX, &PlayerPosY, &PlayerPosZ);
 
 	float a = PlayerPosX - m_posX;
 	float b = PlayerPosY - m_posY;
@@ -90,7 +90,7 @@ void CBoss::TracePlayer()
 		m_eState = JUMP;
 		m_velZ = 10.f;
 		m_fJumpTime = 0.f;
-		ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&m_fJumpPosX, &m_fJumpPosY, &m_fJumpPosZ);
+		//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&m_fJumpPosX, &m_fJumpPosY, &m_fJumpPosZ);
 
 		for (int i = 0; i < 10; i++)
 		{

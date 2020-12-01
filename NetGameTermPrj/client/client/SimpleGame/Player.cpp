@@ -4,7 +4,6 @@
 #include "Bullet.h"
 #include "CServer.h"
 
-
 CPlayer::CPlayer()
 {
 	m_server = new SERVER;

@@ -18,9 +18,8 @@ but WITHOUT ANY WARRANTY.
 #include "CServer.h"
 #include "Player.h"
 
-ScnMgr* g_ScnMgr = NULL;
+//ScnMgr* g_ScnMgr = NULL;
 int g_PrevTime = 0;
-int my_id;
 SERVER server;
 
 int recvn(SOCKET s, char* buf, int len, int flags)
@@ -31,10 +30,12 @@ int recvn(SOCKET s, char* buf, int len, int flags)
 
 	while (left > 0) {
 		received = recv(s, ptr, left, flags);
+
 		if (received == SOCKET_ERROR)
 			return SOCKET_ERROR;
 		else if (received == 0)
 			break;
+
 		left -= received;
 		ptr += received;
 	}
@@ -51,9 +52,9 @@ void RenderScene(int temp)
 
 	//std::cout << "elased time : " << elapsedTime << std::endl;
 
-	g_ScnMgr->Update(elapsedTimeInSec);
-	g_ScnMgr->RenderScene();
-	g_ScnMgr->DoGarbageCollect();
+	ScnMgr::GetInstance()->Update(elapsedTimeInSec);
+	ScnMgr::GetInstance()->RenderScene();
+	ScnMgr::GetInstance()->DoGarbageCollect();
 
 	glutSwapBuffers();
 
@@ -77,22 +78,22 @@ void MouseInput(int button, int state, int x, int y)
 
 void KeyDownInput(unsigned char key, int x, int y)
 {
-	g_ScnMgr->KeyDownInput(key, x, y);
+	ScnMgr::GetInstance()->KeyDownInput(key, x, y);
 }
 
 void KeyUpInput(unsigned char key, int x, int y)
 {
-	g_ScnMgr->KeyUpInput(key, x, y);
+	ScnMgr::GetInstance()->KeyUpInput(key, x, y);
 }
 
 void SpecialKeyDownInput(int key, int x, int y)
 {
-	g_ScnMgr->SpecialKeyDownInput(key, x, y);
+	ScnMgr::GetInstance()->SpecialKeyDownInput(key, x, y);
 }
 
 void SpecialKeyUpInput(int key, int x, int y)
 {
-	g_ScnMgr->SpecialKeyUpInput(key, x, y);
+	ScnMgr::GetInstance()->SpecialKeyUpInput(key, x, y);
 }
 
 
@@ -115,49 +116,47 @@ int main(int argc, char **argv)
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
 	
-	my_id = server.ConnectServer();
-
-	//cout << "my_id :" << my_id << endl;
+	int id = server.ConnectServer();
 
 	char nick[32];
 	cin >> nick;
-	server.SendLoginPacket(my_id, nick);
+	server.SendLoginPacket(id, nick);
 
-	g_ScnMgr = ScnMgr::GetInstance();
-	g_ScnMgr->SetID(my_id);
 
-	SC_Client_LoginOK_Packet p;
-	ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
-	int ret = recvn(server.GetSock(), (char*)&p, sizeof(p), 0);
-	cout << p.nickname << endl;
+	SC_Client_LoginOK_Packet loginok_packet;
+	ZeroMemory(&loginok_packet, sizeof(SC_Client_LoginOK_Packet));
+	int ret = recvn(server.GetSock(), (char*)&loginok_packet, sizeof(loginok_packet), 0);
 
-	glutDisplayFunc(Display);
-	glutIdleFunc(Idle);
+	cout << loginok_packet.nickname << endl;
+	{
+		glutDisplayFunc(Display);
+		glutIdleFunc(Idle);
 
-	glutKeyboardFunc(KeyDownInput); // key down event callback
-	glutKeyboardUpFunc(KeyUpInput); // key up event callback
+		glutKeyboardFunc(KeyDownInput); // key down event callback
+		glutKeyboardUpFunc(KeyUpInput); // key up event callback
 
-	glutMouseFunc(MouseInput);
+		glutMouseFunc(MouseInput);
 
-	glutSpecialFunc(SpecialKeyDownInput);
-	glutSpecialUpFunc(SpecialKeyUpInput);
+		glutSpecialFunc(SpecialKeyDownInput);
+		glutSpecialUpFunc(SpecialKeyUpInput);
 
-	g_PrevTime = glutGet(GLUT_ELAPSED_TIME);
-	glutTimerFunc(10, RenderScene, 0);
+		g_PrevTime = glutGet(GLUT_ELAPSED_TIME);
+		glutTimerFunc(10, RenderScene, 0);
+	}
 
-	if (p.type == NICKNAME_USE) {
-		
-		
+	if (loginok_packet.type == NICKNAME_USE) {
 		cout << "waiting for other client to enter" << endl;
-		SC_Client_Enter_Packet packet;
-		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
-		ret = recvn(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+		SC_Client_Enter_Packet enter_packet;
+		ZeroMemory(&enter_packet, sizeof(SC_Client_Enter_Packet));
+		ret = recvn(server.GetSock(), (char*)&enter_packet, sizeof(enter_packet), 0);
 
-		if (packet.type == ENTER_USER) {
-			cout << "Enter " << packet.nickname << endl;
+		for (int i = 0; i < 2; ++i)
+		{
 			CPlayer* Pobj = new CPlayer;
-			int a = g_ScnMgr->AddObject(packet.posX, packet.posY, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
-			cout << a << endl;
+			static int a = 1;
+			ScnMgr::GetInstance()->AddObject(0.f, a, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			++a;
+			ScnMgr::GetInstance()->m_Obj[i]->SetID(i);
 		}
 	}
 
