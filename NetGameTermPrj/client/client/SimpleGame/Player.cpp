@@ -200,7 +200,7 @@ void CPlayer::Shooting()
 	if (m_Head == UP)vBulletY += 0.2f;
 	if (m_Head == DOWN)vBulletY -= 0.2f;
 
-	m_server->SendAttackPacket(m_id, m_Head);
+	/*m_server->SendAttackPacket(m_id, m_Head);
 
 	SC_Attack_Packet& packet = m_server->RecvAttackPacket();
 
@@ -225,9 +225,9 @@ void CPlayer::Shooting()
 
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(packet.velx, packet.vely, packet.velz, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
-	}
+	}*/
 
-	/*float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
+	float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
 
 	if (vBulletSize > 0.000001f)
 	{
@@ -250,7 +250,7 @@ void CPlayer::Shooting()
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
 
-	}*/
+	}
 }
 
 void CPlayer::KeyInput(float elapsedInSec)
@@ -263,30 +263,19 @@ void CPlayer::KeyInput(float elapsedInSec)
 	
 	if (ScnMgr::GetInstance()->m_KeyW)
 	{
-		m_Head = UP;
-	//	fY += 0.1f;
-		m_CurState = UP;
-
-
+		m_Head = UP;		m_CurState = UP;
 	}
 	if (ScnMgr::GetInstance()->m_KeyS)
 	{
-		m_Head = DOWN;
-		//fY -= 0.1f;
-		m_CurState = DOWN;
+		m_Head = DOWN;		m_CurState = DOWN;
 	}
 	if (ScnMgr::GetInstance()->m_KeyA)
 	{
-		m_Head = LEFT;
-		//fX -= 0.1f;
-		m_CurState = LEFT;
+		m_Head = LEFT;		m_CurState = LEFT;
 	}
 	if (ScnMgr::GetInstance()->m_KeyD)
 	{
-		m_Head = RIGHT;
-		//fX += 0.1f;
-		m_CurState = RIGHT;
-
+		m_Head = RIGHT;		m_CurState = RIGHT;
 	}
 
 	bool Shoot = true;
@@ -314,6 +303,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 
 	m_velX = packet.x;
 	m_velY = packet.y;
+
 }
 
 void CPlayer::LateInit()

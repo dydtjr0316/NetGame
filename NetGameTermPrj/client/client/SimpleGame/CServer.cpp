@@ -147,10 +147,10 @@ SC_Attack_Packet SERVER::RecvAttackPacket()
 {
 	SC_Attack_Packet packet;
 
-	/*int retval = recv(m_Socket, (char*)&packet, sizeof(SC_Attack_Packet), 0);
-	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");*/
+	int retval = recv(m_Socket, (char*)&packet, sizeof(SC_Attack_Packet), 0);
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
-	//cout << "받을 때 : "<<sizeof(packet)<< " , " << packet.velx << " , " << packet.vely << " , " << packet.velz << endl;
+	cout << "받을 때 : "<< packet.velx << " , " << packet.vely << " , " << packet.velz << endl;
 	
 	return packet;
 }

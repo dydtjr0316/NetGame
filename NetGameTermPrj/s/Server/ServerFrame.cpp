@@ -150,11 +150,11 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		p.type = NICKNAME_USE;
 		ret = send(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(p), 0);
 
-		for (int i = 0; i < 2; ++i) {
+		for (int i = 0; i < 1; ++i) {
 			if (m_Clients.count(i) != 0) {
 				if (id != i) {
-					Send_enter_packet(0, id);
-					Send_enter_packet(id, 0);
+					Send_enter_packet(i, id);
+					Send_enter_packet(id, i);
 					Login = true;
 				}
 			}
@@ -171,6 +171,10 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	packet.id = id;
 	packet.size = sizeof(SC_Client_Enter_Packet);
 	packet.type = ENTER_USER;
+
+	packet.posX = m_Clients[id].GetX();
+	packet.posY = m_Clients[id].GetY();
+
 	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
 
 	//Send_pakcet(to, &packet);
@@ -185,7 +189,8 @@ void ServerFrame::Send_pakcet(int id, void* p)
 
 void ServerFrame::CreateMoveThread(int id)
 {
-	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)m_Clients[id].GetID(), 0, NULL);
+	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)id, 0, NULL);
+	//m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 }
 
 void ServerFrame::CreateAttackThread(int id)
@@ -220,9 +225,6 @@ void ServerFrame::UpdateMove(int id)
 
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
-
-	//cout << "받은 패킷" << endl;
-	//cout << move_packet.type << endl;
 
 	float fX, fY, fZ;
 	fX = fY = fZ = 0.0f;
@@ -273,14 +275,8 @@ void ServerFrame::UpdateMove(int id)
 	update_packet.id = id;
 	update_packet.size = sizeof(update_packet);
 
-	if (move_packet.type != IDLE) {
-		update_packet.x = move_packet.velx;
-		update_packet.y = move_packet.vely;
-	}
-	else {
-		update_packet.x = move_packet.velx;
-		update_packet.y = move_packet.vely;
-	}
+	update_packet.x = move_packet.velx;
+	update_packet.y = move_packet.vely;
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
@@ -323,6 +319,14 @@ void ServerFrame::UpdateAttack(int id)
 	update_packet.type = SC_PACKET_ATTACK;
 	update_packet.id = id;
 	update_packet.size = sizeof(SC_Attack_Packet);
+	 
+	if (update_packet.velx == 0 && update_packet.vely == 0)
+	{
+
+	}
+	else 
+		cout << update_packet.velx << " : " << update_packet.vely <<update_packet.velz<< endl;
+
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");

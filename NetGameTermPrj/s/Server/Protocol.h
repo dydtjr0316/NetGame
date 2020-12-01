@@ -57,6 +57,7 @@ struct SC_Client_Enter_Packet
 	char size;
 	char type;
 	int id;
+	float posX, posY;
 	char nickname[32];
 };
 

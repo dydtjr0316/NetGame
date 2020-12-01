@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 			/*g_ScnMgr_other = ScnMgr::GetInstance();`
 			g_ScnMgr_other->SetID(packet.id);*/
 			CPlayer* Pobj = new CPlayer;
-			int a = g_ScnMgr->AddObject(3.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			int a = g_ScnMgr->AddObject(packet.posX, packet.posX, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
 			cout << a << endl;
 		}
 	}

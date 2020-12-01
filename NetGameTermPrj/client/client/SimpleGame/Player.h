@@ -25,6 +25,8 @@ private:
 	float m_Frame = 0.f;
 	STATE m_CurState = IDLE;
 	STATE m_Head = IDLE;
+
+	mutex poslock;
 private:
 	bool m_blsInit = false;
 	// client
