@@ -48,7 +48,5 @@ private:
 	HANDLE m_AttackThread;
 
 	static unordered_map<int, Client> m_Clients;
-
 	static int m_id;
-	static SC_Client_RedayOK_Packet m_ready;
 };

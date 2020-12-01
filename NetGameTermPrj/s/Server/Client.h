@@ -27,7 +27,7 @@ public:
 	void SetSock_TCP(SOCKET sock);
 	void SetAddr(SOCKADDR_IN addr);
 	
-	void SetNickname(string nick);
+	void SetNickname(char nick[]);
 
 	void SetID(int id);
 	void SetHP(int hp);
@@ -44,7 +44,7 @@ private:
 	SOCKET		m_sock;
 	SOCKADDR_IN m_addr;
 
-	string		m_nick;
+	char		m_nick[32];
 
 	int			m_id;
 	int			m_hp;

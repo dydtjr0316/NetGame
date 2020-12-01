@@ -10,6 +10,8 @@ ServerFrame::ServerFrame()
 
 ServerFrame::~ServerFrame()
 {
+	m_Clients.erase(m_id);
+
 	for (auto& h : m_hCThreads) {
 		CloseHandle(h);
 		h = NULL;
@@ -101,7 +103,7 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
-	CreateAttackThread(id);
+	//CreateAttackThread(id);
 
 	// 입구 간 사람 몇명인지 확인
 	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
@@ -139,17 +141,24 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		}
 
 		m_Clients[id].SetNickname(login_packet.nickname);
-		cout << "Enter : " << id << ", " << login_packet.nickname << endl;
+		cout << "Enter : " << id << ", " << m_Clients[id].GetNickname() << endl;
 
-		//for (int i = 0; i < 2; ++i) {
-			//if (m_Clients.count(i) != 0) {
-				if (id == 2) {
+		SC_Client_LoginOK_Packet p;
+		ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
+		p.size = sizeof(SC_Client_LoginOK_Packet);
+		strcpy_s(p.nickname, m_Clients[id].GetNickname().c_str());
+		p.type = NICKNAME_USE;
+		ret = send(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(p), 0);
+
+		for (int i = 0; i < 2; ++i) {
+			if (m_Clients.count(i) != 0) {
+				if (id != i) {
 					Send_enter_packet(0, id);
 					Send_enter_packet(id, 0);
 					Login = true;
 				}
-			//}
-		//}
+			}
+		}
 		Login = true;
 	}
 
@@ -164,7 +173,8 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	packet.type = ENTER_USER;
 	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
 
-	Send_pakcet(to, &packet);
+	//Send_pakcet(to, &packet);
+	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 
 void ServerFrame::Send_pakcet(int id, void* p)
@@ -282,7 +292,7 @@ void ServerFrame::UpdateAttack(int id)
 	ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
 
 	int ret = recv(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
+	if (ret == SOCKET_ERROR) err_display("UpdateAttack() -> recv()");
 
 	float vBulletX, vBulletY, vBulletZ;
 	vBulletX = vBulletY = vBulletZ = 0.f;
@@ -310,12 +320,12 @@ void ServerFrame::UpdateAttack(int id)
 	update_packet.velx = vBulletX;
 	update_packet.vely = vBulletY;
 	update_packet.velz = vBulletZ;
-	update_packet.type = SC_PACKET_MOVE;
+	update_packet.type = SC_PACKET_ATTACK;
 	update_packet.id = id;
 	update_packet.size = sizeof(SC_Attack_Packet);
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
 }
 
 void ServerFrame::UpdateStatus()

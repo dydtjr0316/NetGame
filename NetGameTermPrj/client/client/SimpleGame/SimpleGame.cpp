@@ -16,6 +16,7 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 #include "ScnMgr.h"
 #include "CServer.h"
+#include "Player.h"
 
 ScnMgr* g_ScnMgr = NULL;
 ScnMgr* g_ScnMgr_other = NULL;
@@ -35,12 +36,6 @@ void RenderScene(int temp)
 	g_ScnMgr->Update(elapsedTimeInSec);
 	g_ScnMgr->RenderScene();
 	g_ScnMgr->DoGarbageCollect();
-
-	if (g_ScnMgr_other != NULL) {
-		g_ScnMgr_other->Update(elapsedTimeInSec);
-		g_ScnMgr_other->RenderScene();
-		g_ScnMgr_other->DoGarbageCollect();
-	}
 
 	glutSwapBuffers();
 
@@ -111,15 +106,10 @@ int main(int argc, char **argv)
 	g_ScnMgr = ScnMgr::GetInstance();
 	g_ScnMgr->SetID(my_id);
 
-	SC_Client_Enter_Packet packet;
-	ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
-	int retval = recv((SOCKET)server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
-
-	/*if (packet.type == ENTER_USER) {
-		cout << "Enter " << packet.nickname;
-		g_ScnMgr_other = ScnMgr::GetInstance();
-		g_ScnMgr_other->SetID(packet.id);
-	}*/
+	SC_Client_LoginOK_Packet p;
+	ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
+	int ret = recv(server.GetSock(), (char*)&p, sizeof(p), 0);
+	cout << p.nickname << endl;
 
 	glutDisplayFunc(Display);
 	glutIdleFunc(Idle);
@@ -135,10 +125,25 @@ int main(int argc, char **argv)
 	g_PrevTime = glutGet(GLUT_ELAPSED_TIME);
 	glutTimerFunc(10, RenderScene, 0);
 
+	if (p.type == NICKNAME_USE) {
+		cout << "waiting for other client to enter" << endl;
+		SC_Client_Enter_Packet packet;
+		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
+		ret = recv(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+
+		if (packet.type == ENTER_USER) {
+			cout << "Enter " << packet.nickname << endl;
+			/*g_ScnMgr_other = ScnMgr::GetInstance();`
+			g_ScnMgr_other->SetID(packet.id);*/
+			CPlayer* Pobj = new CPlayer;
+			int a = g_ScnMgr->AddObject(3.f, 0.f, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			cout << a << endl;
+		}
+	}
+
 	glutMainLoop();
 		
 	ScnMgr::GetInstance()->DestroyInstance();
 
-    return 0;
+	return 0;
 }
-

@@ -110,11 +110,11 @@
     <ClInclude Include="Sound.h">
       <Filter>98N\07Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol.h">
-      <Filter>99.etc</Filter>
-    </ClInclude>
     <ClInclude Include="CServer.h">
       <Filter>02Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\s\Server\Protocol.h">
+      <Filter>99.etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

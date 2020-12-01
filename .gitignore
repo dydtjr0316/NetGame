@@ -1,3 +1,8 @@
+/NetGameTermPrj/s/.vs
+/NetGameTermPrj/s/Debug
+/NetGameTermPrj/s/x64
+/NetGameTermPrj/s/Server/Debug
+/NetGameTermPrj/s/Server/x64
 *.exe
 *.ilk
 *.pdb

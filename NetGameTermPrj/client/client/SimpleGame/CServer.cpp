@@ -71,7 +71,7 @@ int SERVER::RecvMyID()
 	return m_id;
 }
 
-void SERVER::SendLoginPacket(int id, char nickname[32])
+void SERVER::SendLoginPacket(int id, char nickname[])
 {
 	CS_Client_Login_Packet packet;
 
@@ -136,6 +136,8 @@ void SERVER::SendAttackPacket(int id, STATE type)
 	packet.type = type;
 	packet.id = id;
 
+
+
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Attack_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
@@ -145,8 +147,10 @@ SC_Attack_Packet SERVER::RecvAttackPacket()
 {
 	SC_Attack_Packet packet;
 
-	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
-	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
+	/*int retval = recv(m_Socket, (char*)&packet, sizeof(SC_Attack_Packet), 0);
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");*/
 
+	//cout << "¹ÞÀ» ¶§ : "<<sizeof(packet)<< " , " << packet.velx << " , " << packet.vely << " , " << packet.velz << endl;
+	
 	return packet;
 }
