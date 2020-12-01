@@ -41,8 +41,8 @@ struct CS_Client_Login_Packet
 {
 	char size;
 	char type;
-	int id;
 	char nickname[32];
+	int id;
 };
 
 struct SC_Client_LoginOK_Packet

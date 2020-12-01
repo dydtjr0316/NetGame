@@ -110,6 +110,9 @@ int main(int argc, char **argv)
 
 	SC_Client_LoginOK_Packet p;
 	ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
+
+	cout << server.GetSock() << endl;
+
 	int ret = recv(server.GetSock(), (char*)&p, sizeof(p), 0);
 	cout << p.nickname << endl;
 
