@@ -128,6 +128,8 @@ int main(int argc, char **argv)
 	glutTimerFunc(10, RenderScene, 0);
 
 	if (p.type == NICKNAME_USE) {
+		
+		
 		cout << "waiting for other client to enter" << endl;
 		SC_Client_Enter_Packet packet;
 		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
@@ -138,7 +140,7 @@ int main(int argc, char **argv)
 			/*g_ScnMgr_other = ScnMgr::GetInstance();`
 			g_ScnMgr_other->SetID(packet.id);*/
 			CPlayer* Pobj = new CPlayer;
-			int a = g_ScnMgr->AddObject(packet.posX, packet.posX, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			int a = g_ScnMgr->AddObject(packet.posX, packet.posY, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
 			cout << a << endl;
 		}
 	}

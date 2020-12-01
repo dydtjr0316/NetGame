@@ -16,7 +16,7 @@ SERVER::~SERVER()
 
 int SERVER::ConnectServer()
 {
-	int id = ConnectTCP("127.0.0.1");
+	int id = ConnectTCP(SERVERIP);
 
 	return id;
 }
