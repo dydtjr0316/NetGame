@@ -146,6 +146,8 @@ int main(int argc, char **argv)
 	glutTimerFunc(10, RenderScene, 0);
 
 	if (p.type == NICKNAME_USE) {
+		
+		
 		cout << "waiting for other client to enter" << endl;
 		SC_Client_Enter_Packet packet;
 		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
