@@ -14,5 +14,5 @@
 #include <iostream>
 using namespace std;
 
-#include "Globals.h"
+#include "../../../NetGameTermPrj/client/client/SimpleGame/Globals.h"
 #include "Protocol.h"

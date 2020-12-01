@@ -30,6 +30,8 @@ public:
 	int ConnectTCP(const char*);
 	int RecvMyID();
 
+	int recvn(SOCKET s, char* buf, int len, int flags);
+
 	void SendLoginPacket(int id, char nickname[]);
 	SC_Client_Enter_Packet RecvEnterPacket();
 

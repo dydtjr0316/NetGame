@@ -9,8 +9,8 @@ public:
 	~ServerFrame();
 
 public:
-	static void err_quit(const char* msg);
 	static void err_display(const char* msg);
+	static int recvn(SOCKET s, char* buf, int len, int flags);
 
 	int InitTCPServer();
 

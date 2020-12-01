@@ -19,10 +19,28 @@ but WITHOUT ANY WARRANTY.
 #include "Player.h"
 
 ScnMgr* g_ScnMgr = NULL;
-ScnMgr* g_ScnMgr_other = NULL;
 int g_PrevTime = 0;
 int my_id;
 SERVER server;
+
+int recvn(SOCKET s, char* buf, int len, int flags)
+{
+	int received;
+	char* ptr = buf;
+	int left = len;
+
+	while (left > 0) {
+		received = recv(s, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+			return SOCKET_ERROR;
+		else if (received == 0)
+			break;
+		left -= received;
+		ptr += received;
+	}
+
+	return (len - left);
+}
 
 void RenderScene(int temp)
 {
@@ -110,7 +128,7 @@ int main(int argc, char **argv)
 
 	SC_Client_LoginOK_Packet p;
 	ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
-	int ret = recv(server.GetSock(), (char*)&p, sizeof(p), 0);
+	int ret = recvn(server.GetSock(), (char*)&p, sizeof(p), 0);
 	cout << p.nickname << endl;
 
 	glutDisplayFunc(Display);
@@ -131,14 +149,12 @@ int main(int argc, char **argv)
 		cout << "waiting for other client to enter" << endl;
 		SC_Client_Enter_Packet packet;
 		ZeroMemory(&packet, sizeof(SC_Client_Enter_Packet));
-		ret = recv(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
+		ret = recvn(server.GetSock(), (char*)&packet, sizeof(SC_Client_Enter_Packet), 0);
 
 		if (packet.type == ENTER_USER) {
 			cout << "Enter " << packet.nickname << endl;
-			/*g_ScnMgr_other = ScnMgr::GetInstance();`
-			g_ScnMgr_other->SetID(packet.id);*/
 			CPlayer* Pobj = new CPlayer;
-			int a = g_ScnMgr->AddObject(packet.posX, packet.posX, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
+			int a = g_ScnMgr->AddObject(packet.posX, packet.posY, 0.f,0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
 			cout << a << endl;
 		}
 	}

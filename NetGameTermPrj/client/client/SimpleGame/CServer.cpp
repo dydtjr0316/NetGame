@@ -16,7 +16,7 @@ SERVER::~SERVER()
 
 int SERVER::ConnectServer()
 {
-	int id = ConnectTCP("127.0.0.1");
+	int id = ConnectTCP(SERVERIP);
 
 	return id;
 }
@@ -67,10 +67,29 @@ int SERVER::ConnectTCP(const char* ip)
 
 int SERVER::RecvMyID()
 {
-	int retval = recv((SOCKET)m_Socket, (char*)&m_id, sizeof(int), 0);
+	int retval = recvn((SOCKET)m_Socket, (char*)&m_id, sizeof(int), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMyID()");
 
 	return m_id;
+}
+
+int SERVER::recvn(SOCKET s, char* buf, int len, int flags)
+{
+	int received;
+	char* ptr = buf;
+	int left = len;
+
+	while (left > 0) {
+		received = recvn(s, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+			return SOCKET_ERROR;
+		else if (received == 0)
+			break;
+		left -= received;
+		ptr += received;
+	}
+
+	return (len - left);
 }
 
 void SERVER::SendLoginPacket(int id, char nickname[])
@@ -93,7 +112,7 @@ SC_Client_Enter_Packet SERVER::RecvEnterPacket()
 {
 	SC_Client_Enter_Packet packet;
 
-	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
+	int retval = recvn(m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::SendEnterPacket");
 
 	return packet;
@@ -124,7 +143,7 @@ SC_Move_Packet SERVER::RecvMovePacket()
 {
 	SC_Move_Packet packet;
 
-	int retval = recv(m_Socket, (char*)&packet, sizeof(packet), 0);
+	int retval = recvn(m_Socket, (char*)&packet, sizeof(packet), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
 	return packet;
@@ -149,7 +168,7 @@ SC_Attack_Packet SERVER::RecvAttackPacket()
 {
 	SC_Attack_Packet packet;
 
-	int retval = recv(m_Socket, (char*)&packet, sizeof(SC_Attack_Packet), 0);
+	int retval = recvn(m_Socket, (char*)&packet, sizeof(SC_Attack_Packet), 0);
 	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
 
 	cout << "¹ÞÀ» ¶§ : "<< packet.velx << " , " << packet.vely << " , " << packet.velz << endl;
