@@ -157,7 +157,8 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		ZeroMemory(&login_packet, sizeof(CS_Client_Login_Packet));
 
 		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
-		if (ret == SOCKET_ERROR || ret == 0) {
+		if (login_packet.type != ENTER_USER) continue;
+		if (ret == SOCKET_ERROR) {
 			err_display("Process() -> recv() : login");
 			closesocket(m_Clients[id].GetSock_TCP());
 			m_Clients.erase(id);
@@ -199,14 +200,7 @@ void ServerFrame::Send_enter_packet(int to, int id)
 
 	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
 
-	//Send_pakcet(to, &packet);
 	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
-}
-
-void ServerFrame::Send_pakcet(int id, void* p)
-{
-	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
-	send(m_Clients[id].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 
 void ServerFrame::CreateMoveThread(int id)
@@ -371,16 +365,17 @@ void ServerFrame::UpdateAttack(int id)
 	update_packet.id = id;
 	update_packet.size = sizeof(SC_Attack_Packet);
 	 
-	if (update_packet.velx == 0 && update_packet.vely == 0)
-	{
+	if (update_packet.velx == 0 && update_packet.vely == 0)	{
 
 	}
-	else 
+	else {
 		//cout << update_packet.velx << " : " << update_packet.vely <<update_packet.velz<< endl;
+	}
 
-
-	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
+	for (auto& m : m_Clients) {
+		ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
+		if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+	}
 }
 
 void ServerFrame::UpdateStatus()

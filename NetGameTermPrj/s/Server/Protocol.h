@@ -5,17 +5,6 @@
 //#define INGAME_CLEAR 312
 //#define INGAME_OVER 313
 
-// enum으로 사용
-//#define MOVE_UP 321
-//#define MOVE_DOWN 322
-//#define MOVE_LEFT 323
-//#define MOVE_RIGHT 324
-//
-//#define SHOOT_UP 331
-//#define SHOOT_DOWN 332
-//#define SHOOT_LEFT 333
-//#define SHOOT_RIGHT 334
-
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
 
@@ -46,14 +35,14 @@ struct CS_Client_Login_Packet
 	char size;
 	char type;
 	int id;
-	char nickname[32];
+	char nickname[16];
 };
 
 struct SC_Client_LoginOK_Packet
 {
 	char size;
 	char type;
-	char nickname[32];
+	char nickname[16];
 };
 
 struct SC_Client_Enter_Packet
@@ -62,7 +51,7 @@ struct SC_Client_Enter_Packet
 	char type;
 	int id;
 	float posX, posY;
-	char nickname[32];
+	char nickname[16];
 };
 
 // Lobby

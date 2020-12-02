@@ -99,6 +99,13 @@ void SpecialKeyUpInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	int id = server.ConnectServer();
+
+	cout << "닉네임 입력 : ";
+	char nick[32];
+	cin >> nick;
+	server.SendLoginPacket(id, nick);
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -116,17 +123,11 @@ int main(int argc, char **argv)
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
 	
-	int id = server.ConnectServer();
-
-	char nick[32];
-	cin >> nick;
-	server.SendLoginPacket(id, nick);
-
 	SC_Client_LoginOK_Packet loginok_packet;
 	ZeroMemory(&loginok_packet, sizeof(SC_Client_LoginOK_Packet));
 	int ret = recvn(server.GetSock(), (char*)&loginok_packet, sizeof(loginok_packet), 0);
-
 	cout << loginok_packet.nickname << endl;
+
 	{
 		glutDisplayFunc(Display);
 		glutIdleFunc(Idle);
@@ -149,8 +150,7 @@ int main(int argc, char **argv)
 		ZeroMemory(&enter_packet, sizeof(SC_Client_Enter_Packet));
 		ret = recvn(server.GetSock(), (char*)&enter_packet, sizeof(enter_packet), 0);
 
-		for (int i = 0; i < 2; ++i)
-		{
+		for (int i = 0; i < 2; ++i) {
 			CPlayer* Pobj = new CPlayer;
 			static int a = 1;
 			ScnMgr::GetInstance()->AddObject(0.f, a, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
