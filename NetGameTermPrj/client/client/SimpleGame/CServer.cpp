@@ -117,15 +117,17 @@ SC_Client_Enter_Packet SERVER::RecvEnterPacket()
 	return packet;
 }
 
-void SERVER::SendMovePacket(int id, float x, float y, STATE type, float elapsedInSec, float velx, float vely, float mass)
+void SERVER::SendMovePacket(int id, float x, float y, char packettype, DIR dir, STATE head,float elapsedInSec, float velx, float vely, float mass)
 {
 	CS_Move_Packet packet;
 
 	packet.size = sizeof(CS_Move_Packet);
+	packet.type = CS_PACKET_MOVE;
 	packet.id = id;
 	packet.x = x;
 	packet.y = y;
-	packet.type = type;
+	packet.dir = dir;
+	packet.head = head;
 	packet.elapsedInSec = elapsedInSec;
 	packet.velx = velx;
 	packet.vely = vely;

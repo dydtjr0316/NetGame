@@ -122,7 +122,6 @@ int main(int argc, char **argv)
 	cin >> nick;
 	server.SendLoginPacket(id, nick);
 
-
 	SC_Client_LoginOK_Packet loginok_packet;
 	ZeroMemory(&loginok_packet, sizeof(SC_Client_LoginOK_Packet));
 	int ret = recvn(server.GetSock(), (char*)&loginok_packet, sizeof(loginok_packet), 0);
@@ -157,6 +156,10 @@ int main(int argc, char **argv)
 			ScnMgr::GetInstance()->AddObject(0.f, a, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
 			++a;
 			ScnMgr::GetInstance()->m_Obj[i]->SetID(i);
+
+			// owner ÁöÁ¤
+			if (id == i)
+				Pobj->is_owner = true;
 		}
 	}
 

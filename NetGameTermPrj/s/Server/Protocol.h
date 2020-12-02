@@ -19,6 +19,8 @@
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
 
+enum class DIR{NONE,LEFT,RIGHT,UP,DOWN};
+
 #pragma pack (push, 1)
 
 constexpr char SC_PACKET_MOVE = 0;
@@ -26,6 +28,8 @@ constexpr char SC_PACKET_ENTER = 1;
 constexpr char SC_PACKET_LOGIN = 2;
 constexpr char SC_PACKET_LEAVE = 3;
 constexpr char SC_PACKET_ATTACK = 4;
+
+constexpr char CS_PACKET_MOVE = 100;
 
 // Login
 constexpr char ENTER_USER = 5;
@@ -80,8 +84,10 @@ struct SC_Client_RedayOK_Packet
 struct CS_Move_Packet
 {
 	char size;
-	STATE type;
+	char type;
 	int id;
+	DIR dir;
+	STATE head;
 	float x, y;
 	float elapsedInSec;
 	float velx, vely;
@@ -93,6 +99,8 @@ struct SC_Move_Packet
 	char size;
 	char type;
 	int id;
+	STATE curstate;
+	STATE head;
 	float x, y;
 };
 

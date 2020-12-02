@@ -7,8 +7,7 @@
 CPlayer::CPlayer()
 {
 	m_server = new SERVER;
-	m_id = m_server->GetID();
-
+	//m_id = m_server->GetID();
 }
 
 CPlayer::~CPlayer()
@@ -198,32 +197,6 @@ void CPlayer::Shooting()
 	if (m_Head == UP)vBulletY += 0.2f;
 	if (m_Head == DOWN)vBulletY -= 0.2f;
 
-	/*m_server->SendAttackPacket(m_id, m_Head);
-
-	SC_Attack_Packet& packet = m_server->RecvAttackPacket();
-
-	float vBulletSize = sqrtf(packet.velx * packet.velx + packet.vely * packet.vely + packet.velz * packet.velz);
-
-	if (vBulletSize > 0.000001f) {
-		packet.velx /= vBulletSize;
-		packet.vely /= vBulletSize;
-		packet.velz /= vBulletSize;
-
-		packet.velx *= bulletVel;
-		packet.vely *= bulletVel;
-		packet.velz *= bulletVel;
-
-		CBullet* pObj = new CBullet;
-
-		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
-			0.2f, 0.2f, 0.2f,
-			1, 1, 1, 1,
-			packet.velx, packet.vely, packet.velz,
-			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
-
-		ScnMgr::GetInstance()->m_Obj[id]->AddForce(packet.velx, packet.vely, packet.velz, 0.1f);
-		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
-	}*/
 
 	float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
 
@@ -253,37 +226,22 @@ void CPlayer::Shooting()
 
 void CPlayer::KeyInput(float elapsedInSec)
 {
-//	cout << m_id << endl;
-	m_server->SendMovePacket(m_id, m_posX, m_posY, m_CurState, elapsedInSec, m_velX, m_velY, m_mass);
-
-
-	SC_Move_Packet& packet = m_server->RecvMovePacket();
-
 	m_blsCanShoot = false;
 
 	m_CurState = IDLE;
 	m_Head = DOWN;
+	m_Dir = DIR::NONE;
 
-	//cout << "my id : " << m_id << " || packet  id : " << packet.id << endl;
-	
-	if (m_id == packet.id)
+	if (is_owner)
 	{
 		if (ScnMgr::GetInstance()->m_KeyW)
-		{
-			m_Head = UP;		m_CurState = UP;
-		}
+			m_Dir = DIR::UP;
 		if (ScnMgr::GetInstance()->m_KeyS)
-		{
-			m_Head = DOWN;		m_CurState = DOWN;
-		}
+			m_Dir = DIR::DOWN;
 		if (ScnMgr::GetInstance()->m_KeyA)
-		{
-			m_Head = LEFT;		m_CurState = LEFT;
-		}
+			m_Dir = DIR::LEFT;
 		if (ScnMgr::GetInstance()->m_KeyD)
-		{
-			m_Head = RIGHT;		m_CurState = RIGHT;
-		}
+			m_Dir = DIR::RIGHT;
 
 		bool Shoot = true;
 
@@ -293,7 +251,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 		else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 		else Shoot = false;
 
-
+		m_server->SendMovePacket(m_id, m_posX, m_posY, CS_PACKET_MOVE, m_Dir, m_Head, elapsedInSec, m_velX, m_velY, m_mass);
 
 		if (Shoot)
 		{
@@ -307,11 +265,14 @@ void CPlayer::KeyInput(float elapsedInSec)
 		}
 	}
 
+	SC_Move_Packet& packet = m_server->RecvMovePacket();
 
 	if (m_id == packet.id)
 	{
 		m_velX = packet.x;
 		m_velY = packet.y;
+		m_Head = packet.head;
+		m_CurState = packet.curstate;
 	}
 }
 

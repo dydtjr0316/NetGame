@@ -253,56 +253,83 @@ void ServerFrame::UpdateMove(int id)
 	float fAmount = 20.f;
 	float fSize = 0.f;
 
-	switch (move_packet.type)
+	if (move_packet.type == CS_PACKET_MOVE)
 	{
-	case UP:
-		fY += 0.1f;
-		break;
-	case DOWN:
-		fY -= 0.1f;
-		break;
-	case LEFT:
-		fX -= 0.1f;
-		break;
-	case RIGHT:
-		fX += 0.1f;
-		break;
-	default:
-		break;
-	}
+		SC_Move_Packet update_packet;
+		ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
 
-	fSize = sqrtf(fX * fX + fY * fY);
+		switch (move_packet.dir)
+		{
+		case DIR::UP:
+			fY += 0.1f;
+			update_packet.curstate = STATE::UP;
+			break;
+		case DIR::DOWN:
+			fY -= 0.1f;
+			update_packet.curstate = STATE::DOWN;
+			break;
+		case DIR::LEFT:
+			fX -= 0.1f;
+			update_packet.curstate = STATE::LEFT;
+			break;
+		case DIR::RIGHT:
+			fX += 0.1f;
+			update_packet.curstate = STATE::RIGHT;
+			break;
+		default:
+			update_packet.curstate = STATE::IDLE;
+			break;
+		}
 
-	if (fSize > FLT_EPSILON)
-	{
-		fX /= fSize;
-		fY /= fSize;
-		fX *= fAmount;
-		fY *= fAmount;
+		switch (move_packet.head)
+		{
+		case UP:
+			update_packet.head = STATE::UP;
+			break;
+		case DOWN:
+			update_packet.head = STATE::DOWN;
+			break;
+		case LEFT:
+			update_packet.head = STATE::LEFT;
+			break;
+		case RIGHT:
+			update_packet.head = STATE::RIGHT;
+			break;
+		default:
+			update_packet.head = STATE::DOWN;
+			break;
+		}
 
-		float accX, accY, accZ;
-		accX = accY = accZ = 0.f;
+		fSize = sqrtf(fX * fX + fY * fY);
 
-		accX = fX / 1.0f;
-		accY = fY / 1.0f;
+		if (fSize > FLT_EPSILON)
+		{
+			fX /= fSize;
+			fY /= fSize;
+			fX *= fAmount;
+			fY *= fAmount;
 
-		move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
-		move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
-	}
+			float accX, accY, accZ;
+			accX = accY = accZ = 0.f;
 
-	SC_Move_Packet update_packet;
-	ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
+			accX = fX / 1.0f;
+			accY = fY / 1.0f;
 
-	update_packet.type = SC_PACKET_MOVE;
-	update_packet.id = id;
-	update_packet.size = sizeof(update_packet);
+			move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+			move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
+		}
 
-	update_packet.x = move_packet.velx;
-	update_packet.y = move_packet.vely;
+		update_packet.type = SC_PACKET_MOVE;
+		update_packet.id = id;
+		update_packet.size = sizeof(update_packet);
 
-	for (int i = 0; i < 2; ++i) {
-		ret = send(m_Clients[i].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
-		if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+		update_packet.x = move_packet.velx;
+		update_packet.y = move_packet.vely;
+
+		for (auto& m : m_Clients) {
+			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
+			if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+		}
 	}
 }
 

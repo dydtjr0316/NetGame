@@ -25,6 +25,8 @@ private:
 	float m_Frame = 0.f;
 	STATE m_CurState = IDLE;
 	STATE m_Head = IDLE;
+	DIR m_Dir = DIR::DOWN;
+
 
 	mutex poslock;
 private:
@@ -43,5 +45,8 @@ private:
 private:
 	int m_iBulletSound = -1;
 	int m_iDamageSound = -1;
+
+public:
+	bool is_owner = false;
 
 };
