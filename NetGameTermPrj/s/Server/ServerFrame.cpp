@@ -144,17 +144,29 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 	getpeername(m_Clients[id].GetSock_TCP(), (SOCKADDR*)&Client_Addr, &addrlen);
 
 	bool Login = false;
+
 	while (!Login) {
 		CS_Client_Login_Packet login_packet;
 		ZeroMemory(&login_packet, sizeof(CS_Client_Login_Packet));
 
+		//int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
+		//if (login_packet.type != ENTER_USER) continue;
+		//
+		//if (ret == SOCKET_ERROR || ret == 0) {
+		//	err_display("Process() -> recv() : login");
+		//	closesocket(m_Clients[id].GetSock_TCP());
+		//	m_Clients.erase(id);
+		//	return 0;
+		//}
+
 		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
-		if (ret == SOCKET_ERROR || ret == 0) {
-			err_display("Process() -> recv() : login");
-			closesocket(m_Clients[id].GetSock_TCP());
-			m_Clients.erase(id);
-			return 0;
-		}
+      if (login_packet.type != ENTER_USER) continue;
+      if (ret == SOCKET_ERROR) {
+         err_display("Process() -> recv() : login");
+         closesocket(m_Clients[id].GetSock_TCP());
+         m_Clients.erase(id);
+         return 0;
+      }
 
 		m_Clients[id].SetNickname(login_packet.nickname);
 		cout << "Enter : " << id << ", " << m_Clients[id].GetNickname().c_str() << endl;
@@ -164,13 +176,15 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		p.size = sizeof(SC_Client_LoginOK_Packet);
 		strcpy_s(p.nickname, m_Clients[id].GetNickname().c_str());
 		p.type = NICKNAME_USE;
+		cout << "type -> " << p.type << endl;
+
 		ret = send(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(p), 0);
 
 		if (id != 0) {
 			if (m_Clients.count(1) != 0) {
 				Send_enter_packet(0, id);
 				Send_enter_packet(id, 0);
-				Login = true;
+				//Login = true;
 			}
 		}
 		Login = true;
@@ -336,44 +350,58 @@ void ServerFrame::UpdateAttack(int id)
 
 	float vBulletX, vBulletY, vBulletZ;
 	vBulletX = vBulletY = vBulletZ = 0.f;
-
-	switch (attack_packet.type) {
-	case UP:
-		vBulletY += 0.2f;
-		break;
-	case DOWN:
-		vBulletY -= 0.2f;
-		break;
-	case LEFT:
-		vBulletX -= 0.2f;
-		break;
-	case RIGHT:
-		vBulletX += 0.2f;
-		break;
-	default:
-		break;
-	}
-
-	SC_Attack_Packet update_packet;
-	ZeroMemory(&update_packet, sizeof(SC_Attack_Packet));
-
-	update_packet.velx = vBulletX;
-	update_packet.vely = vBulletY;
-	update_packet.velz = vBulletZ;
-	update_packet.type = SC_PACKET_ATTACK;
-	update_packet.id = id;
-	update_packet.size = sizeof(SC_Attack_Packet);
-	 
-	if (update_packet.velx == 0 && update_packet.vely == 0)
+	if (attack_packet.type == CS_PACKET_ATTACK)
 	{
+		switch (attack_packet.head) {
+		case UP:
+			vBulletY += 0.2f;
+			break;
+		case DOWN:
+			vBulletY -= 0.2f;
+			break;
+		case LEFT:
+			vBulletX -= 0.2f;
+			break;
+		case RIGHT:
+			vBulletX += 0.2f;
+			break;
+		default:
+			break;
+		}
 
+
+		float vBulletSize = sqrtf(vBulletX * vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
+
+		if (vBulletSize > 0.000001f)
+		{
+			vBulletX /= vBulletSize;
+			vBulletY /= vBulletSize;
+			vBulletZ /= vBulletSize;
+
+			vBulletX *= attack_packet.bulletvel;
+			vBulletY *= attack_packet.bulletvel;
+			vBulletZ *= attack_packet.bulletvel;
+		}
+
+		//
+
+		SC_Attack_Packet update_attack_packet;
+		ZeroMemory(&update_attack_packet, sizeof(SC_Attack_Packet));
+
+		update_attack_packet.bulletx = vBulletX;
+		update_attack_packet.bullety = vBulletY;
+		update_attack_packet.bulletz = vBulletZ;
+		update_attack_packet.bulletsize = vBulletSize;
+		update_attack_packet.type = SC_PACKET_ATTACK;
+		update_attack_packet.id = id;
+		update_attack_packet.size = sizeof(SC_Attack_Packet);
+
+
+		for (auto& m : m_Clients) {
+			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Move_Packet), 0);
+			if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
+		}
 	}
-	else 
-		//cout << update_packet.velx << " : " << update_packet.vely <<update_packet.velz<< endl;
-
-
-	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
 }
 
 void ServerFrame::UpdateStatus()

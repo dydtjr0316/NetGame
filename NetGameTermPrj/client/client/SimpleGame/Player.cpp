@@ -184,44 +184,34 @@ void CPlayer::DrawHead()
 
 void CPlayer::Shooting()
 {
-	if (m_blsCanShoot == false)
+	/*if (m_blsCanShoot == false)
 		return;
-	ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
 
 	float bulletVel = 4.f;
-	float vBulletX, vBulletY, vBulletZ;
-	vBulletX = vBulletY = vBulletZ = 0.f;
 
-	if (m_Head == LEFT) vBulletX -= 0.2f;
-	if (m_Head == RIGHT)vBulletX += 0.2f;
-	if (m_Head == UP)vBulletY += 0.2f;
-	if (m_Head == DOWN)vBulletY -= 0.2f;
-
-
-	float vBulletSize = sqrtf(vBulletX*vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
-
-	if (vBulletSize > 0.000001f)
+	if (is_owner)
 	{
-		vBulletX /= vBulletSize;
-		vBulletY /= vBulletSize;
-		vBulletZ /= vBulletSize;
+		m_server->SendAttackPacket(m_id, CS_PACKET_ATTACK, m_Dir, m_Head, bulletVel);
+	}
+	SC_Attack_Packet& attack_packet = m_server->RecvAttackPacket();
 
-		vBulletX *= bulletVel;
-		vBulletY *= bulletVel;
-		vBulletZ *= bulletVel;
-
+	if(attack_packet.bulletsize>0.000001f)
+	{
+		ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
 		CBullet* pObj = new CBullet;
 
 		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
 			0.2f, 0.2f, 0.2f,
 			1, 1, 1, 1,
-			vBulletX, vBulletY, vBulletZ,
+			attack_packet.bulletx, attack_packet.bullety, attack_packet.bulletz,
 			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
 
-		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
+		ScnMgr::GetInstance()->m_Obj[id]->AddForce
+		(attack_packet.bulletx, attack_packet.bullety, attack_packet.bulletz, 0.1f);
+
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
 
-	}
+	}*/
 }
 
 void CPlayer::KeyInput(float elapsedInSec)
@@ -251,7 +241,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 		else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
 		else Shoot = false;
 
-		m_server->SendMovePacket(m_id, m_posX, m_posY, CS_PACKET_MOVE, m_Dir, m_Head, elapsedInSec, m_velX, m_velY, m_mass);
+		m_server->SendMovePacket(m_id, CS_PACKET_MOVE, m_Dir, m_Head, elapsedInSec, m_velX, m_velY, m_mass);
 
 		if (Shoot)
 		{
@@ -265,15 +255,16 @@ void CPlayer::KeyInput(float elapsedInSec)
 		}
 	}
 
-	SC_Move_Packet& packet = m_server->RecvMovePacket();
+		SC_Move_Packet& packet = m_server->RecvMovePacket();
 
-	if (m_id == packet.id)
-	{
-		m_velX = packet.x;
-		m_velY = packet.y;
-		m_Head = packet.head;
-		m_CurState = packet.curstate;
-	}
+		if (m_id == packet.id)
+		{
+			m_velX = packet.x;
+			m_velY = packet.y;
+			m_Head = packet.head;
+			m_CurState = packet.curstate;
+		}
+	
 }
 
 void CPlayer::LateInit()

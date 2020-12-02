@@ -30,6 +30,8 @@ constexpr char SC_PACKET_LEAVE = 3;
 constexpr char SC_PACKET_ATTACK = 4;
 
 constexpr char CS_PACKET_MOVE = 100;
+constexpr char CS_PACKET_ATTACK = 101;
+
 
 // Login
 constexpr char ENTER_USER = 5;
@@ -46,14 +48,14 @@ struct CS_Client_Login_Packet
 	char size;
 	char type;
 	int id;
-	char nickname[32];
+	char nickname[16];
 };
 
 struct SC_Client_LoginOK_Packet
 {
 	char size;
 	char type;
-	char nickname[32];
+	char nickname[16];
 };
 
 struct SC_Client_Enter_Packet
@@ -62,7 +64,7 @@ struct SC_Client_Enter_Packet
 	char type;
 	int id;
 	float posX, posY;
-	char nickname[32];
+	char nickname[16];
 };
 
 // Lobby
@@ -88,7 +90,6 @@ struct CS_Move_Packet
 	int id;
 	DIR dir;
 	STATE head;
-	float x, y;
 	float elapsedInSec;
 	float velx, vely;
 	float mass;
@@ -108,8 +109,11 @@ struct SC_Move_Packet
 struct CS_Attack_Packet
 {
 	char size;
-	STATE type;
+	char type;
 	int id;
+	DIR dir;
+	STATE head;
+	float bulletvel;
 };
 
 struct SC_Attack_Packet
@@ -117,7 +121,7 @@ struct SC_Attack_Packet
 	char size;
 	char type;
 	int id;
-	float velx, vely, velz;
+	float bulletx, bullety, bulletz, bulletsize;
 };
 
 // Boss

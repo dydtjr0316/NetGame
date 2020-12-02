@@ -35,10 +35,10 @@ public:
 	void SendLoginPacket(int id, char nickname[]);
 	SC_Client_Enter_Packet RecvEnterPacket();
 
-	void SendMovePacket(int id, float x, float y,char packettype,DIR dir, STATE head, float elapsedInSec, float velx, float vely, float mass);
+	void SERVER::SendMovePacket(int id, char packettype, DIR dir, STATE head, float elapsedInSec, float velx, float vely, float mass);
 	SC_Move_Packet RecvMovePacket();
 
-	void SendAttackPacket(int id, STATE type);
-	SC_Attack_Packet RecvAttackPacket();
+	void SERVER::SendAttackPacket(int id, char type, DIR dir, STATE head_state, float bulltvel);
+	SC_Attack_Packet SERVER::RecvAttackPacket();
 };
 
