@@ -89,20 +89,19 @@ int SERVER::recvn(SOCKET s, char* buf, int len, int flags)
 	return (len - left);
 }
 
-void SERVER::SendLoginPacket(int id, char nickname[])
+void SERVER::SendLoginPacket(int id)
 {
 	CS_Client_Login_Packet packet;
 
 	packet.size = sizeof(CS_Client_Login_Packet);
 	packet.type = ENTER_USER;
 	packet.id = id;
-	strcpy_s(packet.nickname, nickname);
 
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Client_Login_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 
-	cout << "send enter packet (" << packet.id << ", " << packet.nickname << ")" << endl;
+	cout << "send enter packet (" << packet.id << ")" << endl;
 
 
 }

@@ -99,6 +99,18 @@ void SpecialKeyUpInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	int id = server.ConnectServer();
+	//server.SendLoginPacket(id);
+	CS_Client_Login_Packet packet;
+
+	packet.size = sizeof(CS_Client_Login_Packet);
+	packet.type = ENTER_USER;
+	packet.id = id;
+
+	int retval = send(server.GetSock(), (char*)&packet, sizeof(CS_Client_Login_Packet), 0);
+	if (retval == SOCKET_ERROR) server.err_quit(" SERVER::SendEnterPacket");
+	cout << "send enter packet (" << packet.id << ")" << endl;
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -116,17 +128,10 @@ int main(int argc, char **argv)
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
 	
-	int id = server.ConnectServer();
-
-	char nick[32];
-	cin >> nick;
-	server.SendLoginPacket(id, nick);
-
 	SC_Client_LoginOK_Packet loginok_packet;
 	ZeroMemory(&loginok_packet, sizeof(SC_Client_LoginOK_Packet));
 	int ret = recvn(server.GetSock(), (char*)&loginok_packet, sizeof(loginok_packet), 0);
 
-	cout << loginok_packet.nickname << endl;
 	{
 		glutDisplayFunc(Display);
 		glutIdleFunc(Idle);
@@ -143,7 +148,7 @@ int main(int argc, char **argv)
 		glutTimerFunc(10, RenderScene, 0);
 	}
 
-	if (loginok_packet.type == NICKNAME_USE) {
+	if (loginok_packet.type == ID_USE) {
 		cout << "waiting for other client to enter" << endl;
 		SC_Client_Enter_Packet enter_packet;
 		ZeroMemory(&enter_packet, sizeof(SC_Client_Enter_Packet));

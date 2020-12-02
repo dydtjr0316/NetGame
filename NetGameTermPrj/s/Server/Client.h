@@ -12,8 +12,6 @@ public:
 	SOCKET GetSock_TCP() { return m_sock; }
 	SOCKADDR_IN GetAddr() { return m_addr; }
 
-	string GetNickname() { return m_nick; }
-
 	int GetID() { return m_id; }
 	int GetHP() { return m_hp; }
 	
@@ -26,8 +24,6 @@ public:
 
 	void SetSock_TCP(SOCKET sock);
 	void SetAddr(SOCKADDR_IN addr);
-	
-	void SetNickname(char nick[]);
 
 	void SetID(int id);
 	void SetHP(int hp);
@@ -43,8 +39,6 @@ public:
 private:
 	SOCKET		m_sock;
 	SOCKADDR_IN m_addr;
-
-	char		m_nick[32];
 
 	int			m_id;
 	int			m_hp;

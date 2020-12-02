@@ -149,34 +149,21 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		CS_Client_Login_Packet login_packet;
 		ZeroMemory(&login_packet, sizeof(CS_Client_Login_Packet));
 
-		//int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
-		//if (login_packet.type != ENTER_USER) continue;
-		//
-		//if (ret == SOCKET_ERROR || ret == 0) {
-		//	err_display("Process() -> recv() : login");
-		//	closesocket(m_Clients[id].GetSock_TCP());
-		//	m_Clients.erase(id);
-		//	return 0;
-		//}
-
 		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
-      if (login_packet.type != ENTER_USER) continue;
-      if (ret == SOCKET_ERROR) {
-         err_display("Process() -> recv() : login");
-         closesocket(m_Clients[id].GetSock_TCP());
-         m_Clients.erase(id);
-         return 0;
-      }
+		if (login_packet.type != ENTER_USER) continue;
+		if (ret == SOCKET_ERROR) {
+			err_display("Process() -> recv() : login");
+			closesocket(m_Clients[id].GetSock_TCP());
+			m_Clients.erase(id);
+			return 0;
+		}
 
-		m_Clients[id].SetNickname(login_packet.nickname);
-		cout << "Enter : " << id << ", " << m_Clients[id].GetNickname().c_str() << endl;
+		cout << "Enter : " << id << endl;
 
 		SC_Client_LoginOK_Packet p;
 		ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
 		p.size = sizeof(SC_Client_LoginOK_Packet);
-		strcpy_s(p.nickname, m_Clients[id].GetNickname().c_str());
-		p.type = NICKNAME_USE;
-		cout << "type -> " << p.type << endl;
+		p.type = ID_USE;
 
 		ret = send(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(p), 0);
 
@@ -184,7 +171,6 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 			if (m_Clients.count(1) != 0) {
 				Send_enter_packet(0, id);
 				Send_enter_packet(id, 0);
-				//Login = true;
 			}
 		}
 		Login = true;
@@ -203,9 +189,6 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	packet.posX = m_Clients[id].GetX();
 	packet.posY = m_Clients[id].GetY();
 
-	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
-
-	//Send_pakcet(to, &packet);
 	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 

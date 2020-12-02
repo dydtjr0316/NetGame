@@ -32,7 +32,7 @@ public:
 
 	int recvn(SOCKET s, char* buf, int len, int flags);
 
-	void SendLoginPacket(int id, char nickname[]);
+	void SendLoginPacket(int id);
 	SC_Client_Enter_Packet RecvEnterPacket();
 
 	void SERVER::SendMovePacket(int id, char packettype, DIR dir, STATE head, float elapsedInSec, float velx, float vely, float mass);

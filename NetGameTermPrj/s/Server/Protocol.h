@@ -1,21 +1,5 @@
 #pragma once
 
-// InGame
-//#define INGAME_RUNNIG 311
-//#define INGAME_CLEAR 312
-//#define INGAME_OVER 313
-
-// enum으로 사용
-//#define MOVE_UP 321
-//#define MOVE_DOWN 322
-//#define MOVE_LEFT 323
-//#define MOVE_RIGHT 324
-//
-//#define SHOOT_UP 331
-//#define SHOOT_DOWN 332
-//#define SHOOT_LEFT 333
-//#define SHOOT_RIGHT 334
-
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
 
@@ -35,7 +19,7 @@ constexpr char CS_PACKET_ATTACK = 101;
 
 // Login
 constexpr char ENTER_USER = 5;
-constexpr char NICKNAME_USE = 6;
+constexpr char ID_USE = 6;
 
 // Lobby
 constexpr char CLIENT_ISREADY = 7;
@@ -48,14 +32,12 @@ struct CS_Client_Login_Packet
 	char size;
 	char type;
 	int id;
-	char nickname[16];
 };
 
 struct SC_Client_LoginOK_Packet
 {
 	char size;
 	char type;
-	char nickname[16];
 };
 
 struct SC_Client_Enter_Packet
@@ -64,7 +46,6 @@ struct SC_Client_Enter_Packet
 	char type;
 	int id;
 	float posX, posY;
-	char nickname[16];
 };
 
 // Lobby

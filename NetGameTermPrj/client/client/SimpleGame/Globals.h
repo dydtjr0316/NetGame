@@ -22,8 +22,6 @@
 #define SERVERIP "127.0.0.1"
 //#define SERVERIP "192.168.122.188"
 
-//#define SERVERIP "192.168.122.188"
-
 // 화면 크기
 #define WIDTH 800
 #define HEIGHT 600
