@@ -87,10 +87,8 @@ void ServerFrame::LoginServer()
 	
 	while (true) {
 		addrlen = sizeof(clientAddr);
-	//	cout << m_sock << endl;
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
-
 
 		int id = 2;
 		for (int i = 0; i < id; ++i) {
@@ -105,11 +103,9 @@ void ServerFrame::LoginServer()
 			continue;
 		}
 
-
 		int ret = send(clientSock, (char*)&id, sizeof(int), 0);
 		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send()");
 
-		//cout << clientSock << endl;
 		Client client(clientSock, id, clientAddr);
 		m_Clients.emplace(id, client);
 
@@ -128,10 +124,6 @@ void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
 	//CreateAttackThread(id);
-
-	// 입구 간 사람 몇명인지 확인
-	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
-	// 인게임으로 넘어가기?
 }
 
 void ServerFrame::InGameServer()
@@ -253,12 +245,12 @@ void ServerFrame::UpdateMove(int id)
 	float fAmount = 20.f;
 	float fSize = 0.f;
 
-	if (move_packet.type == CS_PACKET_MOVE)
+	if (move_packet.type == CS_PACKET_MOVE)		// 움직임이 있을때만 
 	{
 		SC_Move_Packet update_packet;
 		ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
 
-		switch (move_packet.dir)
+		switch (move_packet.dir)				// head, state 처리 전부 서버에서
 		{
 		case DIR::UP:
 			fY += 0.1f;
@@ -312,8 +304,9 @@ void ServerFrame::UpdateMove(int id)
 			float accX, accY, accZ;
 			accX = accY = accZ = 0.f;
 
-			accX = fX / 1.0f;
-			accY = fY / 1.0f;
+			// 수정
+			accX = fX / move_packet.mass;
+			accY = fY / move_packet.mass;
 
 			move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
 			move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
