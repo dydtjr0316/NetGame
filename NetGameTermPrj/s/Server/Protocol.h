@@ -63,6 +63,12 @@ struct SC_Client_RedayOK_Packet
 	char id;
 };
 
+struct CS_Type_Packet
+{
+	char size;
+	char type;
+};
+
 // Move
 struct CS_Move_Packet
 {

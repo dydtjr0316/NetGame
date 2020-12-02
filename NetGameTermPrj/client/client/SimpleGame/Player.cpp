@@ -184,7 +184,7 @@ void CPlayer::DrawHead()
 
 void CPlayer::Shooting()
 {
-	/*if (m_blsCanShoot == false)
+	if (m_blsCanShoot == false)
 		return;
 
 	float bulletVel = 4.f;
@@ -193,25 +193,26 @@ void CPlayer::Shooting()
 	{
 		m_server->SendAttackPacket(m_id, CS_PACKET_ATTACK, m_Dir, m_Head, bulletVel);
 	}
-	SC_Attack_Packet& attack_packet = m_server->RecvAttackPacket();
+	SC_Attack_Packet& packet = m_server->RecvAttackPacket();
 
-	if(attack_packet.bulletsize>0.000001f)
-	{
-		ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
-		CBullet* pObj = new CBullet;
+	if (packet.type == SC_PACKET_ATTACK) {
+		if (packet.bulletsize > 0.000001f)
+		{
+			ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBulletSound, false, 2);
+			CBullet* pObj = new CBullet;
 
-		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ+0.4f,
-			0.2f, 0.2f, 0.2f,
-			1, 1, 1, 1,
-			attack_packet.bulletx, attack_packet.bullety, attack_packet.bulletz,
-			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
+			int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ + 0.4f,
+				0.2f, 0.2f, 0.2f,
+				1, 1, 1, 1,
+				packet.bulletx, packet.bullety, packet.bulletz,
+				0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
 
-		ScnMgr::GetInstance()->m_Obj[id]->AddForce
-		(attack_packet.bulletx, attack_packet.bullety, attack_packet.bulletz, 0.1f);
+			ScnMgr::GetInstance()->m_Obj[id]->AddForce
+			(packet.bulletx, packet.bullety, packet.bulletz, 0.1f);
 
-		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
-
-	}*/
+			ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
+		}
+	}
 }
 
 void CPlayer::KeyInput(float elapsedInSec)
@@ -255,8 +256,9 @@ void CPlayer::KeyInput(float elapsedInSec)
 		}
 	}
 
-		SC_Move_Packet& packet = m_server->RecvMovePacket();
+	SC_Move_Packet& packet = m_server->RecvMovePacket();
 
+	if (packet.type == SC_PACKET_MOVE) {
 		if (m_id == packet.id)
 		{
 			m_velX = packet.x;
@@ -264,7 +266,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 			m_Head = packet.head;
 			m_CurState = packet.curstate;
 		}
-	
+	}
 }
 
 void CPlayer::LateInit()

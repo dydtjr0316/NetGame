@@ -16,7 +16,6 @@ public:
 
 	void LoginServer();
 	static void Send_enter_packet(int to, int id);
-	static void Send_pakcet(int id, void* p);
 
 	void LobbyServer(int id);
 	void InGameServer();
@@ -24,18 +23,17 @@ public:
 	static DWORD WINAPI Process(LPVOID arg);
 
 	void CreateMoveThread(int id);
-	void CreateAttackThread(int id);
 	static DWORD WINAPI MOVEThread(LPVOID arg);
-	static DWORD WINAPI AttackThread(LPVOID arg);
 	static void UpdateMove(int id);
+
+	void CreateAttackThread(int id);
+	static DWORD WINAPI AttackThread(LPVOID arg);
 	static void UpdateAttack(int id);
 
 	void UpdateStatus();
 	void SendAllStatus();
-
 	void IsAllReady();
 
-	void SendBulletRoute();
 	void UpdateCollision();
 	void UpdateBoss();
 	CS_Move_Packet AddForce(CS_Move_Packet& move_packet);

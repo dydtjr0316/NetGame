@@ -110,7 +110,7 @@ void ServerFrame::LoginServer()
 		m_Clients.emplace(id, client);
 
 		u_id = id;
-		cout << "Enter " << id << endl;
+		cout << "Login " << id << endl;
 		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 
 		if (NULL == m_hCThreads[id]) closesocket(clientSock);
@@ -144,7 +144,6 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 	getpeername(m_Clients[id].GetSock_TCP(), (SOCKADDR*)&Client_Addr, &addrlen);
 
 	bool Login = false;
-
 	while (!Login) {
 		CS_Client_Login_Packet login_packet;
 		ZeroMemory(&login_packet, sizeof(CS_Client_Login_Packet));
@@ -192,12 +191,6 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 
-void ServerFrame::Send_pakcet(int id, void* p)
-{
-	unsigned char* packet = reinterpret_cast<unsigned char*>(p);
-	send(m_Clients[id].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
-}
-
 void ServerFrame::CreateMoveThread(int id)
 {
 	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)id, 0, NULL);
@@ -231,94 +224,167 @@ DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
 
 void ServerFrame::UpdateMove(int id)
 {
-	CS_Move_Packet move_packet;
-	ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
+	CS_Type_Packet p;
+	ZeroMemory(&p, sizeof(CS_Type_Packet));
 
-	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
+	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(CS_Type_Packet), 0);
+	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> type()");
 
-	float fX, fY, fZ;
-	fX = fY = fZ = 0.0f;
-	float fAmount = 20.f;
-	float fSize = 0.f;
-
-	if (move_packet.type == CS_PACKET_MOVE)		// 움직임이 있을때만 
+	if (p.type == CS_PACKET_MOVE)
 	{
-		SC_Move_Packet update_packet;
-		ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
+		CS_Move_Packet move_packet;
+		ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
 
-		switch (move_packet.dir)				// head, state 처리 전부 서버에서
+		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
+		if (ret == SOCKET_ERROR) err_display("UpdateMove() -> moverecv()");
+
+		if (move_packet.type == CS_PACKET_MOVE)		// 움직임이 있을때만 
 		{
-		case DIR::UP:
-			fY += 0.1f;
-			update_packet.curstate = STATE::UP;
-			break;
-		case DIR::DOWN:
-			fY -= 0.1f;
-			update_packet.curstate = STATE::DOWN;
-			break;
-		case DIR::LEFT:
-			fX -= 0.1f;
-			update_packet.curstate = STATE::LEFT;
-			break;
-		case DIR::RIGHT:
-			fX += 0.1f;
-			update_packet.curstate = STATE::RIGHT;
-			break;
-		default:
-			update_packet.curstate = STATE::IDLE;
-			break;
-		}
+			float fX, fY, fZ;
+			fX = fY = fZ = 0.0f;
+			float fAmount = 20.f;
+			float fSize = 0.f;
 
-		switch (move_packet.head)
+			SC_Move_Packet update_packet;
+			ZeroMemory(&update_packet, sizeof(SC_Move_Packet));
+
+			switch (move_packet.dir)				// head, state 처리 전부 서버에서
+			{
+			case DIR::UP:
+				fY += 0.1f;
+				update_packet.curstate = STATE::UP;
+				break;
+			case DIR::DOWN:
+				fY -= 0.1f;
+				update_packet.curstate = STATE::DOWN;
+				break;
+			case DIR::LEFT:
+				fX -= 0.1f;
+				update_packet.curstate = STATE::LEFT;
+				break;
+			case DIR::RIGHT:
+				fX += 0.1f;
+				update_packet.curstate = STATE::RIGHT;
+				break;
+			default:
+				update_packet.curstate = STATE::IDLE;
+				break;
+			}
+
+			switch (move_packet.head)
+			{
+			case UP:
+				update_packet.head = STATE::UP;
+				break;
+			case DOWN:
+				update_packet.head = STATE::DOWN;
+				break;
+			case LEFT:
+				update_packet.head = STATE::LEFT;
+				break;
+			case RIGHT:
+				update_packet.head = STATE::RIGHT;
+				break;
+			default:
+				update_packet.head = STATE::DOWN;
+				break;
+			}
+
+			fSize = sqrtf(fX * fX + fY * fY);
+
+			if (fSize > FLT_EPSILON)
+			{
+				fX /= fSize;
+				fY /= fSize;
+				fX *= fAmount;
+				fY *= fAmount;
+
+				float accX, accY, accZ;
+				accX = accY = accZ = 0.f;
+
+				// 수정
+				accX = fX / move_packet.mass;
+				accY = fY / move_packet.mass;
+
+				move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
+				move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
+			}
+
+			update_packet.type = SC_PACKET_MOVE;
+			update_packet.id = id;
+			update_packet.size = sizeof(update_packet);
+
+			update_packet.x = move_packet.velx;
+			update_packet.y = move_packet.vely;
+
+			for (auto& m : m_Clients) {
+				ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
+				if (ret == SOCKET_ERROR) err_display("UpdateMove -> movesend()");
+			}
+		}
+	}
+
+	if (p.type == CS_PACKET_ATTACK)
+	{
+		CS_Attack_Packet attack_packet;
+		ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
+
+		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
+		if (ret == SOCKET_ERROR) err_display("UpdateMove() -> attackrecv()");
+
+		if (attack_packet.type == CS_PACKET_ATTACK)
 		{
-		case UP:
-			update_packet.head = STATE::UP;
-			break;
-		case DOWN:
-			update_packet.head = STATE::DOWN;
-			break;
-		case LEFT:
-			update_packet.head = STATE::LEFT;
-			break;
-		case RIGHT:
-			update_packet.head = STATE::RIGHT;
-			break;
-		default:
-			update_packet.head = STATE::DOWN;
-			break;
-		}
+			float vBulletX, vBulletY, vBulletZ;
+			vBulletX = vBulletY = vBulletZ = 0.f;
 
-		fSize = sqrtf(fX * fX + fY * fY);
+			switch (attack_packet.head) {
+			case UP:
+				vBulletY += 0.2f;
+				break;
+			case DOWN:
+				vBulletY -= 0.2f;
+				break;
+			case LEFT:
+				vBulletX -= 0.2f;
+				break;
+			case RIGHT:
+				vBulletX += 0.2f;
+				break;
+			default:
+				break;
+			}
 
-		if (fSize > FLT_EPSILON)
-		{
-			fX /= fSize;
-			fY /= fSize;
-			fX *= fAmount;
-			fY *= fAmount;
 
-			float accX, accY, accZ;
-			accX = accY = accZ = 0.f;
+			float vBulletSize = sqrtf(vBulletX * vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
 
-			// 수정
-			accX = fX / move_packet.mass;
-			accY = fY / move_packet.mass;
+			if (vBulletSize > 0.000001f)
+			{
+				vBulletX /= vBulletSize;
+				vBulletY /= vBulletSize;
+				vBulletZ /= vBulletSize;
 
-			move_packet.velx = move_packet.velx + accX * move_packet.elapsedInSec;
-			move_packet.vely = move_packet.vely + accY * move_packet.elapsedInSec;
-		}
+				vBulletX *= attack_packet.bulletvel;
+				vBulletY *= attack_packet.bulletvel;
+				vBulletZ *= attack_packet.bulletvel;
+			}
 
-		update_packet.type = SC_PACKET_MOVE;
-		update_packet.id = id;
-		update_packet.size = sizeof(update_packet);
 
-		update_packet.x = move_packet.velx;
-		update_packet.y = move_packet.vely;
+			SC_Attack_Packet update_attack_packet;
+			ZeroMemory(&update_attack_packet, sizeof(SC_Attack_Packet));
 
-		for (auto& m : m_Clients) {
-			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
-			if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");
+			update_attack_packet.bulletx = vBulletX;
+			update_attack_packet.bullety = vBulletY;
+			update_attack_packet.bulletz = vBulletZ;
+			update_attack_packet.bulletsize = vBulletSize;
+			update_attack_packet.type = SC_PACKET_ATTACK;
+			update_attack_packet.id = id;
+			update_attack_packet.size = sizeof(SC_Attack_Packet);
+
+
+			for (auto& m : m_Clients) {
+				ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Attack_Packet), 0);
+				if (ret == SOCKET_ERROR) err_display("UpdateMove -> attacksend()");
+			}
 		}
 	}
 }
@@ -366,7 +432,6 @@ void ServerFrame::UpdateAttack(int id)
 			vBulletZ *= attack_packet.bulletvel;
 		}
 
-		//
 
 		SC_Attack_Packet update_attack_packet;
 		ZeroMemory(&update_attack_packet, sizeof(SC_Attack_Packet));
@@ -381,7 +446,7 @@ void ServerFrame::UpdateAttack(int id)
 
 
 		for (auto& m : m_Clients) {
-			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Move_Packet), 0);
+			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Attack_Packet), 0);
 			if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
 		}
 	}
@@ -396,10 +461,6 @@ void ServerFrame::SendAllStatus()
 }
 
 void ServerFrame::IsAllReady()
-{
-}
-
-void ServerFrame::SendBulletRoute()
 {
 }
 
