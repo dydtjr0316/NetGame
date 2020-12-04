@@ -111,7 +111,7 @@ void ServerFrame::LoginServer()
 
 		u_id = id;
 		cout << "Login " << id << endl;
-		m_hCThreads[id] = CreateThread(NULL, 0, this->Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
+		m_hCThreads[id] = CreateThread(NULL, 0, Process, (LPVOID)m_Clients[id].GetID(), 0, NULL);
 
 		if (NULL == m_hCThreads[id]) closesocket(clientSock);
 
@@ -123,7 +123,7 @@ void ServerFrame::LoginServer()
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
-	//CreateAttackThread(id);
+	CreateAttackThread(id);
 }
 
 void ServerFrame::InGameServer()
@@ -193,12 +193,14 @@ void ServerFrame::Send_enter_packet(int to, int id)
 
 void ServerFrame::CreateMoveThread(int id)
 {
-	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)id, 0, NULL);
+	m_MOVEThread[id] = CreateThread(NULL, 0, MOVEThread, (LPVOID)id, 0, NULL);
+	if (NULL == m_MOVEThread[id]) closesocket(m_sock);
 }
 
 void ServerFrame::CreateAttackThread(int id)
 {
-	m_AttackThread = CreateThread(NULL, 0, this->AttackThread, (LPVOID)id, 0, NULL);
+	m_AttackThread[id] = CreateThread(NULL, 0, AttackThread, (LPVOID)id, 0, NULL);
+	if (NULL == m_AttackThread[id]) closesocket(m_sock);
 }
 
 DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
@@ -224,14 +226,13 @@ DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
 
 void ServerFrame::UpdateMove(int id)
 {
-	CS_Type_Packet p;
+	/*CS_Type_Packet p;
 	ZeroMemory(&p, sizeof(CS_Type_Packet));
 
 	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(CS_Type_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> type()");
+	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> type()");*/
 
-	if (p.type == CS_PACKET_MOVE)
-	{
+	//if (p.type == CS_PACKET_MOVE) {
 		CS_Move_Packet move_packet;
 		ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
 
@@ -322,15 +323,23 @@ void ServerFrame::UpdateMove(int id)
 				if (ret == SOCKET_ERROR) err_display("UpdateMove -> movesend()");
 			}
 		}
-	}
+	//}
+}
 
-	if (p.type == CS_PACKET_ATTACK)
-	{
+void ServerFrame::UpdateAttack(int id)
+{
+	/*CS_Type_Packet p;
+	ZeroMemory(&p, sizeof(CS_Type_Packet));
+
+	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(CS_Type_Packet), 0);
+	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> type()");*/
+
+	//if (p.type == CS_PACKET_ATTACK) {
 		CS_Attack_Packet attack_packet;
 		ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
 
 		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
-		if (ret == SOCKET_ERROR) err_display("UpdateMove() -> attackrecv()");
+		if (ret == SOCKET_ERROR) err_display("UpdateAttack() -> attackrecv()");
 
 		if (attack_packet.type == CS_PACKET_ATTACK)
 		{
@@ -383,73 +392,10 @@ void ServerFrame::UpdateMove(int id)
 
 			for (auto& m : m_Clients) {
 				ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Attack_Packet), 0);
-				if (ret == SOCKET_ERROR) err_display("UpdateMove -> attacksend()");
+				if (ret == SOCKET_ERROR) err_display("UpdatAttack -> attacksend()");
 			}
 		}
-	}
-}
-
-void ServerFrame::UpdateAttack(int id)
-{
-	CS_Attack_Packet attack_packet;
-	ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
-
-	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateAttack() -> recv()");
-
-	float vBulletX, vBulletY, vBulletZ;
-	vBulletX = vBulletY = vBulletZ = 0.f;
-	if (attack_packet.type == CS_PACKET_ATTACK)
-	{
-		switch (attack_packet.head) {
-		case UP:
-			vBulletY += 0.2f;
-			break;
-		case DOWN:
-			vBulletY -= 0.2f;
-			break;
-		case LEFT:
-			vBulletX -= 0.2f;
-			break;
-		case RIGHT:
-			vBulletX += 0.2f;
-			break;
-		default:
-			break;
-		}
-
-
-		float vBulletSize = sqrtf(vBulletX * vBulletX + vBulletY * vBulletY + vBulletZ * vBulletZ);
-
-		if (vBulletSize > 0.000001f)
-		{
-			vBulletX /= vBulletSize;
-			vBulletY /= vBulletSize;
-			vBulletZ /= vBulletSize;
-
-			vBulletX *= attack_packet.bulletvel;
-			vBulletY *= attack_packet.bulletvel;
-			vBulletZ *= attack_packet.bulletvel;
-		}
-
-
-		SC_Attack_Packet update_attack_packet;
-		ZeroMemory(&update_attack_packet, sizeof(SC_Attack_Packet));
-
-		update_attack_packet.bulletx = vBulletX;
-		update_attack_packet.bullety = vBulletY;
-		update_attack_packet.bulletz = vBulletZ;
-		update_attack_packet.bulletsize = vBulletSize;
-		update_attack_packet.type = SC_PACKET_ATTACK;
-		update_attack_packet.id = id;
-		update_attack_packet.size = sizeof(SC_Attack_Packet);
-
-
-		for (auto& m : m_Clients) {
-			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Attack_Packet), 0);
-			if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
-		}
-	}
+	//}
 }
 
 void ServerFrame::UpdateStatus()

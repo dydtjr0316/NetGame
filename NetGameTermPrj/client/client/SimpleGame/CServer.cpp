@@ -118,12 +118,12 @@ SC_Client_Enter_Packet SERVER::RecvEnterPacket()
 
 void SERVER::SendMovePacket(int id, char packettype, DIR dir, STATE head,float elapsedInSec, float velx, float vely, float mass)
 {
-	CS_Type_Packet p;
+	/*CS_Type_Packet p;
 	p.type = CS_PACKET_MOVE;
 	p.size = sizeof(CS_Type_Packet);
 
 	int retval = send(m_Socket, (char*)&p, sizeof(CS_Type_Packet), 0);
-	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");*/
 
 	CS_Move_Packet packet;
 
@@ -137,7 +137,7 @@ void SERVER::SendMovePacket(int id, char packettype, DIR dir, STATE head,float e
 	packet.vely = vely;
 	packet.mass = mass;
 
-	retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
+	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Move_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
 
@@ -157,12 +157,12 @@ SC_Move_Packet SERVER::RecvMovePacket()
 
 void SERVER::SendAttackPacket(int id, char type, DIR dir, STATE head_state, float bulltvel)
 {
-	CS_Type_Packet p;
+	/*CS_Type_Packet p;
 	p.type = CS_PACKET_ATTACK;
 	p.size = sizeof(CS_Type_Packet);
 
 	int retval = send(m_Socket, (char*)&p, sizeof(CS_Type_Packet), 0);
-	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");
+	if (retval <= 0) err_quit(" SERVER::RecvMovePacket");*/
 
 	CS_Attack_Packet attack_packet;
 
@@ -173,7 +173,7 @@ void SERVER::SendAttackPacket(int id, char type, DIR dir, STATE head_state, floa
 	attack_packet.head = head_state;
 	attack_packet.bulletvel = bulltvel;
 
-	retval = send(m_Socket, (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
+	int retval = send(m_Socket, (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
 }

@@ -42,8 +42,8 @@ private:
 	SOCKET m_sock;
 	
 	HANDLE m_hCThreads[2];
-	HANDLE m_MOVEThread;
-	HANDLE m_AttackThread;
+	HANDLE m_MOVEThread[2];
+	HANDLE m_AttackThread[2];
 
 	static unordered_map<int, Client> m_Clients;
 	static int m_id;
