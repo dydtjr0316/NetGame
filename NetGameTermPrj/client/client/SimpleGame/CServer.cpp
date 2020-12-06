@@ -44,6 +44,14 @@ int SERVER::ConnectTCP(const char* ip)
 	m_Socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_Socket == INVALID_SOCKET)	err_quit("socket()");
 
+	//DWORD recvTimeout = 100;  // 0.1ÃÊ.
+	//setsockopt(m_Socket, SOL_SOCKET, SO_RCVTIMEO, (char*)&recvTimeout, sizeof(recvTimeout));
+
+	//u_long socket_switch = 1;
+	//int retunvel = ioctlsocket(m_Socket, FIONBIO, &socket_switch);
+	//if (retunvel == SOCKET_ERROR)
+	//	err_quit("ioctl");
+
 	ZeroMemory(&(m_Serveraddr), sizeof((m_Serveraddr)));
 	m_Serveraddr.sin_family = AF_INET;
 	m_Serveraddr.sin_addr.s_addr = inet_addr(ip);
@@ -75,7 +83,6 @@ int SERVER::recvn(SOCKET s, char* buf, int len, int flags)
 	int received;
 	char* ptr = buf;
 	int left = len;
-
 	while (left > 0) {
 		received = recv(s, ptr, left, flags);
 		if (received == SOCKET_ERROR)
@@ -89,19 +96,20 @@ int SERVER::recvn(SOCKET s, char* buf, int len, int flags)
 	return (len - left);
 }
 
-void SERVER::SendLoginPacket(int id)
+void SERVER::SendLoginPacket(int id, char nickname[])
 {
 	CS_Client_Login_Packet packet;
 
 	packet.size = sizeof(CS_Client_Login_Packet);
 	packet.type = ENTER_USER;
 	packet.id = id;
+	strcpy_s(packet.nickname, nickname);
 
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Client_Login_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 
-	cout << "send enter packet (" << packet.id << ")" << endl;
+	cout << "send enter packet (" << packet.id << ", " << packet.nickname << ")" << endl;
 
 
 }
@@ -162,6 +170,8 @@ void SERVER::SendAttackPacket(int id, char type, DIR dir, STATE head_state, floa
 	int retval = send(m_Socket, (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
 
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendMovePacket");
+
+	cout << attack_packet.bulletvel << endl;
 }
 
 SC_Attack_Packet SERVER::RecvAttackPacket()

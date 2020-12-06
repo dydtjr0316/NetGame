@@ -14,6 +14,7 @@ public:
 public:
 	virtual int Update(float elapsedInSec);
 	void Shooting();
+	void Move(bool shoot, float elapsedInSec);
 	void KeyInput(float elapsedInSec);
 	void CollisionCheck();
 
@@ -27,12 +28,15 @@ private:
 	STATE m_Head = IDLE;
 	DIR m_Dir = DIR::DOWN;
 
+	char m_iMode = MODE_DEFAULT;
+
 
 	mutex poslock;
 private:
 	bool m_blsInit = false;
 	// client
 	int m_texR = -1;
+	bool Shoot;
 	int m_texL = -1;
 	int m_texUD = -1;
 	bool m_blsCanShoot = false;

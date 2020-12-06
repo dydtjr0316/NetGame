@@ -1,7 +1,10 @@
 #include "ServerFrame.h"
+#include <mutex>
 
 unordered_map<int, Client> ServerFrame::m_Clients;
 int ServerFrame::m_id;
+#include <mutex>
+
 
 ServerFrame::ServerFrame()
 {
@@ -55,6 +58,25 @@ int ServerFrame::recvn(SOCKET s, char* buf, int len, int flags)
 	return (len - left);
 }
 
+int ServerFrame::recvn2(SOCKET s, char* buf, int len, int flags)
+{
+	int received;
+	char* ptr = buf;
+	int left = len;
+
+	while (left > 0) {
+		received = recv(s, ptr, left, flags);
+		if (received == SOCKET_ERROR)
+			return SOCKET_ERROR;
+		else if (received == 0)
+			break;
+		left -= received;
+		ptr += received;
+	}
+
+	return (len - left);
+}
+
 int ServerFrame::InitTCPServer()
 {
 	std::wcout.imbue(locale("korean"));
@@ -64,6 +86,9 @@ int ServerFrame::InitTCPServer()
 
 	m_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_sock == INVALID_SOCKET) err_display("InitTCPServer() -> socket()");
+
+	//u_long on = 1;
+	//ioctlsocket(m_sock, 0, &on);
 
 	SOCKADDR_IN Server_Addr;
 	ZeroMemory(&Server_Addr, sizeof(Server_Addr));
@@ -122,8 +147,9 @@ void ServerFrame::LoginServer()
 
 void ServerFrame::LobbyServer(int id)
 {
+	// send
 	CreateMoveThread(id);
-	//CreateAttackThread(id);
+	CreateAttackThread(id);
 }
 
 void ServerFrame::InGameServer()
@@ -149,21 +175,25 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		CS_Client_Login_Packet login_packet;
 		ZeroMemory(&login_packet, sizeof(CS_Client_Login_Packet));
 
-		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
-		if (login_packet.type != ENTER_USER) continue;
-		if (ret == SOCKET_ERROR) {
-			err_display("Process() -> recv() : login");
-			closesocket(m_Clients[id].GetSock_TCP());
-			m_Clients.erase(id);
-			return 0;
-		}
 
-		cout << "Enter : " << id << endl;
+		int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&login_packet, sizeof(CS_Client_Login_Packet), 0);
+      if (login_packet.type != ENTER_USER) continue;
+      if (ret == SOCKET_ERROR) {
+         err_display("Process() -> recv() : login");
+         closesocket(m_Clients[id].GetSock_TCP());
+         m_Clients.erase(id);
+         return 0;
+      }
+
+		m_Clients[id].SetNickname(login_packet.nickname);
+		cout << "Enter : " << id << ", " << m_Clients[id].GetNickname().c_str() << endl;
 
 		SC_Client_LoginOK_Packet p;
 		ZeroMemory(&p, sizeof(SC_Client_LoginOK_Packet));
 		p.size = sizeof(SC_Client_LoginOK_Packet);
-		p.type = ID_USE;
+		strcpy_s(p.nickname, m_Clients[id].GetNickname().c_str());
+		p.type = NICKNAME_USE;
+		cout << "type -> " << p.type << endl;
 
 		ret = send(m_Clients[id].GetSock_TCP(), (char*)&p, sizeof(p), 0);
 
@@ -171,6 +201,7 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 			if (m_Clients.count(1) != 0) {
 				Send_enter_packet(0, id);
 				Send_enter_packet(id, 0);
+				//Login = true;
 			}
 		}
 		Login = true;
@@ -189,6 +220,9 @@ void ServerFrame::Send_enter_packet(int to, int id)
 	packet.posX = m_Clients[id].GetX();
 	packet.posY = m_Clients[id].GetY();
 
+	strcpy_s(packet.nickname, m_Clients[id].GetNickname().c_str());
+
+	//Send_pakcet(to, &packet);
 	send(m_Clients[to].GetSock_TCP(), (char*)&packet, sizeof(packet), 0);
 }
 
@@ -211,10 +245,19 @@ void ServerFrame::CreateAttackThread(int id)
 DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 {
 	int id = reinterpret_cast<int>(arg);
-	while (true) {
-		UpdateMove(id);
 
-	}
+	//char buf[50];
+	//ZeroMemory(&buf, sizeof(buf));
+
+	//int ret = recvn(m_Clients[id].GetSock_TCP(), buf, 50, 0);
+
+	//if (ret != 0 && buf[1] == SC_PACKET_MOVE)
+	//{
+		while (true)
+		{
+			UpdateMove(id);
+		}
+	//}
 
 	return 0;
 }
@@ -222,10 +265,19 @@ DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
 {
 	int id = reinterpret_cast<int>(arg);
-	while (true) {
-		UpdateAttack(id);
-	}
 
+	char buf[50];
+	ZeroMemory(&buf, sizeof(buf));
+
+	int ret = recvn(m_Clients[id].GetSock_TCP(), buf, 50, 0);
+
+	if (ret != 0 && buf[1] == SC_PACKET_ATTACK)
+	{
+		while (true)
+		{
+			UpdateAttack(id);
+		}
+	}
 	return 0;
 }
 
@@ -233,9 +285,13 @@ void ServerFrame::UpdateMove(int id)
 {
 	CS_Move_Packet move_packet;
 	ZeroMemory(&move_packet, sizeof(CS_Move_Packet));
-
+	
 	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&move_packet, sizeof(CS_Move_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateMove() -> recv()");
+	if (ret == SOCKET_ERROR)
+	{
+		err_display("UpdateMove() -> recv()");
+		exit(-1);
+	}
 
 	float fX, fY, fZ;
 	fX = fY = fZ = 0.0f;
@@ -327,9 +383,18 @@ void ServerFrame::UpdateAttack(int id)
 {
 	CS_Attack_Packet attack_packet;
 	ZeroMemory(&attack_packet, sizeof(CS_Attack_Packet));
+	
+	cout << "recv 전" << endl;
 
 	int ret = recvn(m_Clients[id].GetSock_TCP(), (char*)&attack_packet, sizeof(CS_Attack_Packet), 0);
-	if (ret == SOCKET_ERROR) err_display("UpdateAttack() -> recv()");
+	if (ret == SOCKET_ERROR)
+	{
+		err_display("UpdateAttack() -> recv()");
+	}
+
+	cout << "recv 후 " << endl;
+
+	//cout << "받은 거 -> "<<attack_packet.bulletvel << endl;
 
 	float vBulletX, vBulletY, vBulletZ;
 	vBulletX = vBulletY = vBulletZ = 0.f;
@@ -361,9 +426,9 @@ void ServerFrame::UpdateAttack(int id)
 			vBulletY /= vBulletSize;
 			vBulletZ /= vBulletSize;
 
-			vBulletX *= attack_packet.bulletvel;
-			vBulletY *= attack_packet.bulletvel;
-			vBulletZ *= attack_packet.bulletvel;
+			vBulletX *= 4.f;
+			vBulletY *= 4.f;
+			vBulletZ *= 4.f;
 		}
 
 		//
@@ -381,9 +446,13 @@ void ServerFrame::UpdateAttack(int id)
 
 
 		for (auto& m : m_Clients) {
-			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Move_Packet), 0);
+			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_attack_packet, sizeof(SC_Attack_Packet), 0);
 			if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
 		}
+
+		cout << "보낸거 ->"<<update_attack_packet.bulletx<<endl;
+		cout << "보낸거 ->"<<update_attack_packet.bullety<<endl;
+		cout << "보낸거 ->"<<update_attack_packet.bulletsize<<endl;
 	}
 }
 
