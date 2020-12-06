@@ -326,8 +326,6 @@ void ServerFrame::UpdateMove(int id)
 		update_packet.x = move_packet.velx;
 		update_packet.y = move_packet.vely;
 
-
-
 		for (auto& m : m_Clients) {
 			ret = send(m_Clients[m.first].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Move_Packet), 0);
 			if (ret == SOCKET_ERROR) err_display("UpdateMove -> send()");

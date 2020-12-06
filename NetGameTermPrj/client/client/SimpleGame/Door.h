@@ -5,6 +5,7 @@ class CDoor : public Object
 public:
 	CDoor();
 	virtual ~CDoor();
+	int bcnt = 0;
 
 	void LateInit();
 	void Render();

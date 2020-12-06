@@ -184,7 +184,7 @@ int CBoss::Update(float elapsedInSec)
 	{
 		m_fJumpTime += 0.1f;
 		m_fSkillTime += 0.1f;
-		TracePlayer();
+		//TracePlayer();
 
 	}
 

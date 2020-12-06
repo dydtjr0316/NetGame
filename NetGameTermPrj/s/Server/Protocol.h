@@ -102,6 +102,7 @@ struct SC_Move_Packet
 	STATE curstate;
 	STATE head;
 	float x, y;
+	//bool boss;
 };
 
 // Attack

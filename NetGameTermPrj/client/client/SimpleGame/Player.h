@@ -32,7 +32,6 @@ private:
 private:
 	bool m_blsInit = false;
 
-	int m_boss = 0;
 	// client
 	int m_texR = -1;
 	int m_texL = -1;
@@ -49,6 +48,7 @@ private:
 	int m_iDamageSound = -1;
 
 public:
+	static bool isboss;
 	bool is_owner = false;
 
 };
