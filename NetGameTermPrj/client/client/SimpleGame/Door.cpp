@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Door.h"
 #include "Object.h"
-#include "Player.h"
-
 
 CDoor::CDoor()
 {
@@ -73,14 +71,9 @@ int CDoor::Update(float elapsedInSec)
 
 		}
 	}
-	ScnMgr::GetInstance()->CreateBoss();
 
 	//CheckDoor();
-	//if (CPlayer::isboss)
-	//{
-	//	ScnMgr::GetInstance()->CreateBoss();
 
-	//}
 
 
 	if (m_blsDead == false)
@@ -122,34 +115,24 @@ void CDoor::CheckDoor()
 	if (m_blsCheckMonster == false)
 		return;
 
+	float PlayerX, PlayerY, PlayerZ;
 
-	for (int i = 0; i < 2; ++i) {
-		float PlayerX = 0;
-		float PlayerY = 0;
-		float PlayerZ = 0;
-		//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
-		if (bcnt == 1&&i == 0)continue;
-
-		ScnMgr::GetInstance()->m_Obj[i]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
+	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
+	ScnMgr::GetInstance()->m_Obj[Object::m_id]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
 
 
-		PlayerX *= 100;
-		PlayerY *= 100;
-		PlayerZ *= 100;
+	PlayerX *= 100;
+	PlayerY *= 100;
+	PlayerZ *= 100;
 
-		if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::START)
+	if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::START)
+	{
+		if (PlayerX > -30 && PlayerX < 30 && PlayerY>118)
 		{
-			if (PlayerX > -30 && PlayerX < 30 && PlayerY>118)
-			{
-				bcnt++;
-				if (bcnt == 2)
-				{
-					ScnMgr::GetInstance()->CreateBoss();
-					//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetPos(PlayerX / 100, -230 / 100, PlayerZ/100);
-					//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
-					m_blsCheckMonster = false;
-				}
-			}
+			ScnMgr::GetInstance()->CreateBoss();
+			//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetPos(PlayerX / 100, -230 / 100, PlayerZ/100);
+			//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
+			m_blsCheckMonster = false;
 		}
 	}
 }

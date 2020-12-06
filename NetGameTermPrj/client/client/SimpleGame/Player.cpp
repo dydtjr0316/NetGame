@@ -3,7 +3,6 @@
 #include <math.h>
 #include "Bullet.h"
 #include "CServer.h"
-#include "ScnMgr.h"
 
 CPlayer::CPlayer()
 {
@@ -29,8 +28,8 @@ int CPlayer::Update(float elapsedInSec)
 	LateInit();
 
 
-	KeyInput(elapsedInSec);
 	Object::Update(elapsedInSec);
+	KeyInput(elapsedInSec);
 	//Shooting();
 	if(m_blsDamaged==false)
 	CollisionCheck();
@@ -279,12 +278,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 			Shooting();
 		}
 	}
-	//if (packet.boss)
-	//{
-	//	CPlayer::isboss = true;
-	//}
-
-
 }
 
 void CPlayer::LateInit()

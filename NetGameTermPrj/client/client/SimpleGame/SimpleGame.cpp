@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 			CPlayer* Pobj = new CPlayer;
 			static float a = -0.3f;
 			ScnMgr::GetInstance()->AddObject(0.f, a, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
-			a += 0.3f;
+			a+=0.3f;
 			ScnMgr::GetInstance()->m_Obj[i]->SetID(i);
 
 			// owner ÁöÁ¤
