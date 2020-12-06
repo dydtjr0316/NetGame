@@ -23,6 +23,8 @@ enum class DIR{NONE,LEFT,RIGHT,UP,DOWN};
 
 #pragma pack (push, 1)
 
+constexpr char MODE_DEFAULT = 10;
+
 constexpr char SC_PACKET_MOVE = 0;
 constexpr char SC_PACKET_ENTER = 1;
 constexpr char SC_PACKET_LOGIN = 2;

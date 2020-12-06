@@ -44,6 +44,8 @@ private:
 	SOCKET		m_sock;
 	SOCKADDR_IN m_addr;
 
+	
+
 	char		m_nick[32];
 
 	int			m_id;

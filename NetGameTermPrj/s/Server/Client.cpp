@@ -23,6 +23,9 @@ Client::~Client()
 void Client::SetSock_TCP(SOCKET sock)
 {
 	m_sock = sock;
+	//DWORD recvTimeout = 100;  // 0.1√ .
+	//setsockopt(m_sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&recvTimeout, sizeof(recvTimeout));
+
 }
 
 void Client::SetAddr(SOCKADDR_IN addr)

@@ -11,6 +11,7 @@ public:
 public:
 	static void err_display(const char* msg);
 	static int recvn(SOCKET s, char* buf, int len, int flags);
+	static int recvn2(SOCKET s, char* buf, int len, int flags);
 
 	int InitTCPServer();
 
@@ -49,4 +50,6 @@ private:
 
 	static unordered_map<int, Client> m_Clients;
 	static int m_id;
+
+	char m_iMode;
 };
