@@ -157,9 +157,9 @@ int main(int argc, char **argv)
 		for (int i = 0; i < 2; ++i)
 		{
 			CPlayer* Pobj = new CPlayer;
-			static int a = 1;
+			static float a = -0.3f;
 			ScnMgr::GetInstance()->AddObject(0.f, a, 0.f, 0.5f, 0.5f, 0.5f, 1.f, 1.f, 1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.9f, TYPE_NORMAL, 6.f, Pobj);
-			++a;
+			a += 0.3f;
 			ScnMgr::GetInstance()->m_Obj[i]->SetID(i);
 
 			// owner ÁöÁ¤

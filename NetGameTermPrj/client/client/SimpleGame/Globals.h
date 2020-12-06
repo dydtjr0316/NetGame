@@ -15,6 +15,8 @@
 #define TYPE_UI  2
 #define TYPE_MONSTER 3
 #define TYPE_ITEM 4
+#define TYPE_HP  5
+
 
 // Server 
 #define TCP_SERVERPORT 53635

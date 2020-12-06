@@ -31,6 +31,8 @@ private:
 	mutex poslock;
 private:
 	bool m_blsInit = false;
+
+	int m_boss = 0;
 	// client
 	int m_texR = -1;
 	int m_texL = -1;

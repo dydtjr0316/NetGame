@@ -82,12 +82,14 @@ ScnMgr::ScnMgr()
 
 	m_iBloodPaticle = m_Renderer->GenPngTexture("../Texture/BloodPaticle.png");
 
-	//CHp* Pobj = new CHp;
-	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj);
+	CDoor* Pobj2 = new CDoor;
+	AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj2);
 
-	//CDoor * Pobj2 = new CDoor;
-	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_UI, 1.f, Pobj2);
-	//
+	//CHp* Pobj = new CHp;
+	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_HP, 1.f, Pobj);
+
+
+	
 	list<Object*> pList;
 	for (INT i = 0; i < END; i++)
 	{
@@ -221,8 +223,39 @@ int ScnMgr::AddObject(float x, float y, float z,
 	float vx, float vy, float vz,
 	float mass, float fricCoef, float type, float hp,Object * pObj)
 {
+	int i =0 ;
+	if (type == TYPE_NORMAL)i = 0;
+	else if (type == TYPE_UI) {
+		m_Obj[MAX_OBJ_COUNT-1] = pObj;
+		m_Obj[MAX_OBJ_COUNT-1]->SetPos(x, y, z);
+		m_Obj[MAX_OBJ_COUNT-1]->SetVol(sx, sy, sz);
+		m_Obj[MAX_OBJ_COUNT-1]->SetColor(r, g, b, a);
+		m_Obj[MAX_OBJ_COUNT-1]->SetVel(vx, vy, vz);
+		m_Obj[MAX_OBJ_COUNT-1]->SetMass(mass);
+		m_Obj[MAX_OBJ_COUNT-1]->SetFricCoef(fricCoef);
+		m_Obj[MAX_OBJ_COUNT-1]->SetType(type);
+		m_Obj[MAX_OBJ_COUNT-1]->SetHP(hp);
+
+		return MAX_OBJ_COUNT-1;
+	}
+	else if (type == TYPE_HP)
+	{
+		m_Obj[MAX_OBJ_COUNT - 2] = pObj;
+		m_Obj[MAX_OBJ_COUNT - 2]->SetPos(x, y, z);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetVol(sx, sy, sz);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetColor(r, g, b, a);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetVel(vx, vy, vz);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetMass(mass);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetFricCoef(fricCoef);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetType(type);
+		m_Obj[MAX_OBJ_COUNT - 2]->SetHP(hp);
+
+		return MAX_OBJ_COUNT -2;
+	}
+	else i = 2;
+
 	int idx = -1;
-	for (int i = 0; i < MAX_OBJ_COUNT; ++i)
+	for (; i < MAX_OBJ_COUNT; ++i)
 	{
 
 		if (m_Obj[i] == NULL)

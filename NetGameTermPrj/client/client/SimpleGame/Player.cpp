@@ -26,10 +26,10 @@ int CPlayer::Update(float elapsedInSec)
 	if (m_velX < -5.0f)
 		m_velX = -5.0f;
 	LateInit();
-	Object::Update(elapsedInSec);
 
 
 	KeyInput(elapsedInSec);
+	Object::Update(elapsedInSec);
 	//Shooting();
 	if(m_blsDamaged==false)
 	CollisionCheck();
@@ -256,17 +256,6 @@ void CPlayer::KeyInput(float elapsedInSec)
 		}
 
 		m_server->SendMovePacket(m_id, m_posX, m_posY, CS_PACKET_MOVE, m_Dir, m_Head, elapsedInSec, m_velX, m_velY, m_mass);
-
-		//if (Shoot)
-		//{
-		//	if (m_CurrentCoolTIme == 0)
-		//		m_blsCanShoot = true;
-
-		//	m_CurrentCoolTIme += elapsedInSec;
-		//	if (m_CurrentCoolTIme > 0.3)
-		//		m_CurrentCoolTIme = 0;
-
-		//}
 	}
 
 	SC_Move_Packet& packet = m_server->RecvMovePacket();
@@ -289,6 +278,9 @@ void CPlayer::KeyInput(float elapsedInSec)
 			Shooting();
 		}
 	}
+
+
+
 }
 
 void CPlayer::LateInit()
@@ -314,6 +306,7 @@ void CPlayer::CollisionCheck()
 			if (ScnMgr::GetInstance()->m_Physics->IsOverlap(this, ScnMgr::GetInstance()->m_Obj[src],0))
 			{
 				int Type = 0;
+				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
 
 				if (Type == TYPE_MONSTER)

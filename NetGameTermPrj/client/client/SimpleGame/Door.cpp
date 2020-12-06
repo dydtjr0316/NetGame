@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Door.h"
+#include "Object.h"
 
 CDoor::CDoor()
 {
@@ -71,7 +72,7 @@ int CDoor::Update(float elapsedInSec)
 		}
 	}
 
-	CheckDoor();
+	//CheckDoor();
 
 
 
@@ -117,6 +118,8 @@ void CDoor::CheckDoor()
 	float PlayerX, PlayerY, PlayerZ;
 
 	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
+	ScnMgr::GetInstance()->m_Obj[Object::m_id]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
+
 
 	PlayerX *= 100;
 	PlayerY *= 100;
