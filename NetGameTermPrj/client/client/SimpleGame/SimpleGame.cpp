@@ -22,6 +22,8 @@ but WITHOUT ANY WARRANTY.
 int g_PrevTime = 0;
 SERVER server;
 
+HANDLE event;
+
 int recvn(SOCKET s, char* buf, int len, int flags)
 {
 	int received;
@@ -120,6 +122,7 @@ int main(int argc, char **argv)
 
 	char nick[32];
 	cin >> nick;
+	SetEvent(event);
 	server.SendLoginPacket(id, nick);
 
 	SC_Client_LoginOK_Packet loginok_packet;
@@ -144,6 +147,8 @@ int main(int argc, char **argv)
 	}
 
 	if (loginok_packet.type == NICKNAME_USE) {
+		WaitForSingleObject(event, INFINITE);
+
 		cout << "waiting for other client to enter" << endl;
 		SC_Client_Enter_Packet enter_packet;
 		ZeroMemory(&enter_packet, sizeof(SC_Client_Enter_Packet));

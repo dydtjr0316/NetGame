@@ -30,7 +30,7 @@ int CPlayer::Update(float elapsedInSec)
 
 
 	KeyInput(elapsedInSec);
-	Shooting();
+	//Shooting();
 	if(m_blsDamaged==false)
 	CollisionCheck();
 	int Collision=MapCollisionCheck(&m_posX, &m_posY);
@@ -229,7 +229,7 @@ void CPlayer::KeyInput(float elapsedInSec)
 	m_blsCanShoot = false;
 
 	m_CurState = IDLE;
-	m_Head = DOWN;
+	m_Head = IDLE;
 	m_Dir = DIR::NONE;
 
 	if (is_owner)
@@ -249,20 +249,24 @@ void CPlayer::KeyInput(float elapsedInSec)
 		else if (ScnMgr::GetInstance()->m_KeyLeft)m_Head = LEFT;
 		else if (ScnMgr::GetInstance()->m_KeyUp)m_Head = UP;
 		else if (ScnMgr::GetInstance()->m_KeyDown)m_Head = DOWN;
-		else Shoot = false;
+		else
+		{
+			m_Head = IDLE;
+			Shoot = false;
+		}
 
 		m_server->SendMovePacket(m_id, m_posX, m_posY, CS_PACKET_MOVE, m_Dir, m_Head, elapsedInSec, m_velX, m_velY, m_mass);
 
-		if (Shoot)
-		{
-			if (m_CurrentCoolTIme == 0)
-				m_blsCanShoot = true;
+		//if (Shoot)
+		//{
+		//	if (m_CurrentCoolTIme == 0)
+		//		m_blsCanShoot = true;
 
-			m_CurrentCoolTIme += elapsedInSec;
-			if (m_CurrentCoolTIme > 0.3)
-				m_CurrentCoolTIme = 0;
+		//	m_CurrentCoolTIme += elapsedInSec;
+		//	if (m_CurrentCoolTIme > 0.3)
+		//		m_CurrentCoolTIme = 0;
 
-		}
+		//}
 	}
 
 	SC_Move_Packet& packet = m_server->RecvMovePacket();
@@ -273,6 +277,17 @@ void CPlayer::KeyInput(float elapsedInSec)
 		m_velY = packet.y;
 		m_Head = packet.head;
 		m_CurState = packet.curstate;
+		if (m_Head != IDLE)
+		{
+			if (m_CurrentCoolTIme == 0)
+				m_blsCanShoot = true;
+
+			m_CurrentCoolTIme += elapsedInSec;
+			if (m_CurrentCoolTIme > 0.3)
+				m_CurrentCoolTIme = 0;
+
+			Shooting();
+		}
 	}
 }
 

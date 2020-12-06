@@ -296,7 +296,7 @@ void ServerFrame::UpdateMove(int id)
 			update_packet.head = STATE::RIGHT;
 			break;
 		default:
-			update_packet.head = STATE::DOWN;
+			update_packet.head = STATE::IDLE;
 			break;
 		}
 
