@@ -23,6 +23,7 @@ public:
 
 private:
 	static ScnMgr* m_pInstance;
+
 public:
 	static ScnMgr* GetInstance();
 	static void DestroyInstance(void);
@@ -30,20 +31,18 @@ public:
 private:
 	explicit ScnMgr();
 	virtual ~ScnMgr();
+
 public:
 	void RenderScene(void);
 	void DoGarbageCollect();
 
-	int AddObject(float x, float y, float z,
-					float sx, float sy, float sz,
-					float r, float g, float b, float a,
-		float vx, float vy, float vz,
-		float mass, float fricCoef, float type, float hp,Object* pObj);
+	int AddObject(float x, float y, float z, float sx, float sy, float sz,
+				  float r, float g, float b, float a,	float vx, float vy, float vz,
+				  float mass, float fricCoef, float type, float hp,Object* pObj);
 	void DeleteObject(int idx);
 
 	void SetID(int id) { m_id = id; }
 	void AddRenderGroup(RENDERGROUP Group,Object* pObj);
-
 
 	void Update(float elapsedInSec);
 	void SpecialKeyDownInput(int key, int x, int y);
@@ -56,6 +55,7 @@ public:
 	void ResetObject();
 	void ShakeCamara();
 	void Ending();
+
 public:
 	Renderer* m_Renderer = NULL;
 	Sound* m_Sound = NULL;
@@ -82,16 +82,15 @@ public:
 	bool m_blsStage2 = false;
 	bool m_blsStage3 = false;
 	bool m_blsBoss = false;
+
 public:
 	bool m_blsShake = false;
 	float m_fShakeTime = 0.f;
+
 public:
 	int m_BulletID = -1;
 	STAGENUM m_eCurStage = START;
 	int m_iBloodPaticle = -1;
 	int m_iBulletSound = -1;
-
 	int m_iMonsterDead = -1;
-
-
 };

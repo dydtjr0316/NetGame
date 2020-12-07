@@ -10,6 +10,7 @@ public:
 	void LateInit();
 	void Render();
 	int Update(float elapsedInSec);
+
 private:
 	bool m_blsInit = false;
 	float m_iHpCount = 6;

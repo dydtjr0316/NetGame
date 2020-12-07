@@ -1,26 +1,9 @@
 #pragma once
 
-// InGame
-//#define INGAME_RUNNIG 311
-//#define INGAME_CLEAR 312
-//#define INGAME_OVER 313
-
-// enum으로 사용
-//#define MOVE_UP 321
-//#define MOVE_DOWN 322
-//#define MOVE_LEFT 323
-//#define MOVE_RIGHT 324
-//
-//#define SHOOT_UP 331
-//#define SHOOT_DOWN 332
-//#define SHOOT_LEFT 333
-//#define SHOOT_RIGHT 334
-
 enum STATE { IDLE, DOWN, UP, RIGHT, LEFT };
 enum ITEM { NONE, TRIPLE };
 
 enum class DIR{NONE,LEFT,RIGHT,UP,DOWN};
-
 
 #pragma pack (push, 1)
 
@@ -123,32 +106,32 @@ struct SC_Attack_Packet
 };
 
 // Boss
-struct CS_Boss_Move_Packet
-{
-	char size;
-	char type;
-};
-
-struct CS_Boss_Attack_Packet
-{
-	char size;
-	char type;
-};
-
-struct SC_Boss_Move_Packet
-{
-	char size;
-	char type;
-	int id;
-	float x, y;
-};
-
-struct SC_Boss_Attack_Packet
-{
-	char size;
-	char type;
-	int id;
-	float x, y;
-};
+//struct CS_Boss_Move_Packet
+//{
+//	char size;
+//	char type;
+//};
+//
+//struct CS_Boss_Attack_Packet
+//{
+//	char size;
+//	char type;
+//};
+//
+//struct SC_Boss_Move_Packet
+//{
+//	char size;
+//	char type;
+//	int id;
+//	float x, y;
+//};
+//
+//struct SC_Boss_Attack_Packet
+//{
+//	char size;
+//	char type;
+//	int id;
+//	float x, y;
+//};
 
 #pragma pack (pop)

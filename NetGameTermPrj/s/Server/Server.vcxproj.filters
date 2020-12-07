@@ -32,13 +32,13 @@
     <ClInclude Include="ServerFrame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\client\client\SimpleGame\Globals.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

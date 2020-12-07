@@ -4,7 +4,6 @@ class SERVER {
 // server
 private:
 	char m_cServerip[15];
-
 	mutex m_lock;
 
 // tcp
@@ -13,7 +12,6 @@ private:
 	static SOCKET m_Socket;
 	sockaddr_in m_Serveraddr;
 	int m_id = 0;
-
 
 public:
 	// server
@@ -35,7 +33,8 @@ public:
 	void SendLoginPacket(int id, char nickname[]);
 	SC_Client_Enter_Packet RecvEnterPacket();
 
-	void SendMovePacket(int id, float x, float y,char packettype,DIR dir, STATE head, float elapsedInSec, float velx, float vely, float mass);
+	void SendMovePacket(int id, float x, float y,char packettype,DIR dir, STATE head, 
+						float elapsedInSec, float velx, float vely, float mass);
 	SC_Move_Packet RecvMovePacket();
 
 	void SendAttackPacket(int id, STATE type);

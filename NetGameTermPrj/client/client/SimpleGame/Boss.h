@@ -19,7 +19,6 @@ public:
 	int Update(float elapsedInSec);
 	void Collision();
 
-
 private:
 	float m_fSkillTime = 0.f;
 	float m_fJumpTime = 0.f;
@@ -37,6 +36,4 @@ private:
 	float m_fJumpPosX = 0.f;
 	float m_fJumpPosY = 0.f;
 	float m_fJumpPosZ = 0.f;
-
-
 };

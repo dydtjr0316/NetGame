@@ -48,16 +48,16 @@ int SERVER::ConnectTCP(const char* ip)
 	m_Serveraddr.sin_family = AF_INET;
 	m_Serveraddr.sin_addr.s_addr = inet_addr(ip);
 	m_Serveraddr.sin_port = htons(TCP_SERVERPORT);
-	cout << m_Socket << endl;
+	//cout << m_Socket << endl;
+
 	int retval = connect(m_Socket, (SOCKADDR*)&(m_Serveraddr), sizeof((m_Serveraddr)));
 	if (retval == SOCKET_ERROR)
 		err_quit("connect()");
 
-	cout << "TCP소켓 : " << m_Socket << endl;
+	//cout << "TCP소켓 : " << m_Socket << endl;
 
 	printf("서버 연결: IP 주소=%s, 포트 번호=%d \n",
 		inet_ntoa(m_Serveraddr.sin_addr), ntohs(m_Serveraddr.sin_port));
-
 
 	return RecvMyID();
 }
@@ -103,8 +103,6 @@ void SERVER::SendLoginPacket(int id, char nickname[])
 	if (retval == SOCKET_ERROR)err_quit(" SERVER::SendEnterPacket");
 
 	cout << "send enter packet (" << packet.id << ", " << packet.nickname << ")" << endl;
-
-
 }
 
 SC_Client_Enter_Packet SERVER::RecvEnterPacket()
@@ -157,8 +155,6 @@ void SERVER::SendAttackPacket(int id, STATE type)
 	packet.size = sizeof(CS_Attack_Packet);
 	packet.type = type;
 	packet.id = id;
-
-
 
 	int retval = send(m_Socket, (char*)&packet, sizeof(CS_Attack_Packet), 0);
 

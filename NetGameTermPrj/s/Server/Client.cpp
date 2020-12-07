@@ -65,6 +65,7 @@ void Client::SetDead(bool dead)
 {
 	m_dead = dead;
 }
+
 CS_Move_Packet Client::AddForce(CS_Move_Packet& move_packet, float fX, float fY)
 {
 	float fAmount = 20.f;

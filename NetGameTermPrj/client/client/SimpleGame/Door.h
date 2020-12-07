@@ -12,6 +12,7 @@ public:
 	int Update(float elapsedInSec);
 	void DrawDoor();
 	void CheckDoor();
+
 private:
 	bool m_blsInit = false;
 	int  m_iMiniMap = 0;

@@ -20,6 +20,7 @@ public:
 	void DrawHead();
 	void LateInit();
 	virtual void Render();
+
 private:
 	float m_MaxFrame = 0.f;
 	float m_Frame = 0.f;
@@ -27,8 +28,8 @@ private:
 	STATE m_Head = IDLE;
 	DIR m_Dir = DIR::DOWN;
 
-
 	mutex poslock;
+
 private:
 	bool m_blsInit = false;
 
@@ -50,5 +51,4 @@ private:
 public:
 	static bool isboss;
 	bool is_owner = false;
-
 };

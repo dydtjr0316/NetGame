@@ -45,7 +45,6 @@ void CDoor::Render()
 	else if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS)
 		yy = 9;
 
-
 	ScnMgr::GetInstance()->m_Renderer->DrawTextureRectAnim(-250, 200, 0, sx, sy, sz, r, g, b, a, m_iMiniMap, 1, 10, 0, yy, true);
 
 	DrawDoor();
@@ -56,45 +55,35 @@ int CDoor::Update(float elapsedInSec)
 	if (m_blsInit == false)
 		LateInit();
 
-
 	m_blsCheckMonster = true;
 
 	for (int src = 2; src < MAX_OBJ_COUNT; src++)
 	{
 		if (ScnMgr::GetInstance()->m_Obj[src] != NULL)
 		{
-			
 				int Type = 0;
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
 
 				if (Type == TYPE_MONSTER)
 				{
 					m_blsCheckMonster = false;
-
 				}
-			
-
 		}
 	}
 
 	CheckDoor();
 
-
-
 	if (m_blsDead == false)
 		ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
 
-
 	if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS &&m_blsCheckMonster == false)
 		m_fEndingTime += 0.1f;
-
 
 	return m_blsDead;
 }
 
 void CDoor::DrawDoor()
 {
-
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;
@@ -115,9 +104,7 @@ void CDoor::DrawDoor()
 	if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS)
 	{
 		ScnMgr::GetInstance()->m_Renderer->DrawTextureRectAnim(0, 130, -0.1f, sx, sy, sz, r, g, b, a, m_textID, 2, 4, false, 0, true);
-
 	}
-
 }
 
 void CDoor::CheckDoor()
@@ -156,7 +143,6 @@ void CDoor::CheckDoor()
 				ScnMgr::GetInstance()->m_Obj[0]->SetVel(0.f, 0.f, 0.f);
 				ScnMgr::GetInstance()->m_Obj[1]->SetPos(PlayerX / 100 + 0.2f, -230 / 100, PlayerZ / 100);
 				ScnMgr::GetInstance()->m_Obj[1]->SetVel(0.f, 0.f, 0.f);
-
 
 				ScnMgr::GetInstance()->CreateBoss();
 				m_blsCheckMonster = false;

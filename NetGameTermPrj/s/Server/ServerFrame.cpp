@@ -90,7 +90,6 @@ void ServerFrame::LoginServer()
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
 
-
 		int id = 2;
 		for (int i = 0; i < id; ++i) {
 			if (m_Clients.count(i) == 0) {
@@ -103,7 +102,6 @@ void ServerFrame::LoginServer()
 			closesocket(clientSock);
 			continue;
 		}
-
 
 		int ret = send(clientSock, (char*)&id, sizeof(int), 0);
 		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send()");
@@ -119,26 +117,11 @@ void ServerFrame::LoginServer()
 
 		LobbyServer(u_id);
 	}
-
 }
 
 void ServerFrame::LobbyServer(int id)
 {
 	CreateMoveThread(id);
-	//CreateAttackThread(id);
-
-	// 입구 간 사람 몇명인지 확인
-	// 패킷 주고받으면서 두명 다 입구에 있는거 확인되면
-	// 인게임으로 넘어가기?
-}
-
-void ServerFrame::InGameServer()
-{
-	while (true) {
-		UpdateStatus();
-		UpdateCollision();
-		UpdateBoss();
-	}
 }
 
 DWORD __stdcall ServerFrame::Process(LPVOID arg)
@@ -181,7 +164,6 @@ DWORD __stdcall ServerFrame::Process(LPVOID arg)
 		}
 		Login = true;
 	}
-
 	return 0;
 }
 
@@ -212,27 +194,11 @@ void ServerFrame::CreateMoveThread(int id)
 	m_MOVEThread = CreateThread(NULL, 0, this->MOVEThread, (LPVOID)id, 0, NULL);
 }
 
-void ServerFrame::CreateAttackThread(int id)
-{
-	m_AttackThread = CreateThread(NULL, 0, this->AttackThread, (LPVOID)id, 0, NULL);
-}
-
 DWORD __stdcall ServerFrame::MOVEThread(LPVOID arg)
 {
 	int id = reinterpret_cast<int>(arg);
 	while (true) {
 		UpdateMove(id);
-
-	}
-
-	return 0;
-}
-
-DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
-{
-	int id = reinterpret_cast<int>(arg);
-	while (true) {
-		UpdateAttack(id);
 	}
 
 	return 0;
@@ -331,6 +297,21 @@ void ServerFrame::UpdateMove(int id)
 	}
 }
 
+void ServerFrame::CreateAttackThread(int id)
+{
+	m_AttackThread = CreateThread(NULL, 0, this->AttackThread, (LPVOID)id, 0, NULL);
+}
+
+DWORD __stdcall ServerFrame::AttackThread(LPVOID arg)
+{
+	int id = reinterpret_cast<int>(arg);
+	while (true) {
+		UpdateAttack(id);
+	}
+
+	return 0;
+}
+
 void ServerFrame::UpdateAttack(int id)
 {
 	CS_Attack_Packet attack_packet;
@@ -373,30 +354,6 @@ void ServerFrame::UpdateAttack(int id)
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);
 	if (ret == SOCKET_ERROR) err_display("UpdateAttack -> send()");
-}
-
-void ServerFrame::UpdateStatus()
-{
-}
-
-void ServerFrame::SendAllStatus()
-{
-}
-
-void ServerFrame::IsAllReady()
-{
-}
-
-void ServerFrame::SendBulletRoute()
-{
-}
-
-void ServerFrame::UpdateCollision()
-{
-}
-
-void ServerFrame::UpdateBoss()
-{
 }
 
 CS_Move_Packet ServerFrame::AddForce(CS_Move_Packet& move_packet)

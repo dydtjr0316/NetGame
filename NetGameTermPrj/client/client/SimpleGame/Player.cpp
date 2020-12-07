@@ -27,7 +27,6 @@ int CPlayer::Update(float elapsedInSec)
 		m_velX = -5.0f;
 	LateInit();
 
-
 	Object::Update(elapsedInSec);
 	KeyInput(elapsedInSec);
 	//Shooting();
@@ -41,12 +40,9 @@ int CPlayer::Update(float elapsedInSec)
 		m_velY = 0.f;
 	}
 
-
 	ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::RENDERGROUP::OBJECT, this);
 
 	return m_blsDead;
-
-
 }
 
 void CPlayer::Render()
@@ -67,7 +63,6 @@ void CPlayer::Render()
 	b = m_b;
 	a = m_a;
 
-
 	static float temp = 0;
 	if (m_CurState != LEFT)			temp += 0.2f;
 	else
@@ -76,7 +71,6 @@ void CPlayer::Render()
 
 	int iX = (int)temp % 10;
 	int iY = 0;
-
 
 	if (m_CurState == RIGHT) {
 		TexId = m_texR;
@@ -141,8 +135,6 @@ void CPlayer::Render()
 		1,true);
 
 	DrawHead();
-	
-
 }
 
 void CPlayer::DrawHead()
@@ -219,10 +211,8 @@ void CPlayer::Shooting()
 			vBulletX, vBulletY, vBulletZ,
 			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
 
-
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
-
 	}
 }
 
@@ -293,7 +283,6 @@ void CPlayer::LateInit()
 	m_iBulletSound = ScnMgr::GetInstance()->m_Sound->CreateShortSound("../Sound/Bullet.wav");
 	m_iDamageSound = ScnMgr::GetInstance()->m_Sound->CreateShortSound("../Sound/Damage.wav");
 	m_blsInit = true;
-
 }
 
 void CPlayer::CollisionCheck()
@@ -319,13 +308,8 @@ void CPlayer::CollisionCheck()
 					}
 					if (m_healthPoint <= 0)
 						m_healthPoint = 1.f;
-
 				}
 			}
-
 		}
-
 	}
-
-
 }

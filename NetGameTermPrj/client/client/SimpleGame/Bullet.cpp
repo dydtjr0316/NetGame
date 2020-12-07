@@ -19,7 +19,6 @@ void CBullet::LateInit()
 
 void CBullet::Render()
 {
-
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;
@@ -36,9 +35,6 @@ void CBullet::Render()
 	a = m_a;
 
     ScnMgr::GetInstance()->m_Renderer->DrawTextureRect(x, y, z, sx, sy, sz, r, g, b, a, m_textID);
-
-
-
 }
 
 int CBullet::Update(float elapsedInSec)
@@ -48,7 +44,6 @@ int CBullet::Update(float elapsedInSec)
 
 	if (m_posZ <= 0.f)
 		m_blsDead = true;
-
 
 	if(MapCollisionCheck(&m_posX, &m_posY))
 		m_blsDead=true;
@@ -62,7 +57,6 @@ int CBullet::Update(float elapsedInSec)
 	{
 			ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
 	}
-
 
 	return m_blsDead;
 }

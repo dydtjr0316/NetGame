@@ -6,10 +6,7 @@ ServerFrame server;
 int main()
 {
 	server.InitTCPServer();
-
 	server.LoginServer();
-
-	//server.InGameServer();
 
 	return 0;
 }

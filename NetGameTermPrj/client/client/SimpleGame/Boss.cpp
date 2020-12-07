@@ -59,13 +59,10 @@ void CBoss::Render()
 
 	// ui z°ª ¼öÁ¤
 	ScnMgr::GetInstance()->m_Renderer->DrawSolidRectGauge(0.5f, -250.f, 0.f, 0, 0, 0, 500, 20, 1, 1, 0, 0, 1, persent, false);
-
-
 }
 
 void CBoss::TracePlayer()
 {
-
 	float PlayerPosX = 0.f;
 	float PlayerPosY = 0.f;
 	float PlayerPosZ = 0.f;
@@ -110,9 +107,7 @@ void CBoss::TracePlayer()
 			float fRandx = RandX / 10.f;
 			float fRandy = RandY / 10.f;
 			CreateBullet(fRandx, fRandy);
-
 		}
-
 	}
 }
 
@@ -135,7 +130,6 @@ void CBoss::Jumping()
 
 	if (m_posZ <= 0.f)
 	{
-
 		m_eState = IDLE;
 		ScnMgr::GetInstance()->ShakeCamara();
 		ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBossJump, false, 0.5);
@@ -165,7 +159,6 @@ void CBoss::CreateBullet(float X, float Y)
 		vBulletY *= bulletVel;
 		vBulletZ *= bulletVel;
 
-
 		CBullet* pObj = new CBullet;
 
 		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ + 0.4f,
@@ -176,14 +169,11 @@ void CBoss::CreateBullet(float X, float Y)
 
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
-
-
 	}
 }
 
 int CBoss::Update(float elapsedInSec)
 {
-
 	LateInit();
 
 	Object::Update(elapsedInSec);
@@ -197,7 +187,6 @@ int CBoss::Update(float elapsedInSec)
 		TracePlayer();
 	}
 
-	
 	Collision();
 
 	if (m_healthPoint <= 0)
@@ -206,7 +195,6 @@ int CBoss::Update(float elapsedInSec)
 		ScnMgr::GetInstance()->Ending();
 	}
 
-
 	ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
 
 	return m_blsDead;
@@ -214,7 +202,6 @@ int CBoss::Update(float elapsedInSec)
 
 void CBoss::Collision()
 {
-
 	for (int src = 2; src < MAX_OBJ_COUNT; src++)
 	{
 		if (ScnMgr::GetInstance()->m_Obj[src] != NULL)
@@ -223,8 +210,6 @@ void CBoss::Collision()
 			{
 				int Type = 0;
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
-
-				
 
 				if (Type == TYPE_BULLET && ScnMgr::GetInstance()->m_Obj[src]->GetDead() == false)
 				{
@@ -235,9 +220,6 @@ void CBoss::Collision()
 					ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBossHit, false, 0.5);
 				}
 			}
-
 		}
 	}
-
-
 }

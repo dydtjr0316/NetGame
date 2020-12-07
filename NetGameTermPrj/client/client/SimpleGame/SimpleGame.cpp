@@ -101,6 +101,14 @@ void SpecialKeyUpInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	int id = server.ConnectServer();
+
+	cout << "닉네임 입력: ";
+	char nick[32];
+	cin >> nick;
+	SetEvent(event);
+	server.SendLoginPacket(id, nick);
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -117,13 +125,6 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
-	
-	int id = server.ConnectServer();
-
-	char nick[32];
-	cin >> nick;
-	SetEvent(event);
-	server.SendLoginPacket(id, nick);
 
 	SC_Client_LoginOK_Packet loginok_packet;
 	ZeroMemory(&loginok_packet, sizeof(SC_Client_LoginOK_Packet));

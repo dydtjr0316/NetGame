@@ -4,13 +4,14 @@
 class CBullet : public Object
 {
 public:
-	        CBullet();
+	CBullet();
 	virtual ~CBullet();
 
 	void LateInit();
 	void Render();
 
 	int Update(float elapsedInSec);
+
 private:
 	bool m_blsInit = false;
 };

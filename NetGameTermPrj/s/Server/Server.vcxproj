@@ -144,8 +144,8 @@
     <ClCompile Include="ServerFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\client\client\SimpleGame\Globals.h" />
     <ClInclude Include="Client.h" />
-    <ClInclude Include="Globals.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="ServerFrame.h" />
     <ClInclude Include="stdafx.h" />

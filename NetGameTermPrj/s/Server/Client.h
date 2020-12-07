@@ -39,7 +39,7 @@ public:
 	void SetDead(bool dead);
 
 	CS_Move_Packet AddForce(CS_Move_Packet& move_packet, float fX, float fY);
-	//priavet:
+
 public:
 	SOCKET		m_sock;
 	SOCKADDR_IN m_addr;

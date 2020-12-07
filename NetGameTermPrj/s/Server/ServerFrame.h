@@ -19,7 +19,6 @@ public:
 	static void Send_pakcet(int id, void* p);
 
 	void LobbyServer(int id);
-	void InGameServer();
 
 	static DWORD WINAPI Process(LPVOID arg);
 
@@ -30,14 +29,6 @@ public:
 	static void UpdateMove(int id);
 	static void UpdateAttack(int id);
 
-	void UpdateStatus();
-	void SendAllStatus();
-
-	void IsAllReady();
-
-	void SendBulletRoute();
-	void UpdateCollision();
-	void UpdateBoss();
 	CS_Move_Packet AddForce(CS_Move_Packet& move_packet);
 
 private:

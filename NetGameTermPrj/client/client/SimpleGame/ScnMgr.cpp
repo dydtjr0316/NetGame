@@ -15,9 +15,6 @@ int g_Stage = -1;
 int g_UI = -1;
 int g_BGM = -1;
 
-
-
-
 ScnMgr* ScnMgr::m_pInstance = NULL;
 ScnMgr* ScnMgr::GetInstance()
 {
@@ -27,12 +24,14 @@ ScnMgr* ScnMgr::GetInstance()
 	}
 	return m_pInstance;
 }
+
 void ScnMgr::DestroyInstance(void) {
 	if (NULL != m_pInstance) {
 		delete m_pInstance;
 		m_pInstance = NULL;
 	}
 }
+
 ScnMgr::ScnMgr()
 {
 	srand(unsigned(time(nullptr)));
@@ -70,8 +69,6 @@ ScnMgr::ScnMgr()
 	g_Stage = m_Renderer->GenPngTexture("../Texture/StartRoom.Png");
 	g_UI = m_Renderer->GenPngTexture("../Texture/UI.Png");
 
-
-
 	g_BGM = m_Sound->CreateBGSound("../Sound/StageBgm.wav");
 	m_iMonsterDead = m_Sound->CreateShortSound("../Sound/MonsterDeath.wav");
 	
@@ -86,15 +83,12 @@ ScnMgr::ScnMgr()
 
 	//CHp* Pobj = new CHp;
 	//AddObject(0.f, 0.f, 0.f, 0.8f, 0.8f, 0.8f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, TYPE_HP, 1.f, Pobj);
-
-
 	
 	list<Object*> pList;
 	for (INT i = 0; i < END; i++)
 	{
 		m_RenderGroup.push_back(pList);
 	}
-
 
 	m_iBloodPaticle = m_Renderer->CreateParticleObject(
 		100,
@@ -127,8 +121,7 @@ void ScnMgr::Update(float elapsedInSec)
 	for (int i = 0; i < MAX_OBJ_COUNT; ++i) {
 		if (m_Obj[i] != NULL)
 			if (m_Obj[i]->Update(elapsedInSec))
-				DeleteObject(i);
-		 
+				DeleteObject(i); 
 	}
 
 	float x, y, z;
@@ -146,7 +139,6 @@ void ScnMgr::Update(float elapsedInSec)
 			m_blsShake = false;
 		}
 	}
-
 }
 
 void ScnMgr::RenderScene(void)
@@ -161,14 +153,11 @@ void ScnMgr::RenderScene(void)
 		1.f);
 	int  StageNum = g_Stage;
 
-
 	m_Renderer->DrawGround(0.f, -50.f, 0.f,
 		800.f, 500.f, 0.f,
 		1, 1, 1, 1,
 		StageNum,
 		1.f);
-
-	// ø©±‚º≠ ≈Õ¡¸
 
 	// Draw all m_Objs
 	for (int i = 0; i < END; ++i)
@@ -198,13 +187,11 @@ void ScnMgr::RenderScene(void)
 			else
 				cout << "trash -> i velue => " << i << endl;
 		}
-
 	}
 	for (int i = 0; i < END; ++i)
 	{
 		m_RenderGroup[i].clear();
 	}
-
 }
 
 void ScnMgr::DoGarbageCollect()
@@ -219,7 +206,6 @@ void ScnMgr::DoGarbageCollect()
 
 		if (type == TYPE_BULLET)
 		{
-
 			// Check velocity size
 			float vx, vy, vz;
 			m_Obj[i]->GetVel(&vx, &vy, &vz);
@@ -295,7 +281,6 @@ int ScnMgr::AddObject(float x, float y, float z,
 	int idx = -1;
 	for (; i < MAX_OBJ_COUNT; ++i)
 	{
-
 		if (m_Obj[i] == NULL)
 		{
 			m_Obj[i] = pObj;
@@ -339,6 +324,7 @@ void ScnMgr::DeleteObject(int idx)
 		std::cout << "m_Obj[ " << idx << "] is NULL" << std::endl;
 		return;
 	}
+
 	delete m_Obj[idx];
 	m_Obj[idx] = NULL;
 }
@@ -371,9 +357,9 @@ void ScnMgr::KeyDownInput(unsigned char key, int x, int y)
 		m_KeySP = true;
 	}
 }
+
 void ScnMgr::KeyUpInput(unsigned char key, int x, int y)
 {
-
 	if (key == 'w' || key == 'W')
 	{
 		m_KeyW = false;
@@ -396,7 +382,6 @@ void ScnMgr::KeyUpInput(unsigned char key, int x, int y)
 	}
 }
 
-
 void ScnMgr::CreateStart()
 {
 	g_Stage = m_Renderer->GenPngTexture("../Texture/Stage1.Png");
@@ -407,7 +392,6 @@ void ScnMgr::CreateStart()
 
 void ScnMgr::CreateBoss()
 {
-	
 	if(m_blsBoss == false)
 	{
 		ResetObject();
@@ -418,11 +402,9 @@ void ScnMgr::CreateBoss()
 		m_Sound->StopBGSound(g_BGM);
 		g_BGM = m_Sound->CreateBGSound("../Sound/MainBGM.wav");
 		m_Sound->PlayBGSound(g_BGM, true, 1);
-
 	}
 
 	m_eCurStage = BOSS;
-
 }
 
 void ScnMgr::ResetObject()
@@ -438,8 +420,6 @@ void ScnMgr::ResetObject()
 		//if (/*i != 0&&i!=1 && */type != TYPE_MONSTER)
 		//	m_Obj[i]->lsDead();
 	}
-
-
 }
 
 void ScnMgr::ShakeCamara()
@@ -449,7 +429,6 @@ void ScnMgr::ShakeCamara()
 
 void ScnMgr::Ending()
 {
-
 	m_Sound->StopBGSound(g_BGM);
 	g_BGM = m_Sound->CreateBGSound("../Sound/CafeBene.wav");
 	m_Sound->PlayBGSound(g_BGM,false,1);
@@ -459,7 +438,6 @@ void ScnMgr::SpecialKeyDownInput(int key, int x, int y)
 {
 	if (key == GLUT_KEY_F1)
 	{
-		
 		//GetInstance()->CreateBoss();
 		//GetInstance()->m_Obj[HERO_ID]->SetPos(10 / 100, 110 / 100, 10 / 100);
 		//GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
@@ -467,39 +445,34 @@ void ScnMgr::SpecialKeyDownInput(int key, int x, int y)
 	if (key == GLUT_KEY_UP)
 	{
 		m_KeyUp = true;
-
 	}
 	if (key == GLUT_KEY_LEFT)
 	{
 		m_KeyLeft = true;
-
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
 		m_KeyDown = true;
-
 	}
 	if (key == GLUT_KEY_RIGHT)
 	{
 		m_KeyRight = true;
 	}
 }
+
 void ScnMgr::SpecialKeyUpInput(int key, int x, int y)
 {
 	if (key == GLUT_KEY_UP)
 	{
 		m_KeyUp = false;
-
 	}
 	if (key == GLUT_KEY_LEFT)
 	{
 		m_KeyLeft = false;
-
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
 		m_KeyDown = false;
-
 	}
 	if (key == GLUT_KEY_RIGHT)
 	{

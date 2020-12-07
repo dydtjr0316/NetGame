@@ -15,13 +15,8 @@ Object::~Object()
 {
 }
 
-
-
-
-
 int Object::Update(float elapsedInSec)
 {
-	
 	// reduce remaining cool
 	m_remainingCoolTime -= elapsedInSec;
 	/////////////////////Apply friction////////////////////
@@ -82,8 +77,6 @@ void Object::AddForce(float x, float y, float z, float eTime)
 
 }
 
-
-
 void Object::InitPhysics()
 {
 	float m_r= 0.f, m_g = 0.f, m_b = 0.f, m_a = 0.f; // color
@@ -129,6 +122,7 @@ void Object::SetVel(float velx, float vely, float velz)
 	m_velY = vely;
 	m_velZ = velz;
 }
+
 void Object::SetVol(float volx, float voly, float volz)
 {
 	m_volX = volx;
@@ -151,8 +145,6 @@ void Object::SetTexID(int id)
 	m_textID = id;
 }
 
-
-
 void Object::GetPos(float *posx, float *posy, float *posz)
 {
 	*posx = m_posX;
@@ -170,12 +162,14 @@ void Object::GetVel(float *velx, float *vely, float *velz)
 	*vely = m_velY;
 	*velz = m_velZ;
 }
+
 void Object::GetVol(float *volx, float *voly, float *volz)
 {
 	*volx = m_volX;
 	*voly = m_volY;
 	*volz = m_volZ;
 }
+
 void Object::GetFricCoef(float * coef)
 {
 	*coef = m_fricCoef;
@@ -195,7 +189,6 @@ void Object::SetParentObj(Object* parent)
 {
 	m_parent = parent;
 }
-
 
 void Object::GetHP(float* hp)
 {

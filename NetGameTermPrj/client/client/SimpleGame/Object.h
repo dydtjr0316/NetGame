@@ -25,11 +25,7 @@ public:
 	void SetHP(float hp);
 
 	void SetBossStage(bool bisBossStage) { m_bisBossStage = bisBossStage; }
-	bool GetBossStage() {
-		return m_bisBossStage
-			;
-	}
-
+	bool GetBossStage() { return m_bisBossStage; }
 
 	void GetMass(float *mass);
 	void GetVol(float *volx, float *voly, float *volz);
