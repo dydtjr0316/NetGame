@@ -30,7 +30,7 @@ void CBoss::LateInit()
 
 void CBoss::Render()
 {
-	cout << "보스 랜더" << endl;
+	//cout << "보스 랜더" << endl;
 
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
@@ -57,7 +57,8 @@ void CBoss::Render()
 
 	float persent = (m_healthPoint)*2.5f;
 
-	ScnMgr::GetInstance()->m_Renderer->DrawSolidRectGauge(0.f, 180.f, 0.f, 0, 0, 0, 350, 20, 1, 1, 0, 0, 1, persent, false);
+	// ui z값 수정
+	ScnMgr::GetInstance()->m_Renderer->DrawSolidRectGauge(0.5f, -250.f, 0.f, 0, 0, 0, 500, 20, 1, 1, 0, 0, 1, persent, false);
 
 
 }
@@ -72,8 +73,8 @@ void CBoss::TracePlayer()
 	int tt;
 	ScnMgr::GetInstance()->m_Obj[0]->GetType(&t);
 	ScnMgr::GetInstance()->m_Obj[1]->GetType(&tt);
-	cout << "0번 타입 -> " << t << endl;
-	cout << "1번 타입 -> " << tt << endl;
+	//cout << "0번 타입 -> " << t << endl;
+	//cout << "1번 타입 -> " << tt << endl;
 
 	ScnMgr::GetInstance()->m_Obj[1]->GetPos(&PlayerPosX, &PlayerPosY, &PlayerPosZ);
 
@@ -168,10 +169,10 @@ void CBoss::CreateBullet(float X, float Y)
 		CBullet* pObj = new CBullet;
 
 		int id = ScnMgr::GetInstance()->AddObject(m_posX, m_posY, m_posZ + 0.4f,
-			0.2f, 0.2f, 0.2f,
+			0.25f, 0.25f, 0.25f,
 			1, 0, 0, 1,
 			vBulletX, vBulletY, vBulletZ,
-			0.15f, 0.2f, TYPE_BULLET, 1.f, pObj);
+			0.1f, 0.2f, TYPE_MONSTER_BULLET, 2.f, pObj);
 
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
@@ -191,10 +192,9 @@ int CBoss::Update(float elapsedInSec)
 
 	if (m_eState == IDLE)
 	{
-		m_fJumpTime += 0.1f;
-		m_fSkillTime += 0.1f;
+		m_fJumpTime += 0.2f;
+		m_fSkillTime += 0.2f;
 		TracePlayer();
-
 	}
 
 	
@@ -202,7 +202,6 @@ int CBoss::Update(float elapsedInSec)
 
 	if (m_healthPoint <= 0)
 	{
-
 		ScnMgr::GetInstance()->m_Sound->PlayShortSound(m_iBollDead, false, 1.0);
 		ScnMgr::GetInstance()->Ending();
 	}
@@ -216,7 +215,7 @@ int CBoss::Update(float elapsedInSec)
 void CBoss::Collision()
 {
 
-	for (int src = 0; src < MAX_OBJ_COUNT; src++)
+	for (int src = 2; src < MAX_OBJ_COUNT; src++)
 	{
 		if (ScnMgr::GetInstance()->m_Obj[src] != NULL)
 		{
@@ -224,6 +223,8 @@ void CBoss::Collision()
 			{
 				int Type = 0;
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
+
+				
 
 				if (Type == TYPE_BULLET && ScnMgr::GetInstance()->m_Obj[src]->GetDead() == false)
 				{

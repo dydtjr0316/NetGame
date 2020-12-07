@@ -87,7 +87,6 @@ void ServerFrame::LoginServer()
 	
 	while (true) {
 		addrlen = sizeof(clientAddr);
-	//	cout << m_sock << endl;
 		clientSock = accept(m_sock, (SOCKADDR*)&clientAddr, &addrlen);
 		if (clientSock == INVALID_SOCKET) err_display((char*)"LoginServer() -> accept()");
 
@@ -109,7 +108,6 @@ void ServerFrame::LoginServer()
 		int ret = send(clientSock, (char*)&id, sizeof(int), 0);
 		if (ret == SOCKET_ERROR) err_display("LoginServer() -> send()");
 
-		//cout << clientSock << endl;
 		Client client(clientSock, id, clientAddr);
 		m_Clients.emplace(id, client);
 
@@ -371,12 +369,6 @@ void ServerFrame::UpdateAttack(int id)
 	update_packet.id = id;
 	update_packet.size = sizeof(SC_Attack_Packet);
 	 
-	if (update_packet.velx == 0 && update_packet.vely == 0)
-	{
-
-	}
-	else 
-		//cout << update_packet.velx << " : " << update_packet.vely <<update_packet.velz<< endl;
 
 
 	ret = send(m_Clients[id].GetSock_TCP(), (char*)&update_packet, sizeof(SC_Attack_Packet), 0);

@@ -51,7 +51,7 @@ int CPlayer::Update(float elapsedInSec)
 
 void CPlayer::Render()
 {
-	cout << "플레이어 랜더" << endl;
+	//cout << "플레이어 랜더" << endl;
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;
@@ -219,6 +219,7 @@ void CPlayer::Shooting()
 			vBulletX, vBulletY, vBulletZ,
 			0.1f, 0.2f, TYPE_BULLET, 2.f, pObj);
 
+
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);
 
@@ -307,7 +308,7 @@ void CPlayer::CollisionCheck()
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
 				ScnMgr::GetInstance()->m_Obj[src]->GetType(&Type);
 
-				if (Type == TYPE_MONSTER)
+				if (Type == TYPE_MONSTER||Type == TYPE_MONSTER_BULLET)
 				{
 					ScnMgr::GetInstance()->m_Physics->processCollision(this, ScnMgr::GetInstance()->m_Obj[src]);
 					if (m_blsDamaged == false)

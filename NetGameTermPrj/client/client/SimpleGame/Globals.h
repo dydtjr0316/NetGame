@@ -16,6 +16,7 @@
 #define TYPE_MONSTER 3
 #define TYPE_ITEM 4
 #define TYPE_HP  5
+#define TYPE_MONSTER_BULLET  6
 
 
 // Server 

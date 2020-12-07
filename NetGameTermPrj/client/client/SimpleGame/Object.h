@@ -24,6 +24,11 @@ public:
 	void SetVel(float velx, float vely, float velz);
 	void SetHP(float hp);
 
+	void SetBossStage(bool bisBossStage) { m_bisBossStage = bisBossStage; }
+	bool GetBossStage() {
+		return m_bisBossStage
+			;
+	}
 
 
 	void GetMass(float *mass);
@@ -54,6 +59,8 @@ protected:
 	float m_fricCoef;				//friction
 	int m_type;				// object type
 	int m_textID;
+
+	bool m_bisBossStage = false;
 	
 	Object* m_parent = NULL;
 

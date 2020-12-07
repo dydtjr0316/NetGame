@@ -19,11 +19,11 @@ void CDoor::LateInit()
 
 void CDoor::Render()
 {
-	if(ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS)
-		cout << "보스 -> 문 랜더" << endl;
+	//if(ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS)
+	//	cout << "보스 -> 문 랜더" << endl;
 
-	if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::START)
-		cout << "야이 시발 -> 문 랜더" << endl;
+	//if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::START)
+	//	cout << "로비 -> 문 랜더" << endl;
 
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
@@ -114,7 +114,7 @@ void CDoor::DrawDoor()
 		ScnMgr::GetInstance()->m_Renderer->DrawTextureRectAnim(0,130, z, sx, sy, sz, r, g, b, a, m_textID, 2, 4, m_blsCheckMonster, 0, true);
 	if (ScnMgr::GetInstance()->m_eCurStage == ScnMgr::BOSS)
 	{
-		ScnMgr::GetInstance()->m_Renderer->DrawTextureRectAnim(0, 130, z, sx, sy, sz, r, g, b, a, m_textID, 2, 4, false, 0, true);
+		ScnMgr::GetInstance()->m_Renderer->DrawTextureRectAnim(0, 130, -0.1f, sx, sy, sz, r, g, b, a, m_textID, 2, 4, false, 0, true);
 
 	}
 
@@ -136,8 +136,6 @@ void CDoor::CheckDoor()
 		float PlayerX = 0.5f;
 		float PlayerY = 0.5f;
 		float PlayerZ = 0.5f;
-		//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
-		if (bcnt == 1 && i == 0)continue;
 
 		ScnMgr::GetInstance()->m_Obj[i]->GetPos(&PlayerX, &PlayerY, &PlayerZ);
 
@@ -146,33 +144,22 @@ void CDoor::CheckDoor()
 			PlayerX *= 100;
 			PlayerY *= 100;
 			PlayerZ *= 100;
-			//if (PlayerX > -30 && PlayerX < 30 && PlayerY>118)
-			//{
-			//	ScnMgr::GetInstance()->CreateBoss();
-			//	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetPos(PlayerX / 100, -230 / 100, PlayerZ/100);
-			//	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);
-			//	m_blsCheckMonster = false;
-			//}
+	
 			if (PlayerX > -30 && PlayerX < 30 && PlayerY>118)
 			{
-				bcnt++;
-				if (bcnt == 2)
-				{
-					/*for (int j = 0; j < 2; ++j) {*/
-					ScnMgr::GetInstance()->m_Obj[0]->SetPos(PlayerX / 100, -230 / 100, PlayerZ / 100);
-					ScnMgr::GetInstance()->m_Obj[0]->SetVel(0.f, 0.f, 0.f);
-					ScnMgr::GetInstance()->m_Obj[1]->SetPos(PlayerX / 100 + 0.2f, -230 / 100, PlayerZ / 100);
-					ScnMgr::GetInstance()->m_Obj[1]->SetVel(0.f, 0.f, 0.f);
-					
-					//ScnMgr::GetInstance()->m_Obj[0]->SetPos(/*PlayerX / 100*/0, -230 / 100, PlayerZ / 100);
-					//ScnMgr::GetInstance()->m_Obj[0]->SetVel(0.f, 0.f, 0.f);
-					//ScnMgr::GetInstance()->m_Obj[1]->SetPos(/*PlayerX / 100*/0.5f, -230 / 100, PlayerZ / 100);
-					//ScnMgr::GetInstance()->m_Obj[1]->SetVel(0.f, 0.f, 0.f);
-					//
-					ScnMgr::GetInstance()->CreateBoss();
-					//}
-					m_blsCheckMonster = false;
-				}
+				ScnMgr::GetInstance()->m_Obj[i]->SetBossStage(true);
+			}
+
+			if (ScnMgr::GetInstance()->m_Obj[0]->GetBossStage()&& ScnMgr::GetInstance()->m_Obj[1]->GetBossStage())
+			{
+				ScnMgr::GetInstance()->m_Obj[0]->SetPos(PlayerX / 100, -230 / 100, PlayerZ / 100);
+				ScnMgr::GetInstance()->m_Obj[0]->SetVel(0.f, 0.f, 0.f);
+				ScnMgr::GetInstance()->m_Obj[1]->SetPos(PlayerX / 100 + 0.2f, -230 / 100, PlayerZ / 100);
+				ScnMgr::GetInstance()->m_Obj[1]->SetVel(0.f, 0.f, 0.f);
+
+
+				ScnMgr::GetInstance()->CreateBoss();
+				m_blsCheckMonster = false;
 			}
 		}
 	}

@@ -49,18 +49,19 @@ int CBullet::Update(float elapsedInSec)
 	if (m_posZ <= 0.f)
 		m_blsDead = true;
 
+
 	if(MapCollisionCheck(&m_posX, &m_posY))
 		m_blsDead=true;
 
 	if (m_blsDead)
 	{
-		if(m_type==TYPE_BULLET)
-		ScnMgr::GetInstance()->m_Sound->PlayShortSound(ScnMgr::GetInstance()->m_iBulletSound, false, 0.5);
-
+			ScnMgr::GetInstance()->m_Sound->PlayShortSound(ScnMgr::GetInstance()->m_iBulletSound, false, 0.5);
 	}
 
-	if(!m_blsDead)
-		ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
+	if (!m_blsDead)
+	{
+			ScnMgr::GetInstance()->AddRenderGroup(ScnMgr::OBJECT, this);
+	}
 
 
 	return m_blsDead;

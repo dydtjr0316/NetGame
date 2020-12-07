@@ -177,7 +177,7 @@ void ScnMgr::RenderScene(void)
 		{
 			int t;
 			pSrc->GetType(&t);
-			switch (t)
+			/*switch (t)
 			{
 			case TYPE_NORMAL:
 				cout << "플레이어" << endl;
@@ -191,7 +191,7 @@ void ScnMgr::RenderScene(void)
 			default:
 				cout << "타입 : " << t << endl;
 				break;
-			}
+			}*/
 			// 터지기전에 타입이 쓰레기값
 			if (t >= 0)
 				pSrc->Render(); // 여기서 터짐
