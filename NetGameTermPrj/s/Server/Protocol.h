@@ -21,6 +21,7 @@ enum ITEM { NONE, TRIPLE };
 
 enum class DIR{NONE,LEFT,RIGHT,UP,DOWN};
 
+
 #pragma pack (push, 1)
 
 constexpr char SC_PACKET_MOVE = 0;

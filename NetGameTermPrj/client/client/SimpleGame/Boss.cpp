@@ -30,6 +30,7 @@ void CBoss::LateInit()
 
 void CBoss::Render()
 {
+	cout << "보스 랜더" << endl;
 
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
@@ -64,9 +65,17 @@ void CBoss::Render()
 void CBoss::TracePlayer()
 {
 
-	float PlayerPosX, PlayerPosY, PlayerPosZ;
+	float PlayerPosX = 0.f;
+	float PlayerPosY = 0.f;
+	float PlayerPosZ = 0.f;
+	int t;
+	int tt;
+	ScnMgr::GetInstance()->m_Obj[0]->GetType(&t);
+	ScnMgr::GetInstance()->m_Obj[1]->GetType(&tt);
+	cout << "0번 타입 -> " << t << endl;
+	cout << "1번 타입 -> " << tt << endl;
 
-	//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&PlayerPosX, &PlayerPosY, &PlayerPosZ);
+	ScnMgr::GetInstance()->m_Obj[1]->GetPos(&PlayerPosX, &PlayerPosY, &PlayerPosZ);
 
 	float a = PlayerPosX - m_posX;
 	float b = PlayerPosY - m_posY;
@@ -90,7 +99,7 @@ void CBoss::TracePlayer()
 		m_eState = JUMP;
 		m_velZ = 10.f;
 		m_fJumpTime = 0.f;
-		//ScnMgr::GetInstance()->m_Obj[HERO_ID]->GetPos(&m_fJumpPosX, &m_fJumpPosY, &m_fJumpPosZ);
+		ScnMgr::GetInstance()->m_Obj[1]->GetPos(&m_fJumpPosX, &m_fJumpPosY, &m_fJumpPosZ);
 
 		for (int i = 0; i < 10; i++)
 		{
@@ -162,7 +171,7 @@ void CBoss::CreateBullet(float X, float Y)
 			0.2f, 0.2f, 0.2f,
 			1, 0, 0, 1,
 			vBulletX, vBulletY, vBulletZ,
-			0.15f, 0.2f, TYPE_MONSTER, 1.f, pObj);
+			0.15f, 0.2f, TYPE_BULLET, 1.f, pObj);
 
 		ScnMgr::GetInstance()->m_Obj[id]->AddForce(vBulletX, vBulletY, vBulletZ, 0.1f);
 		ScnMgr::GetInstance()->m_Obj[id]->SetParentObj(this);

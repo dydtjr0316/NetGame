@@ -9,7 +9,6 @@
 #include "Hp.h"
 
 #include "Door.h"
-
 #include "Boss.h"
 
 int g_Stage = -1;
@@ -169,11 +168,36 @@ void ScnMgr::RenderScene(void)
 		StageNum,
 		1.f);
 
+	// 여기서 터짐
+
 	// Draw all m_Objs
 	for (int i = 0; i < END; ++i)
 	{
-		for(auto& pSrc: m_RenderGroup[i])
-			pSrc->Render();
+		for (auto& pSrc : m_RenderGroup[i])
+		{
+			int t;
+			pSrc->GetType(&t);
+			switch (t)
+			{
+			case TYPE_NORMAL:
+				cout << "플레이어" << endl;
+				break;
+			case TYPE_MONSTER:
+				cout << "보스" << endl;
+				break;
+			case TYPE_UI:
+				cout << "문" << endl;
+				break;
+			default:
+				cout << "타입 : " << t << endl;
+				break;
+			}
+			// 터지기전에 타입이 쓰레기값
+			if (t >= 0)
+				pSrc->Render(); // 여기서 터짐
+			else
+				cout << "trash -> i velue => " << i << endl;
+		}
 
 	}
 	for (int i = 0; i < END; ++i)
@@ -251,6 +275,20 @@ int ScnMgr::AddObject(float x, float y, float z,
 		m_Obj[MAX_OBJ_COUNT - 2]->SetHP(hp);
 
 		return MAX_OBJ_COUNT -2;
+	}
+	else if (type == TYPE_MONSTER)
+	{
+		m_Obj[MAX_OBJ_COUNT - 3] = pObj;
+		m_Obj[MAX_OBJ_COUNT - 3]->SetPos(x, y, z);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetVol(sx, sy, sz);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetColor(r, g, b, a);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetVel(vx, vy, vz);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetMass(mass);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetFricCoef(fricCoef);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetType(type);
+		m_Obj[MAX_OBJ_COUNT - 3]->SetHP(hp);
+
+		return MAX_OBJ_COUNT - 3;
 	}
 	else i = 2;
 
@@ -389,14 +427,16 @@ void ScnMgr::CreateBoss()
 
 void ScnMgr::ResetObject()
 {
-	for (int i = 0; i < MAX_OBJ_COUNT; i++)
+	for (int i = 2; i < MAX_OBJ_COUNT; i++)
 	{
 		if (m_Obj[i] == NULL)
 			continue;
 		int type = 0;
 		m_Obj[i]->GetType(&type);
-		if (/*i != HERO_ID &&*/ type != TYPE_UI)
+		if (type != TYPE_UI && type != TYPE_MONSTER )
 			m_Obj[i]->lsDead();
+		//if (/*i != 0&&i!=1 && */type != TYPE_MONSTER)
+		//	m_Obj[i]->lsDead();
 	}
 
 
@@ -419,7 +459,7 @@ void ScnMgr::SpecialKeyDownInput(int key, int x, int y)
 {
 	if (key == GLUT_KEY_F1)
 	{
-		// stage 시작 하는 조건 넣기 
+		
 		//GetInstance()->CreateBoss();
 		//GetInstance()->m_Obj[HERO_ID]->SetPos(10 / 100, 110 / 100, 10 / 100);
 		//GetInstance()->m_Obj[HERO_ID]->SetVel(0.f, 0.f, 0.f);

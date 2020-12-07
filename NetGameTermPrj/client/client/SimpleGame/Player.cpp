@@ -51,6 +51,7 @@ int CPlayer::Update(float elapsedInSec)
 
 void CPlayer::Render()
 {
+	cout << "플레이어 랜더" << endl;
 	float x, y, z = 0;
 	float sx, sy, sz = 0;
 	float r, g, b, a = 0;

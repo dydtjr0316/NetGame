@@ -16,7 +16,8 @@
 class ScnMgr
 {
 public:
-	enum STAGENUM{START,BOSS};
+	enum STAGENUM { START, BOSS };
+
 public:
 	enum RENDERGROUP{MAP,OBJECT,UI,END};
 
