@@ -158,6 +158,7 @@ void CDoor::CheckDoor()
 				ScnMgr::GetInstance()->m_Obj[1]->SetVel(0.f, 0.f, 0.f);
 
 
+
 				ScnMgr::GetInstance()->CreateBoss();
 				m_blsCheckMonster = false;
 			}

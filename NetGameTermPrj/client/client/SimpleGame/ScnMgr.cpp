@@ -127,8 +127,7 @@ void ScnMgr::Update(float elapsedInSec)
 	for (int i = 0; i < MAX_OBJ_COUNT; ++i) {
 		if (m_Obj[i] != NULL)
 			if (m_Obj[i]->Update(elapsedInSec))
-				DeleteObject(i);
-		 
+				DeleteObject(i);		 
 	}
 
 	float x, y, z;

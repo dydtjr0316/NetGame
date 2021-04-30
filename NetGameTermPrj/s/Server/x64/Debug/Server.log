@@ -1,5 +1,4 @@
 ﻿  Client.cpp
-  main.cpp
   ServerFrame.cpp
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(116,87): warning C4312: '형식 캐스트': 'int'에서 더 큰 'LPVOID'(으)로의 변환입니다.
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(146,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
@@ -10,5 +9,6 @@ D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(222,36): warning C431
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(222,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(233,36): warning C4311: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 포인터가 잘립니다.
 D:\GitHube\NetGame\NetGameTermPrj\s\Server\ServerFrame.cpp(233,36): warning C4302: 'reinterpret_cast': 'LPVOID'에서 'int'(으)로 잘립니다.
+  main.cpp
   코드를 생성하고 있습니다...
   Server.vcxproj -> D:\GitHube\NetGame\NetGameTermPrj\s\x64\Debug\Server.exe
